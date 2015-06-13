@@ -8,7 +8,7 @@ function GraphicsEngine(canvas, context, map, mapWidth, mapHeight) {
 	this.height = mapHeight;
 	this.radius = 50;
 	var hexagonPatterns = new HexagonPatterns(this.radius);
-	this.hexagonPattern = hexagonPatterns.getPattern();
+	this.patterns = hexagonPatterns.getPatterns();
 }
 
 GraphicsEngine.prototype.beginDrawing = function() {
@@ -25,14 +25,16 @@ GraphicsEngine.prototype.draw = function() {
 	var preComputedOffsetY = Math.sqrt(3)/2 * this.radius;
 	var height = Math.sqrt(3) * this.radius;
 	var offsetX, offsetY;
+	var style;
 	for (let i = 0; i < this.width; i++) {
 		for (let j = 0; j < this.height; j++) {
+			style = this.map[i*this.width + j].type;
 			if ((i % 2) == 0) {
 				offsetY = preComputedOffsetY; 
 			} else {
 				offsetY = 0;
 			}
-			this.ctx.drawImage(this.hexagonPattern, i * (2*this.radius + preComputedOffsetX), j * height + offsetY);
+			this.ctx.drawImage(this.patterns.get(style), i * (2*this.radius + preComputedOffsetX), j * height + offsetY);
 		}
 	}
 }

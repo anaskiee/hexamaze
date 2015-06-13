@@ -1,6 +1,6 @@
 "use strict";
 
-function Map(width, height) {
+function MapConfiguration(width, height) {
 	this.width = width + 2;
 	this.height = height + 2;
 
@@ -10,7 +10,9 @@ function Map(width, height) {
 	for (let i = 0; i < this.width; i++) {
 		for (let j = 0; j < this.height; j++) {
 			let idx = i*this.width + j;
-			if (i == 0 || j == 0 || i == this.width-1 || j == this.height-1) {
+			if (i == 1 && j == 1 || i == this.width-2 && j == 1) {
+				this.map[idx] = new Hexagon("block");
+			} else if (i == 0 || j == 0 || i == this.width-1 || j == this.height-1) {
 				this.map[idx] = new Hexagon("block");
 			} else {
 				this.map[idx] = new Hexagon("space");
@@ -46,14 +48,14 @@ function Map(width, height) {
 	}
 }
 
-Map.prototype.getMap = function() {
+MapConfiguration.prototype.getMap = function() {
 	return this.map;
 }
 
-Map.prototype.getMapWidth = function() {
+MapConfiguration.prototype.getMapWidth = function() {
 	return this.width;
 }
 
-Map.prototype.getMapHeight = function() {
+MapConfiguration.prototype.getMapHeight = function() {
 	return this.height;
 }

@@ -21,26 +21,11 @@ window.addEventListener('DOMContentLoaded', function() {
 	canvas.width = width;
 	canvas.height = height;
 
-	var map = new Map(10, 6);
+	var map = new MapConfiguration(11, 6);
 	var mapWidth = map.getMapWidth();
 	var mapHeight = map.getMapHeight();
 	var graphicsEngine = new GraphicsEngine(canvas, context, map.getMap(), mapWidth, mapHeight);
 
 	graphicsEngine.beginDrawing();
-
-	var hexagonPatterns = new HexagonPatterns(50);
-	var hexagonPattern = hexagonPatterns.getPattern();
-
-
-	//draw();
-
-	function draw() {
-		requestAnimationFrame(draw);
-
-		context.fillStyle = "#003333";
-		context.fillRect(0, 0, canvas.width, canvas.height);
-
-		context.drawImage(hexagonPattern, 50, 50);
-	}
 
 });
