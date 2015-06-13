@@ -18,14 +18,21 @@ window.addEventListener('DOMContentLoaded', function() {
 
 	var width = window.innerWidth;
 	var height = window.innerHeight;
-
-	var hexagon = new Hexagon(50);
-	var hexagonPattern = hexagon.getPattern();
-
 	canvas.width = width;
 	canvas.height = height;
 
-	draw();
+	var map = new Map(10, 6);
+	var mapWidth = map.getMapWidth();
+	var mapHeight = map.getMapHeight();
+	var graphicsEngine = new GraphicsEngine(canvas, context, map.getMap(), mapWidth, mapHeight);
+
+	graphicsEngine.beginDrawing();
+
+	var hexagonPatterns = new HexagonPatterns(50);
+	var hexagonPattern = hexagonPatterns.getPattern();
+
+
+	//draw();
 
 	function draw() {
 		requestAnimationFrame(draw);
