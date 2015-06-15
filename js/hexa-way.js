@@ -22,10 +22,12 @@ window.addEventListener('DOMContentLoaded', function() {
 	canvas.height = height;
 
 	var eventHandler = new EventHandler(canvas, width/2, height/2);
-	var map = new MapConfiguration(11, 6);
-	var mapWidth = map.getMapWidth();
-	var mapHeight = map.getMapHeight();
-	var graphicsEngine = new GraphicsEngine(canvas, context, map.getMap(), mapWidth, mapHeight, eventHandler);
+	var width = 11;
+	var height = 6;
+	var map = new MapConfiguration(height, width);
+	var nbLines = map.getMapNbLines();
+	var nbColumns = map.getMapNbColumns();
+	var graphicsEngine = new GraphicsEngine(canvas, context, map.getMap(), nbLines, nbColumns, eventHandler);
 
 	graphicsEngine.beginDrawing();
 

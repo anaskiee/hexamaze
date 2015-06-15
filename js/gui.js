@@ -28,23 +28,4 @@ Gui.prototype.draw = function(ctx, x, y, theta) {
 
 	let pattern = this.hexagonPatterns.get("space-" + advancedStyle);
 	ctx.drawImage(pattern, x - pattern.width/2, y - pattern.height/2);
-
-	// Draw
-	ctx.beginPath();
-	ctx.arc(x, y, this.r2, 0, 2*Math.PI);
-	ctx.closePath();
-	ctx.strokeStyle = "#AAAAAA";
-	ctx.stroke();
-
-	ctx.beginPath();
-	ctx.arc(x, y, this.r3, 0, 2*Math.PI);
-	ctx.closePath();
-	ctx.strokeStyle = "#AAAAAA";
-	ctx.stroke();
-
-	ctx.beginPath();
-	ctx.arc(x + (this.r2 + this.r4) * Math.cos(theta), y + (this.r2 + this.r4) * Math.sin(theta), this.r4, 0, 2*Math.PI);
-	ctx.closePath();
-	ctx.fillStyle = "#888888";
-	ctx.fill();
 }

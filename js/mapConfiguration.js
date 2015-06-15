@@ -1,18 +1,20 @@
 "use strict";
 
-function MapConfiguration(width, height) {
-	this.width = width + 2;
-	this.height = height + 2;
+function MapConfiguration(nbLines, nbColumns) {
+	this.nbLines = nbLines + 2;
+	this.nbColumns = nbColumns + 2;
+	var characterLine = 2;
+	var characterColumn = 1;
 
 	// Contstruct map
 	// Initialiaze block types
-	this.map = new Array(this.width * this.height);
-	for (let i = 0; i < this.width; i++) {
-		for (let j = 0; j < this.height; j++) {
-			let idx = i*this.width + j;
-			if (i == 1 && j == 1 || i == this.width-2 && j == 1) {
+	this.map = new Array(this.nbLines * this.nbColumns);
+	for (let i = 0; i < this.nbLines; i++) {
+		for (let j = 0; j < this.nbColumns; j++) {
+			let idx = i*this.nbColumns + j;
+			if (i == 1 && j == 1 || i == 1 && j == this.nbColumns-2) {
 				this.map[idx] = new Hexagon("block");
-			} else if (i == 0 || j == 0 || i == this.width-1 || j == this.height-1) {
+			} else if (i == 0 || j == 0 || i == this.nbLines-1 || j == this.nbColumns-1) {
 				this.map[idx] = new Hexagon("block");
 			} else {
 				this.map[idx] = new Hexagon("space");
@@ -22,27 +24,34 @@ function MapConfiguration(width, height) {
 
 	var hexagon;
 	// Initialize links between hexagons
-	for (let i = 0; i < this.width; i++) {
-		for (let j = 0; j < this.height; j++) {
-			let idx = i*this.width + j;
+	for (let i = 0; i < this.nbLines; i++) {
+		for (let j = 0; j < this.nbColumns; j++) {
+			let idx = i*this.nbColumns + j;
 			hexagon = this.map[idx];
+
+			// Links
 			if (i > 0) {
-				hexagon.top = this.map[(i-1)*this.width + j];
+				hexagon.top = this.map[(i-1)*this.nbLines + j];
 				if (j > 0) {
-					hexagon.topLeft = this.map[(i-1)*this.width + j-1];
+					hexagon.topLeft = this.map[(i-1)*this.nbLines + j-1];
 				}
-				if (j < this.height-1) {
-					hexagon.topRight = this.map[(i-1)*this.width + j+1];
+				if (j < this.nbColumns-1) {
+					hexagon.topRight = this.map[(i-1)*this.nbLines + j+1];
 				}
 			}
-			if (i < this.width - 1) {
-				hexagon.bot = this.map[(i+1)*this.width + j];
+			if (i < this.nbLines - 1) {
+				hexagon.bot = this.map[(i+1)*this.nbLines + j];
 				if (j > 0) {
-					hexagon.botLeft = this.map[(i+1)*this.width + j-1];
+					hexagon.botLeft = this.map[(i+1)*this.nbLines + j-1];
 				}
-				if (j < this.height-1) {
-					hexagon.botRight = this.map[(i+1)*this.width + j+1];
+				if (j < this.nbColumns-1) {
+					hexagon.botRight = this.map[(i+1)*this.nbLines + j+1];
 				}
+			}
+
+			// Character positionning
+			if (i == characterLine && j == characterColumn) {
+				hexagon.characterHere = true;
 			}
 		}
 	}
@@ -52,10 +61,10 @@ MapConfiguration.prototype.getMap = function() {
 	return this.map;
 }
 
-MapConfiguration.prototype.getMapWidth = function() {
-	return this.width;
+MapConfiguration.prototype.getMapNbLines = function() {
+	return this.nbLines;
 }
 
-MapConfiguration.prototype.getMapHeight = function() {
-	return this.height;
+MapConfiguration.prototype.getMapNbColumns = function() {
+	return this.nbColumns;
 }
