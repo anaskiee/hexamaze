@@ -3,8 +3,8 @@
 function MapConfiguration(nbLines, nbColumns) {
 	this.nbLines = nbLines + 2;
 	this.nbColumns = nbColumns + 2;
-	var characterLine = 2;
-	var characterColumn = 1;
+	var characterLine = 3;
+	var characterColumn = 4;
 
 	// Contstruct map
 	// Initialiaze block types
@@ -19,6 +19,8 @@ function MapConfiguration(nbLines, nbColumns) {
 			} else {
 				this.map[idx] = new Hexagon("space");
 			}
+			this.map[idx].i = i;
+			this.map[idx].j = j;
 		}
 	}
 
@@ -30,22 +32,54 @@ function MapConfiguration(nbLines, nbColumns) {
 			hexagon = this.map[idx];
 
 			// Links
+			// top
 			if (i > 0) {
-				hexagon.top = this.map[(i-1)*this.nbLines + j];
+				hexagon.top = this.map[(i-1)*this.nbColumns + j];
+			}
+
+			// bot
+			if (i < this.nbLines - 1) {
+				hexagon.bot = this.map[(i+1)*this.nbColumns + j];
+			}
+
+			// topright
+			// topleft
+			// Column uneven -> line--
+			if ((j % 2) == 1) {
+				if (i > 0) {
+					if (j > 0) {
+					hexagon.topLeft = this.map[(i-1)*this.nbColumns + j-1];
+					}
+					if (j < this.nbColumns-1) {
+						hexagon.topRight = this.map[(i-1)*this.nbColumns + j+1];
+					}
+				}
+			} else {
 				if (j > 0) {
-					hexagon.topLeft = this.map[(i-1)*this.nbLines + j-1];
+					hexagon.topLeft = this.map[i*this.nbColumns + j-1];
 				}
 				if (j < this.nbColumns-1) {
-					hexagon.topRight = this.map[(i-1)*this.nbLines + j+1];
+					hexagon.topRight = this.map[i*this.nbColumns + j+1];
 				}
 			}
-			if (i < this.nbLines - 1) {
-				hexagon.bot = this.map[(i+1)*this.nbLines + j];
+			// botright
+			// botleft
+			// Column even -> line++
+			if ((j % 2) == 0) {
+				if (i < this.nbLines-1) {
+					if (j > 0) {
+						hexagon.botLeft = this.map[(i+1)*this.nbColumns + j-1];
+					}
+					if (j < this.nbColumns-1) {
+						hexagon.botRight = this.map[(i+1)*this.nbColumns + j+1];
+					}
+				}
+			} else {
 				if (j > 0) {
-					hexagon.botLeft = this.map[(i+1)*this.nbLines + j-1];
+					hexagon.botLeft = this.map[i*this.nbColumns + j-1];
 				}
 				if (j < this.nbColumns-1) {
-					hexagon.botRight = this.map[(i+1)*this.nbLines + j+1];
+					hexagon.botRight = this.map[i*this.nbColumns + j+1];
 				}
 			}
 
@@ -55,6 +89,8 @@ function MapConfiguration(nbLines, nbColumns) {
 			}
 		}
 	}
+
+	this.computeReachableHexagons();
 }
 
 MapConfiguration.prototype.getMap = function() {
@@ -67,4 +103,24 @@ MapConfiguration.prototype.getMapNbLines = function() {
 
 MapConfiguration.prototype.getMapNbColumns = function() {
 	return this.nbColumns;
+}
+
+MapConfiguration.prototype.computeReachableHexagons = function() {
+	// Search for character position
+	var charHexa;
+	for (let hexagon of this.map) {
+		if (hexagon.characterHere) {
+			charHexa = hexagon;
+			break;
+		}
+	}
+
+	var directions = ["top", "topRight", "topLeft", "bot", "botRight", "botLeft"];
+	for (let direction of directions) {
+		var nextHexagon = charHexa[direction];
+		while (nextHexagon != null && nextHexagon.type != "block") {
+			nextHexagon.isReachable = true;
+			nextHexagon = nextHexagon[direction];
+		}
+	}
 }

@@ -49,7 +49,13 @@ GraphicsEngine.prototype.draw = function() {
 			style = hexagon.type;
 			posX = j * (width + preComputedOffsetX);
 			posY = i * height;
-			this.ctx.drawImage(this.patterns.get(style), posX, posY);
+
+			if (hexagon.isReachable) {
+				this.ctx.drawImage(this.patterns.get("reachable"), posX, posY);
+			} else {
+				this.ctx.drawImage(this.patterns.get(style), posX, posY);
+			}
+
 			if (hexagon.characterHere) {
 				this.ctx.drawImage(this.characterPatterns.get("basic"), posX, posY);
 			}
