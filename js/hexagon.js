@@ -17,4 +17,8 @@ function Hexagon(type)
 	this.characterHere = false;
 	this.isReachable = false;
 	this.isPreselected = false;
+
+	// To avoid ton of calculation for each frame
+	this.x = -1;
+	this.y = -1;
 }

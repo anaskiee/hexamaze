@@ -21,13 +21,17 @@ window.addEventListener('DOMContentLoaded', function() {
 	canvas.width = width;
 	canvas.height = height;
 
-	var eventHandler = new EventHandler(canvas, width/2, height/2);
 	var width = 11;
 	var height = 6;
-	var map = new MapConfiguration(height, width);
-	var nbLines = map.getMapNbLines();
-	var nbColumns = map.getMapNbColumns();
-	var graphicsEngine = new GraphicsEngine(canvas, context, map.getMap(), nbLines, nbColumns, eventHandler);
+	var mapConfig = new MapConfiguration(height, width);
+	var map = mapConfig.getMap();
+	var nbLines = mapConfig.getMapNbLines();
+	var nbColumns = mapConfig.getMapNbColumns();
+	var physicsEngine = new PhysicsEngine(map);
+	var graphicsEngine = new GraphicsEngine(canvas, context, map, nbLines, nbColumns, eventHandler);
+	physicsEngine.applyMove("top");
+	
+	var eventHandler = new EventHandler(canvas, width/2, height/2, physicsEngine, graphicsEngine);
 
 	graphicsEngine.beginDrawing();
 

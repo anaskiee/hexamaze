@@ -89,8 +89,6 @@ function MapConfiguration(nbLines, nbColumns) {
 			}
 		}
 	}
-
-	this.computeReachableHexagons();
 }
 
 MapConfiguration.prototype.getMap = function() {
@@ -103,24 +101,4 @@ MapConfiguration.prototype.getMapNbLines = function() {
 
 MapConfiguration.prototype.getMapNbColumns = function() {
 	return this.nbColumns;
-}
-
-MapConfiguration.prototype.computeReachableHexagons = function() {
-	// Search for character position
-	var charHexa;
-	for (let hexagon of this.map) {
-		if (hexagon.characterHere) {
-			charHexa = hexagon;
-			break;
-		}
-	}
-
-	var directions = ["top", "topRight", "topLeft", "bot", "botRight", "botLeft"];
-	for (let direction of directions) {
-		var nextHexagon = charHexa[direction];
-		while (nextHexagon != null && nextHexagon.type != "block") {
-			nextHexagon.isReachable = true;
-			nextHexagon = nextHexagon[direction];
-		}
-	}
 }
