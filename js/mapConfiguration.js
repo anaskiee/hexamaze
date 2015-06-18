@@ -5,6 +5,8 @@ function MapConfiguration(nbLines, nbColumns) {
 	this.nbColumns = nbColumns + 2;
 	var characterLine = 3;
 	var characterColumn = 4;
+	var exitLine = 4;
+	var exitColumn = 5;
 
 	// Contstruct map
 	// Initialiaze block types
@@ -86,6 +88,9 @@ function MapConfiguration(nbLines, nbColumns) {
 			// Character positionning
 			if (i == characterLine && j == characterColumn) {
 				hexagon.characterHere = true;
+			}
+			if (i == exitLine && j == exitColumn) {
+				hexagon.exitHere = true;
 			}
 		}
 	}

@@ -20,18 +20,22 @@ PhysicsEngine.prototype.searchForCharacter = function() {
 PhysicsEngine.prototype.computeReachableHexagons = function() {
 	var directions = ["top", "topRight", "topLeft", "bot", "botRight", "botLeft"];
 	for (let direction of directions) {
-		var nextHexagon = this.characterHexagon[direction];
-		while (nextHexagon != null && nextHexagon.type != "block") {
+		var currHexagon = this.characterHexagon;
+		var nextHexagon = currHexagon[direction];
+		while (nextHexagon != null && nextHexagon.type != "block" && !currHexagon.exitHere) {
 			nextHexagon.isReachable = true;
+			currHexagon = nextHexagon;
 			nextHexagon = nextHexagon[direction];
 		}
 	}
 }
 
 PhysicsEngine.prototype.computeHexagonsTowardsDirection = function(direction) {
-	var nextHexagon = this.characterHexagon[direction];
-	while (nextHexagon != null && nextHexagon.type != "block") {
+	var currHexagon = this.characterHexagon;
+	var nextHexagon = currHexagon[direction];
+	while (nextHexagon != null && nextHexagon.type != "block" && !currHexagon.exitHere) {
 		nextHexagon.isPreselected = true;
+		currHexagon = nextHexagon;
 		nextHexagon = nextHexagon[direction];
 	}
 }
@@ -40,8 +44,8 @@ PhysicsEngine.prototype.applyMove = function(direction) {
 	this.cleanMap();
 
 	var currHexagon = this.characterHexagon;
-	var nextHexagon = this.characterHexagon[direction];
-	while (nextHexagon != null && nextHexagon.type != "block") {
+	var nextHexagon = currHexagon[direction];
+	while (nextHexagon != null && nextHexagon.type != "block" && !currHexagon.exitHere) {
 		currHexagon = nextHexagon;
 		nextHexagon = nextHexagon[direction];
 	}

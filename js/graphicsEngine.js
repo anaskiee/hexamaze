@@ -19,10 +19,11 @@ function GraphicsEngine(canvas, context, map, nbLines, nbColumns, eventHandler) 
 	this.patternWidth = this.patterns.get("block").width;
 	this.patternHeight = this.patterns.get("block").height;
 	this.characterPatterns = new CharacterPatterns(characterHeight, this.patternWidth, this.patternHeight);
+	var exitHeight = 25;
+	this.exitPatterns = new ExitPatterns(characterHeight, this.patternWidth, this.patternHeight);
 
+	// Pre computation of each hexagons position for the drawing
 	this.computeHexagonCoordinates();
-
-	this.gui = new Gui(50, 90, 120, this.patterns);
 }
 
 GraphicsEngine.prototype.beginDrawing = function() {
@@ -42,6 +43,10 @@ GraphicsEngine.prototype.draw = function() {
 		posX = hexagon.x;
 		posY = hexagon.y;
 		
+		if (hexagon.exitHere) {
+			this.ctx.drawImage(this.exitPatterns.get("basic"), posX, posY);
+		}
+
 		if (hexagon.characterHere) {
 			// Draw character
 			this.ctx.drawImage(this.characterPatterns.get("basic"), posX, posY);
