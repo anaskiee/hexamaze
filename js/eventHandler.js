@@ -10,6 +10,7 @@ function EventHandler(canvas, initX, initY, physicsEngine, graphicsEngine) {
 	this.charX = -1;
 	this.charY = -1;
 	this.updateCharacterCoordinates();
+	this.direction = "top";
 
 	canvas.addEventListener("touchmove", this.handleTouch.bind(this), false);
 	canvas.addEventListener("mousemove", this.handleMouse.bind(this), false);
@@ -29,11 +30,18 @@ EventHandler.prototype.handleTouch = function(event, isMouse) {
 		this.y = event.touches[0].pageY;
 	}
 
-	this.computeDirection();
+	var direction = this.computeDirection();
+	if (direction != this.direction) {
+		this.direction = direction;
+		this.physicsEngine.cleanPreselectedHexagons();
+		this.physicsEngine.computeHexagonsTowardsDirection(this.direction);
+
+		this.graphicsEngine.updateDirection(this.direction);
+	}
 }
 
 EventHandler.prototype.handleClick = function(event) {
-	this.physicsEngine.applyMove(this.computeDirection());
+	this.physicsEngine.applyMove(this.direction);
 	this.updateCharacterCoordinates();
 }
 

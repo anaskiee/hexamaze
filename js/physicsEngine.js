@@ -28,6 +28,14 @@ PhysicsEngine.prototype.computeReachableHexagons = function() {
 	}
 }
 
+PhysicsEngine.prototype.computeHexagonsTowardsDirection = function(direction) {
+	var nextHexagon = this.characterHexagon[direction];
+	while (nextHexagon != null && nextHexagon.type != "block") {
+		nextHexagon.isPreselected = true;
+		nextHexagon = nextHexagon[direction];
+	}
+}
+
 PhysicsEngine.prototype.applyMove = function(direction) {
 	this.cleanMap();
 
@@ -47,5 +55,12 @@ PhysicsEngine.prototype.cleanMap = function() {
 	for (let hexagon of this.map) {
 		hexagon.isReachable = false;
 		hexagon.characterHere = false;
+		hexagon.isPreselected = false;
+	}
+}
+
+PhysicsEngine.prototype.cleanPreselectedHexagons = function() {
+	for (let hexagon of this.map) {
+		hexagon.isPreselected = false;
 	}
 }

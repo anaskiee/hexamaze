@@ -9,24 +9,25 @@ function HexagonPatterns(radius) {
 	this.drawings = new Map();
 	this.preRenderDrawing("space", "");
 	this.preRenderDrawing("space", "top");
-	this.preRenderDrawing("space", "topleft");
-	this.preRenderDrawing("space", "topright");
+	this.preRenderDrawing("space", "topLeft");
+	this.preRenderDrawing("space", "topRight");
 	this.preRenderDrawing("space", "bot");
-	this.preRenderDrawing("space", "botleft");
-	this.preRenderDrawing("space", "botright");
+	this.preRenderDrawing("space", "botLeft");
+	this.preRenderDrawing("space", "botRight");
 	this.preRenderDrawing("block", "");
 	this.preRenderDrawing("reachable", "");
+	this.preRenderDrawing("highlight", "");
 }
 
 HexagonPatterns.prototype.computeDirectionAngles = function(direction) {
 	let i;
-	if (direction == "botright") {
+	if (direction == "botRight") {
 		i = 0;
 	} else if (direction == "bot") {
 		i = 1;
-	} else if (direction == "botleft") {
+	} else if (direction == "botLeft") {
 		i = 2
-	} else if (direction == "topleft") {
+	} else if (direction == "topLeft") {
 		i = 3
 	} else if (direction == "top") {
 		i = 4
@@ -81,6 +82,9 @@ HexagonPatterns.prototype.preRenderDrawing = function(mainStyle, advancedStyle) 
 		ctx.fill();
 	} else if (mainStyle == "reachable") {
 		ctx.fillStyle = "rgba(120, 120, 120, 0.3)";
+		ctx.fill();
+	} else if (mainStyle == "highlight") {
+		ctx.fillStyle = "rgba(200, 200, 200, 0.3)";
 		ctx.fill();
 	}
 	ctx.strokeStyle = "#AAAAAA";
