@@ -23,38 +23,38 @@ EventHandler.prototype.handleMouse = function(event) {
 }
 
 EventHandler.prototype.handleKey = function(event) {
-	var directionsBot = ["botLeft", "bot", "botRight"];
-	var directionsTop = ["topLeft", "top", "topRight"];
-	var directions;
-	if (directionsBot.indexOf(this.direction) == -1) {
-		directions = directionsTop;
-	} else {
-		directions = directionsBot;
-	}
-
+	var changed = false;
 	switch (event.code) {
-		case "Space":
+		case "Enter":
 			this.handleClick();
 			break;
-		case "ArrowLeft":
-			var currIdx = directions.indexOf(this.direction);
-			var idx = (directions.indexOf(this.direction) - 1 + 3) % 3;
-			this.direction = directions[idx];
+		case "KeyQ":
+			this.direction = "topLeft";
+			changed = true;
 			break;
-		case "ArrowRight":
-			var currIdx = directions.indexOf(this.direction);
-			var idx = (directions.indexOf(this.direction) + 1) % 3;
-			this.direction = directions[idx];
-			break;
-		case "ArrowUp":
+		case "KeyW":
 			this.direction = "top";
+			changed = true;
 			break;
-		case "ArrowDown":
+		case "KeyE":
+			this.direction = "topRight";
+			changed = true;
+			break;
+		case "KeyA":
+			this.direction = "botLeft";
+			changed = true;
+			break;
+		case "KeyS":
 			this.direction = "bot";
+			changed = true;
+			break;
+		case "KeyD":
+			this.direction = "botRight";
+			changed = true;
 			break;
 	}
 
-	if (event.key == "ArrowDown" || event.key == "ArrowUp" || event.key == "ArrowRight" || event.key == "ArrowLeft") {
+	if (changed) {
 		this.physicsEngine.cleanPreselectedHexagons();
 		this.physicsEngine.computeHexagonsTowardsDirection(this.direction);
 
