@@ -14,11 +14,52 @@ function EventHandler(canvas, initX, initY, physicsEngine, graphicsEngine) {
 
 	canvas.addEventListener("touchmove", this.handleTouch.bind(this), false);
 	canvas.addEventListener("mousemove", this.handleMouse.bind(this), false);
+	canvas.addEventListener("keypress", this.handleKey.bind(this), false);
 	canvas.addEventListener("click", this.handleClick.bind(this), false);
 } 
 
 EventHandler.prototype.handleMouse = function(event) {
 	this.handleTouch(event, true);
+}
+
+EventHandler.prototype.handleKey = function(event) {
+	var directionsBot = ["botLeft", "bot", "botRight"];
+	var directionsTop = ["topLeft", "top", "topRight"];
+	var directions;
+	if (directionsBot.indexOf(this.direction) == -1) {
+		directions = directionsTop;
+	} else {
+		directions = directionsBot;
+	}
+
+	switch (event.code) {
+		case "Space":
+			this.handleClick();
+			break;
+		case "ArrowLeft":
+			var currIdx = directions.indexOf(this.direction);
+			var idx = (directions.indexOf(this.direction) - 1 + 3) % 3;
+			this.direction = directions[idx];
+			break;
+		case "ArrowRight":
+			var currIdx = directions.indexOf(this.direction);
+			var idx = (directions.indexOf(this.direction) + 1) % 3;
+			this.direction = directions[idx];
+			break;
+		case "ArrowUp":
+			this.direction = "top";
+			break;
+		case "ArrowDown":
+			this.direction = "bot";
+			break;
+	}
+
+	if (event.key == "ArrowDown" || event.key == "ArrowUp" || event.key == "ArrowRight" || event.key == "ArrowLeft") {
+		this.physicsEngine.cleanPreselectedHexagons();
+		this.physicsEngine.computeHexagonsTowardsDirection(this.direction);
+
+		this.graphicsEngine.updateDirection(this.direction);
+	}
 }
 
 EventHandler.prototype.handleTouch = function(event, isMouse) {

@@ -9,6 +9,7 @@ window.addEventListener('DOMContentLoaded', function() {
 		alert("Impossible to get the main canvas");
 		return;
 	}
+	canvas.focus();
 
 	var context = canvas.getContext("2d");
 	if (!context) {
