@@ -81,7 +81,7 @@ HexagonPatterns.prototype.preRenderDrawing = function(mainStyle, advancedStyle) 
 		ctx.fillStyle = "#666666";
 		ctx.fill();
 	} else if (mainStyle == "reachable") {
-		ctx.fillStyle = "rgba(120, 120, 120, 0.3)";
+		ctx.fillStyle = "rgba(120, 120, 120, 0.1)";
 		ctx.fill();
 	} else if (mainStyle == "highlight") {
 		ctx.fillStyle = "rgba(200, 200, 200, 0.3)";

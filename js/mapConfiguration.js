@@ -94,6 +94,8 @@ function MapConfiguration(nbLines, nbColumns) {
 			}
 		}
 	}
+
+	this.randomize(15);
 }
 
 MapConfiguration.prototype.getMap = function() {
@@ -106,4 +108,21 @@ MapConfiguration.prototype.getMapNbLines = function() {
 
 MapConfiguration.prototype.getMapNbColumns = function() {
 	return this.nbColumns;
+}
+
+MapConfiguration.prototype.randomize = function(blockPercent) {
+	var limit = blockPercent / 100;
+	var hexagon;
+	var idx;
+	for (let i = 1; i < this.nbLines-1; i++) {
+		for (let j = 1; j < this.nbColumns-1; j++) {
+			idx = i*this.nbColumns + j;
+			hexagon = this.map[idx];
+			if (hexagon.type == "space" && !hexagon.characterHere && !hexagon.exitHere) {
+				if (Math.random() < limit) {
+					hexagon.type = "block";
+				}
+			}
+		}
+	}
 }
