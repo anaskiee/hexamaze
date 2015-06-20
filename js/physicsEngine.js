@@ -5,7 +5,6 @@ function PhysicsEngine(map) {
 	this.characterHexagon = null;
 
 	this.searchForCharacter();
-	this.computeReachableHexagons();
 }
 
 PhysicsEngine.prototype.searchForCharacter = function() {
@@ -51,15 +50,18 @@ PhysicsEngine.prototype.applyMove = function(direction) {
 	}
 	this.characterHexagon = currHexagon;
 	this.characterHexagon.characterHere = true;
-
-	this.computeReachableHexagons();
 }
 
 PhysicsEngine.prototype.cleanMap = function() {
 	for (let hexagon of this.map) {
-		hexagon.isReachable = false;
 		hexagon.characterHere = false;
 		hexagon.isPreselected = false;
+	}
+}
+
+PhysicsEngine.prototype.cleanHighlight = function() {
+	for (let hexagon of this.map) {
+		hexagon.isReachable = false;
 	}
 }
 

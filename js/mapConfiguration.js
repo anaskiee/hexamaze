@@ -113,18 +113,16 @@ MapConfiguration.prototype.randomize = function(blockPercent) {
 	var hexagon;
 	var idx;
 
-	var x,y;
 	// Character
-	x = Math.floor(Math.random() * (this.nbColumns - 2)) + 1;
-	y = Math.floor(Math.random() * (this.nbLines - 2)) + 1;
-	idx = y*this.nbColumns + x;
-	this.map[idx].characterHere = true;
+	var characterHexagon = this.getRandomHexagon();
+	characterHexagon.characterHere = true;
 	
 	// Exit
-	x = Math.floor(Math.random() * (this.nbColumns - 2)) + 1;
-	y = Math.floor(Math.random() * (this.nbLines - 2)) + 1;
-	idx = y*this.nbColumns + x;
-	this.map[idx].exitHere = true;
+	var exitHexagon = this.getRandomHexagon();
+	while (exitHexagon == characterHexagon) {
+		var exitHexagon = this.getRandomHexagon();
+	}
+	exitHexagon.exitHere = true;
 
 	// Blocks
 	for (let i = 1; i < this.nbLines-1; i++) {
@@ -138,4 +136,10 @@ MapConfiguration.prototype.randomize = function(blockPercent) {
 			}
 		}
 	}
+}
+
+MapConfiguration.prototype.getRandomHexagon = function() {
+	var x = Math.floor(Math.random() * (this.nbColumns - 2)) + 1;
+	var y = Math.floor(Math.random() * (this.nbLines - 2)) + 1;
+	return this.map[y*this.nbColumns + x];
 }

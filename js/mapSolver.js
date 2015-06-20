@@ -2,37 +2,81 @@
 
 function MapSolver(map) {
 	this.map = map
+	this.solution = null;
+}
+
+MapSolver.prototype.getCharacterHexagon = function() {
+	for (let hexagon of this.map) {
+		if (hexagon.characterHere) {
+			return hexagon;
+		}
+	}
+}
+
+MapSolver.prototype.getExitHexagon = function() {
+	for (let hexagon of this.map) {
+		if (hexagon.exitHere) {
+			return hexagon;
+		}
+	}
+}
+
+MapSolver.prototype.getMin = function() {
+	if (this.solution == null) {
+		this.solution = this.solve();
+	}
+	if (this.solution == "undefined") {
+		return 9000;
+	}
+	var exitHexagon = this.getExitHexagon();
+	return this.solution.get(exitHexagon).depth;
+}
+
+MapSolver.prototype.highlightSolution = function() {
+	if (this.solution == null) {
+		this.solution = this.solve();
+	}
+	if (this.solution == "undefined") {
+		// no solution
+		return;
+	}
+	var exitHexagon = this.getExitHexagon();
+
+	var currHexagon = exitHexagon;
+	var nextHexagon, direction;
+	while (!currHexagon.characterHere) {
+		nextHexagon = this.solution.get(currHexagon).prevHexagon;
+		direction = this.solution.get(currHexagon).direction;
+		while (currHexagon != nextHexagon) {
+			currHexagon.isReachable = true;
+			currHexagon = currHexagon[direction];
+		}
+	} 
 }
 
 MapSolver.prototype.solve = function() {
-	// Find character
-	var characterHexagon;
-	for (let hexagon of this.map) {
-		if (hexagon.characterHere) {
-			characterHexagon = hexagon;
-			break;
-		}
-	}
+	var characterHexagon = this.getCharacterHexagon();
 
-	var directions = ["top", "topLeft", "topRight", "bot", "botLeft", "botRight"];
+	var directions = ["top", "topLeft", "topRight", "bot", "botRight", "botLeft"];
 	var toExplore = [characterHexagon];
 	var solution = new Map();
-	solution.set(characterHexagon, {prevHexagon : null, depth : 0});
+	solution.set(characterHexagon, {prevHexagon : null, depth : 0, direction : ""});
 	while (toExplore.length > 0) {
 		let hexagon = toExplore.shift();
 		let depth = solution.get(hexagon).depth;
 		for (let direction of directions) {
+			let oppositeDirection = directions[(directions.indexOf(direction) + 3) % 6];
 			let nextHexagon = this.computeNextHexagon(hexagon, direction);
-			nextHexagon.isReachable = true;
 			if (!solution.has(nextHexagon)) {
-				solution.set(nextHexagon, {prevHexagon : hexagon, depth : depth + 1});
+				solution.set(nextHexagon, {prevHexagon : hexagon, depth : depth + 1, direction : oppositeDirection});
 				if (nextHexagon.exitHere) {
-					return depth + 1;
+					return solution;
 				}
 				toExplore.push(nextHexagon);
 			}
 		}
-	}	
+	}
+	return "undefined";
 }
 
 MapSolver.prototype.computeNextHexagon = function(hexagon, direction) {

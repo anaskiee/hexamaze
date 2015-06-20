@@ -1,11 +1,12 @@
 "use strict";
 
-function EventHandler(canvas, initX, initY, physicsEngine, graphicsEngine) {
+function EventHandler(canvas, initX, initY, physicsEngine, graphicsEngine, solver) {
 	// Positions when event is received
 	this.x = initX;
 	this.y = initY;
 	this.physicsEngine = physicsEngine;
 	this.graphicsEngine = graphicsEngine;
+	this.solver = solver;
 	
 	this.charX = -1;
 	this.charY = -1;
@@ -52,6 +53,13 @@ EventHandler.prototype.handleKey = function(event) {
 			this.direction = "botRight";
 			changed = true;
 			break;
+		case "KeyH":
+			this.solver.highlightSolution();
+			break;
+		case "KeyC":
+			this.physicsEngine.cleanHighlight();
+			break;
+
 	}
 
 	if (changed) {
