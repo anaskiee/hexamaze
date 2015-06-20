@@ -14,9 +14,7 @@ function MapConfiguration(nbLines, nbColumns) {
 	for (let i = 0; i < this.nbLines; i++) {
 		for (let j = 0; j < this.nbColumns; j++) {
 			let idx = i*this.nbColumns + j;
-			if (i == 1 && j == 1 || i == 1 && j == this.nbColumns-2) {
-				this.map[idx] = new Hexagon("block");
-			} else if (i == 0 || j == 0 || i == this.nbLines-1 || j == this.nbColumns-1) {
+			if (i == 0 || j == 0 || i == this.nbLines-1 || j == this.nbColumns-1) {
 				this.map[idx] = new Hexagon("block");
 			} else {
 				this.map[idx] = new Hexagon("space");
@@ -85,13 +83,13 @@ function MapConfiguration(nbLines, nbColumns) {
 				}
 			}
 
-			// Character positionning
+/*			// Character positionning
 			if (i == characterLine && j == characterColumn) {
 				hexagon.characterHere = true;
 			}
 			if (i == exitLine && j == exitColumn) {
 				hexagon.exitHere = true;
-			}
+			}*/
 		}
 	}
 
@@ -114,6 +112,21 @@ MapConfiguration.prototype.randomize = function(blockPercent) {
 	var limit = blockPercent / 100;
 	var hexagon;
 	var idx;
+
+	var x,y;
+	// Character
+	x = Math.floor(Math.random() * (this.nbColumns - 2)) + 1;
+	y = Math.floor(Math.random() * (this.nbLines - 2)) + 1;
+	idx = y*this.nbColumns + x;
+	this.map[idx].characterHere = true;
+	
+	// Exit
+	x = Math.floor(Math.random() * (this.nbColumns - 2)) + 1;
+	y = Math.floor(Math.random() * (this.nbLines - 2)) + 1;
+	idx = y*this.nbColumns + x;
+	this.map[idx].exitHere = true;
+
+	// Blocks
 	for (let i = 1; i < this.nbLines-1; i++) {
 		for (let j = 1; j < this.nbColumns-1; j++) {
 			idx = i*this.nbColumns + j;

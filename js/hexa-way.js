@@ -22,17 +22,17 @@ window.addEventListener('DOMContentLoaded', function() {
 	canvas.width = width;
 	canvas.height = height;
 
-	var width = 11;
-	var height = 6;
+	var width = 15;
+	var height = 7;
 	var mapConfig = new MapConfiguration(height, width);
 	var map = mapConfig.getMap();
 	var nbLines = mapConfig.getMapNbLines();
 	var nbColumns = mapConfig.getMapNbColumns();
 	var physicsEngine = new PhysicsEngine(map);
 	var graphicsEngine = new GraphicsEngine(canvas, context, map, nbLines, nbColumns, eventHandler);
-	physicsEngine.applyMove("top");
-	
 	var eventHandler = new EventHandler(canvas, width/2, height/2, physicsEngine, graphicsEngine);
+	var solver = new MapSolver(map);
+	console.log(solver.solve());
 
 	graphicsEngine.beginDrawing();
 
