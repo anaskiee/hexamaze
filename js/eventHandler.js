@@ -13,19 +13,63 @@ function EventHandler(canvas, initX, initY, physicsEngine, graphicsEngine, solve
 	this.updateCharacterCoordinates();
 	this.direction = "top";
 
+	// A first fake event is pushed to force display
+	this.events = [];
+	this.events.push({type : "I"});
+
 	canvas.addEventListener("touchmove", this.handleTouch.bind(this), false);
 	canvas.addEventListener("mousemove", this.handleMouse.bind(this), false);
 	canvas.addEventListener("keypress", this.handleKey.bind(this), false);
 	canvas.addEventListener("click", this.handleClick.bind(this), false);
-} 
+}
 
+// Functions to catch events in order to apply them asynchronously
 EventHandler.prototype.handleMouse = function(event) {
-	this.handleTouch(event, true);
+	this.events.push({type : "M", x : event.pageX, y : event.pageY});
 }
 
 EventHandler.prototype.handleKey = function(event) {
+	this.events.push({type : "K", key : event.code});
+}
+
+EventHandler.prototype.handleTouch = function(event, isMouse) {
+	this.events.push({type : "T", x : event.touches[0].pageX, y : event.touches[0].pageY});
+}
+
+EventHandler.prototype.handleClick = function(event) {
+	this.events.push({type : "C"});
+}
+
+// Functions to apply events before drawing
+EventHandler.prototype.applyEvents = function() {
+	var e;
+	var updateNeeded = false;
+	while (this.events.length > 0) {
+		updateNeeded = true;
+		e = this.events.shift();
+		switch (e.type) {
+			case "M":
+				this.applyNewCursorPosition(e.x, e.y);
+				break;
+			case "K":
+				this.applyKeyEvent(e.key);
+				break;
+			case "T":
+				this.applyNewCursorPosition(e.x, e.y);
+				break;
+			case "C":
+				this.applyClickEvent();
+				break;
+			case "I":
+				break;
+		}
+	}
+	return updateNeeded;
+}
+
+EventHandler.prototype.applyKeyEvent = function(key) {
 	var changed = false;
-	switch (event.code) {
+	switch (key) {
 		case "Enter":
 			this.handleClick();
 			break;
@@ -70,14 +114,9 @@ EventHandler.prototype.handleKey = function(event) {
 	}
 }
 
-EventHandler.prototype.handleTouch = function(event, isMouse) {
-	if (isMouse) {
-		this.x = event.pageX;
-		this.y = event.pageY;
-	} else {
-		this.x = event.touches[0].pageX;
-		this.y = event.touches[0].pageY;
-	}
+EventHandler.prototype.applyNewCursorPosition = function(x, y) {
+	this.x = x;
+	this.y = y;
 
 	var direction = this.computeDirection();
 	if (direction != this.direction) {
@@ -89,11 +128,12 @@ EventHandler.prototype.handleTouch = function(event, isMouse) {
 	}
 }
 
-EventHandler.prototype.handleClick = function(event) {
+EventHandler.prototype.applyClickEvent = function() {
 	this.physicsEngine.applyMove(this.direction);
 	this.updateCharacterCoordinates();
 }
 
+// Others functions
 EventHandler.prototype.updateCharacterCoordinates= function() {
 	var characterCoordinates = this.graphicsEngine.computeCharacterCoordinates();
 	this.charX = characterCoordinates.x;

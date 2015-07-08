@@ -4,9 +4,10 @@ window.addEventListener('DOMContentLoaded', function() {
 
 	screen.mozlockOrientation = "landscape-secondary";
 
-	var canvas = document.getElementById("main");
+	// Get man canvas
+	var canvas = document.getElementById("map");
 	if (!canvas) {
-		alert("Impossible to get the main canvas");
+		alert("Impossible to get the map canvas");
 		return;
 	}
 	canvas.focus();
@@ -22,11 +23,17 @@ window.addEventListener('DOMContentLoaded', function() {
 	canvas.width = width;
 	canvas.height = height;
 
+	// Get end game menu canvas;
+	var igCanvas = document.getElementById("igMenu");
+	var igContext = igCanvas.getContext("2d");
+	igCanvas.width = width/2;
+	igCanvas.height = height/2;
+
 	var width = 15;
 	var height = 7;
 	
 	var difficulty = 9000;
-	while (difficulty < 13 || difficulty == 9000) {
+	while (difficulty < 10 || difficulty == 9000) {
 		var mapConfig = new MapConfiguration(height, width);
 		var map = mapConfig.getMap();
 		var solver = new MapSolver(map);
@@ -39,8 +46,10 @@ window.addEventListener('DOMContentLoaded', function() {
 	var nbColumns = mapConfig.getMapNbColumns();
 	var physicsEngine = new PhysicsEngine(map);
 	var graphicsEngine = new GraphicsEngine(canvas, context, map, nbLines, nbColumns, eventHandler);
+	var ingameMenu = new IngameMenu(igCanvas, igContext);
 	var eventHandler = new EventHandler(canvas, width/2, height/2, physicsEngine, graphicsEngine, solver);
+	var displayManager = new DisplayManager(eventHandler, graphicsEngine, ingameMenu);
 
-	graphicsEngine.beginDrawing();
+	displayManager.beginDrawing();
 
 });

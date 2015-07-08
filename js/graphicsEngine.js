@@ -26,13 +26,7 @@ function GraphicsEngine(canvas, context, map, nbLines, nbColumns, eventHandler) 
 	this.computeHexagonCoordinates();
 }
 
-GraphicsEngine.prototype.beginDrawing = function() {
-	this.draw();
-}
-
 GraphicsEngine.prototype.draw = function() {
-	requestAnimationFrame(this.draw.bind(this));
-
 	// Clean screen
 	this.ctx.fillStyle = "#003333";
 	this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
