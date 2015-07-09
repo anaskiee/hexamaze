@@ -1,20 +1,47 @@
 "use strict";
 
-function EventStack(physicsEngine, graphicsEngine, displayManager, solver) {
+function Master(physicsEngine, graphicsEngine, ingameMenu, solver) {
 	this.physicsEngine = physicsEngine;
 	this.graphicsEngine = graphicsEngine;
-	this.displayManager = displayManager;
+	this.ingameMenu = ingameMenu;
 	this.solver = solver;
+	
+	this.mainMenu = false;
+	this.ingame = true;
+	this.ingameMenu = true;
 
 	this.events = [];
 }
 
-EventStack.prototype.push = function(event) {
+
+// +--------------------------+
+// |    Drawing management    |
+// +--------------------------+
+
+Master.prototype.beginDrawing = function() {
+	this.draw();
+}
+
+Master.prototype.draw = function() {
+	requestAnimationFrame(this.draw.bind(this));
+
+	if (this.applyEvents()) {
+		this.graphicsEngine.draw();
+		this.ingameMenu.draw();
+	}
+}
+
+
+// +----------------------+
+// |   Events managment   |
+// +----------------------+
+
+Master.prototype.push = function(event) {
 	this.events.push(event);
 }
 
 // Functions to apply events before drawing
-EventStack.prototype.applyEvents = function() {
+Master.prototype.applyEvents = function() {
 	var e;
 	var updateNeeded = false;
 	while (this.events.length > 0) {
@@ -43,7 +70,7 @@ EventStack.prototype.applyEvents = function() {
 	return updateNeeded;
 }
 
-EventStack.prototype.applyKeyEvent = function(key) {
+Master.prototype.applyKeyEvent = function(key) {
 	var changed = false;
 	switch (key) {
 		case "Enter":
@@ -90,7 +117,7 @@ EventStack.prototype.applyKeyEvent = function(key) {
 	}
 }
 
-EventStack.prototype.applyNewCursorPosition = function(x, y) {
+Master.prototype.applyNewCursorPosition = function(x, y) {
 	this.x = x;
 	this.y = y;
 
@@ -104,22 +131,22 @@ EventStack.prototype.applyNewCursorPosition = function(x, y) {
 	}
 }
 
-EventStack.prototype.applyClickEvent = function() {
+Master.prototype.applyClickEvent = function() {
 	this.physicsEngine.applyMove(this.direction);
 	this.updateCharacterCoordinates();
 }
 
-EventStack.prototype.applyDragEvent = function() {
+Master.prototype.applyDragEvent = function() {
 }
 
 // Others functions
-EventStack.prototype.updateCharacterCoordinates= function() {
+Master.prototype.updateCharacterCoordinates= function() {
 	var characterCoordinates = this.graphicsEngine.computeCharacterCoordinates();
 	this.charX = characterCoordinates.x;
 	this.charY = characterCoordinates.y;
 }
 
-EventStack.prototype.computeDirection = function() {
+Master.prototype.computeDirection = function() {
 	var theta = Math.atan((this.y - this.charY) / (this.x - this.charX));
 	if (this.x - this.charX < 0) {
 		theta += Math.PI;
