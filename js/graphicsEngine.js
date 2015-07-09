@@ -1,12 +1,11 @@
 "use strict";
 
-function GraphicsEngine(canvas, context, map, nbLines, nbColumns, eventHandler) {
+function GraphicsEngine(canvas, context, map, nbLines, nbColumns) {
 	this.canvas = canvas;
 	this.ctx = context;
 	this.map = map;
 	this.nbLines = nbLines;
 	this.nbColumns = nbColumns;
-	this.eventHandler = eventHandler;
 
 	// Direction given by eventHandler
 	this.direction = "top";

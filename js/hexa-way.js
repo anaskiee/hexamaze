@@ -47,8 +47,9 @@ window.addEventListener('DOMContentLoaded', function() {
 	var physicsEngine = new PhysicsEngine(map);
 	var graphicsEngine = new GraphicsEngine(canvas, context, map, nbLines, nbColumns, eventHandler);
 	var ingameMenu = new IngameMenu(igCanvas, igContext);
-	var eventHandler = new EventHandler(canvas, width/2, height/2, physicsEngine, graphicsEngine, solver);
-	var displayManager = new DisplayManager(eventHandler, graphicsEngine, ingameMenu);
+	var eventStack = new EventStack(physicsEngine, graphicsEngine, null, solver);
+	var eventHandler = new EventHandler(canvas, width/2, height/2, igCanvas, eventStack);
+	var displayManager = new DisplayManager(eventStack, graphicsEngine, ingameMenu);
 
 	displayManager.beginDrawing();
 
