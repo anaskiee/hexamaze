@@ -1,12 +1,27 @@
 "use strict";
 
-function IngameMenu(canvas, context) {
+function IngameMenu(canvas, context, screenWidth, screenHeight) {
 	this.canvas = canvas;
 	this.ctx = context;
+	this.screenWidth = screenWidth;
+	this.screenHeight = screenHeight;
 
 	this.canvas.style.position = "absolute";
-	this.canvas.style.left = "30px";
-	this.canvas.style.top = "-" + 0.97*this.canvas.height + "px";
+	this.reduce();
+}
+
+IngameMenu.prototype.reduce = function() {
+	var left = (this.screenWidth - this.canvas.width) / 2;
+	var top = -0.97*this.canvas.height;
+	this.canvas.style.left = left + "px";
+	this.canvas.style.top = top + "px";
+}
+
+IngameMenu.prototype.expand = function() {
+	var left = (this.screenWidth - this.canvas.width) / 2;
+	var top = (this.screenHeight - this.canvas.height) / 2;
+	this.canvas.style.left = left + "px";
+	this.canvas.style.top = top + "px";
 }
 
 IngameMenu.prototype.draw = function() {

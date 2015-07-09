@@ -6,9 +6,9 @@ function Master(physicsEngine, graphicsEngine, ingameMenu, solver) {
 	this.ingameMenu = ingameMenu;
 	this.solver = solver;
 	
-	this.mainMenu = false;
-	this.ingame = true;
-	this.ingameMenu = true;
+	this.mainMenuDisplayed = false;
+	this.gameDisplayed = true;
+	this.ingameMenuDisplayed = true;
 
 	this.events = [];
 }
@@ -31,6 +31,19 @@ Master.prototype.draw = function() {
 	}
 }
 
+
+// +----------------------+
+// |   States managment   |
+// +----------------------+
+
+Master.prototype.switchIngameMenuState = function() {
+	this.ingameMenuDisplayed = !this.ingameMenuDisplayed;
+	if (this.ingameMenuDisplayed) {
+		this.ingameMenu.expand();
+	} else {
+		this.ingameMenu.reduce();
+	}
+}
 
 // +----------------------+
 // |   Events managment   |
@@ -74,7 +87,7 @@ Master.prototype.applyKeyEvent = function(key) {
 	var changed = false;
 	switch (key) {
 		case "Enter":
-			this.handleClick();
+			this.applyClickEvent();
 			break;
 		case "KeyQ":
 			this.direction = "topLeft";
@@ -137,6 +150,7 @@ Master.prototype.applyClickEvent = function() {
 }
 
 Master.prototype.applyDragEvent = function() {
+	this.switchIngameMenuState();
 }
 
 // Others functions
