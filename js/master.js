@@ -26,12 +26,12 @@ Master.prototype.draw = function() {
 	requestAnimationFrame(this.draw.bind(this));
 
 	var date = new Date();
-	if (this.applyEvents()) {
+	if (this.applyEvents() || !this.ingameMenu.animationEnded) {
 		if (this.gameDisplayed) {
 			this.graphicsEngine.draw();
 		}
 		if (this.ingameMenu) {
-			this.ingameMenu.draw(1);
+			this.ingameMenu.draw(date);
 		}
 	}
 }
@@ -44,9 +44,9 @@ Master.prototype.draw = function() {
 Master.prototype.switchIngameMenuState = function() {
 	this.ingameMenuDisplayed = !this.ingameMenuDisplayed;
 	if (this.ingameMenuDisplayed) {
-		this.ingameMenu.expand();
+		this.ingameMenu.expand(new Date());
 	} else {
-		this.ingameMenu.reduce();
+		this.ingameMenu.reduce(new Date());
 	}
 }
 
