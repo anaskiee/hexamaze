@@ -19,4 +19,5 @@ p {
 
 canvas {
 	display: block;
+	outline: 0;
 }

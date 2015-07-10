@@ -8,7 +8,7 @@ function Master(physicsEngine, graphicsEngine, ingameMenu, solver) {
 	
 	this.mainMenuDisplayed = false;
 	this.gameDisplayed = true;
-	this.ingameMenuDisplayed = true;
+	this.ingameMenuDisplayed = false;
 
 	this.events = [];
 }
@@ -25,9 +25,14 @@ Master.prototype.beginDrawing = function() {
 Master.prototype.draw = function() {
 	requestAnimationFrame(this.draw.bind(this));
 
+	var date = new Date();
 	if (this.applyEvents()) {
-		this.graphicsEngine.draw();
-		this.ingameMenu.draw();
+		if (this.gameDisplayed) {
+			this.graphicsEngine.draw();
+		}
+		if (this.ingameMenu) {
+			this.ingameMenu.draw(1);
+		}
 	}
 }
 
@@ -118,6 +123,9 @@ Master.prototype.applyKeyEvent = function(key) {
 			break;
 		case "KeyC":
 			this.physicsEngine.cleanHighlight();
+			break;
+		case "Escape":
+			this.switchIngameMenuState();
 			break;
 
 	}

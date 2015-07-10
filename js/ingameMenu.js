@@ -24,27 +24,29 @@ IngameMenu.prototype.expand = function() {
 	this.canvas.style.top = top + "px";
 }
 
-IngameMenu.prototype.draw = function() {
-	this.ctx.fillStyle = "#AAAAAA";
-	this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+IngameMenu.prototype.draw = function(factor) {
+	var l = factor*0.7*this.canvas.width;
+	var h = 0.9*this.canvas.height;
+	var x = h / 2 / Math.sqrt(3);
 
-	var l = this.canvas.height/3;
-	var h = Math.sqrt(3)/6*this.canvas.height;
 	this.ctx.save();
-	this.ctx.translate(this.canvas.width/2, this.canvas.height/2);
+	this.ctx.translate(this.canvas.width/2+0.5, this.canvas.height/2);
 
-	this.ctx.fillStyle = "#333333";
-	this.ctx.fillRect(-l/2, -h/2, l, h);
-
-	this.ctx.beginPath();
-	this.ctx.moveTo(-l/2, -h);
-	this.ctx.lineTo(l/2, -h);
-	this.ctx.lineTo(l/2 + h, 0);
-	this.ctx.lineTo(l/2, h);
-	this.ctx.lineTo(-l/2, h);
-	this.ctx.lineTo(-l/2 + -h, 0);
-	this.ctx.closePath();
-	this.ctx.fill();
+	this.drawDistortedHexagon(this.ctx, l, h, x, "#FFFFFF");
+	this.drawDistortedHexagon(this.ctx, 0.994*l, 0.98*h, 0.98*x, "#555555");
 
 	this.ctx.restore();
+}
+
+IngameMenu.prototype.drawDistortedHexagon = function(ctx, l, h, x, color) {
+	ctx.beginPath();
+	ctx.moveTo(-l/2 - x, 0);
+	ctx.lineTo(-l/2, -h/2);
+	ctx.lineTo(l/2, -h/2);
+	ctx.lineTo(l/2 + x, 0);
+	ctx.lineTo(l/2, h/2);
+	ctx.lineTo(-l/2, h/2);
+	ctx.closePath();
+	ctx.fillStyle = color;
+	ctx.fill();
 }

@@ -10,7 +10,6 @@ window.addEventListener('DOMContentLoaded', function() {
 		alert("Impossible to get the map canvas");
 		return;
 	}
-	canvas.focus();
 
 	var context = canvas.getContext("2d");
 	if (!context) {
@@ -28,6 +27,9 @@ window.addEventListener('DOMContentLoaded', function() {
 	var igContext = igCanvas.getContext("2d");
 	igCanvas.width = screenWidth/2;
 	igCanvas.height = screenHeight/2;
+	
+	igCanvas.focus();
+	canvas.focus();
 
 	var width = 15;
 	var height = 7;
