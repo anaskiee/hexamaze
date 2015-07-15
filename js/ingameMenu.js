@@ -8,6 +8,7 @@ function IngameMenu(canvas, context, screenWidth, screenHeight) {
 
 	this.beginning = -1;
 	this.animationEnded = true;
+	this.animationDuration = 500;
 
 	this.canvas.style.position = "absolute";
 	this.reduce();
@@ -36,7 +37,7 @@ IngameMenu.prototype.draw = function(date) {
 	if (this.animationEnded) {
 		factor = 1;
 	} else {
-		factor = (date - this.beginning) / 1000;
+		factor = (date - this.beginning) / this.animationDuration;
 		if (factor > 1) {
 			factor = 1;
 			this.animationEnded = true;
@@ -53,6 +54,13 @@ IngameMenu.prototype.draw = function(date) {
 	this.drawDistortedHexagon(this.ctx, 0.992*l, 0.98*h, 0.98*x, "#555555");
 
 	this.ctx.restore();
+
+	this.ctx.fillStyle = "#000000";
+	this.ctx.font = this.canvas.height/6 + "px motorwerk";
+	this.ctx.textAlign = "center";
+	this.ctx.fillText("Ingame menu text !", this.canvas.width/2, this.canvas.height/3);
+	this.ctx.fillText("Play", this.canvas.width/2, 2/3*this.canvas.height);
+	this.ctx.fillText("again", this.canvas.width/2, (2/3 + 1/10)*this.canvas.height);
 }
 
 IngameMenu.prototype.drawDistortedHexagon = function(ctx, l, h, x, color) {

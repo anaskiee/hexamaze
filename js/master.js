@@ -26,11 +26,13 @@ Master.prototype.draw = function() {
 	requestAnimationFrame(this.draw.bind(this));
 
 	var date = new Date();
-	if (this.applyEvents() || !this.ingameMenu.animationEnded) {
-		if (this.gameDisplayed) {
+	if (this.gameDisplayed) {
+		if (this.applyEvents()) {
 			this.graphicsEngine.draw();
 		}
-		if (this.ingameMenu) {
+	}
+	if (this.ingameMenu) {
+		if (!this.ingameMenu.animationEnded) {
 			this.ingameMenu.draw(date);
 		}
 	}
