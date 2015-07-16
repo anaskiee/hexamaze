@@ -1,6 +1,6 @@
 "use strict";
 
-function EventHandler(gameCanvas, initX, initY, igMenuCanvas, master) {
+function EventHandler(gameCanvas, initX, initY, master) {
 	// Positions when event is received
 	this.x = initX;
 	this.y = initY;
@@ -19,8 +19,6 @@ function EventHandler(gameCanvas, initX, initY, igMenuCanvas, master) {
 	gameCanvas.addEventListener("mousemove", this.handleMouse.bind(this), false);
 	gameCanvas.addEventListener("keypress", this.handleKey.bind(this), false);
 	gameCanvas.addEventListener("click", this.handleClick.bind(this), false);
-
-	igMenuCanvas.addEventListener("dragstart", this.handleDrag.bind(this), false);
 }
 
 // Functions to catch events in order to apply them asynchronously
@@ -38,8 +36,4 @@ EventHandler.prototype.handleTouch = function(event, isMouse) {
 
 EventHandler.prototype.handleClick = function(event) {
 	this.master.push({type : "C"});
-}
-
-EventHandler.prototype.handleDrag = function(event) {
-	this.master.push({type : "D"});
 }

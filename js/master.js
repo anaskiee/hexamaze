@@ -26,13 +26,13 @@ Master.prototype.draw = function() {
 	requestAnimationFrame(this.draw.bind(this));
 
 	var date = new Date();
-	if (this.gameDisplayed) {
-		if (this.applyEvents()) {
+	var animationRunning = this.ingameMenu.animationRunning;
+
+	if (this.applyEvents() || animationRunning) {
+		if (this.gameDisplayed) {
 			this.graphicsEngine.draw();
 		}
-	}
-	if (this.ingameMenu) {
-		if (!this.ingameMenu.animationEnded) {
+		if (this.ingameMenu) {
 			this.ingameMenu.draw(date);
 		}
 	}
@@ -45,6 +45,7 @@ Master.prototype.draw = function() {
 
 Master.prototype.switchIngameMenuState = function() {
 	this.ingameMenuDisplayed = !this.ingameMenuDisplayed;
+	this.gameDisplayed = !this.gameDisplayed;
 	if (this.ingameMenuDisplayed) {
 		this.ingameMenu.expand(new Date());
 	} else {
@@ -79,9 +80,6 @@ Master.prototype.applyEvents = function() {
 				break;
 			case "C":
 				this.applyClickEvent();
-				break;
-			case "D":
-			this.applyDragEvent();
 				break;
 			case "I":
 				break;
@@ -157,10 +155,6 @@ Master.prototype.applyNewCursorPosition = function(x, y) {
 Master.prototype.applyClickEvent = function() {
 	this.physicsEngine.applyMove(this.direction);
 	this.updateCharacterCoordinates();
-}
-
-Master.prototype.applyDragEvent = function() {
-	this.switchIngameMenuState();
 }
 
 // Others functions

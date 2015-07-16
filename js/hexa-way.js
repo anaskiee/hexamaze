@@ -22,13 +22,6 @@ window.addEventListener('DOMContentLoaded', function() {
 	canvas.width = screenWidth;
 	canvas.height = screenHeight;
 
-	// Get end game menu canvas;
-	var igCanvas = document.getElementById("igMenu");
-	var igContext = igCanvas.getContext("2d");
-	igCanvas.width = screenWidth/2;
-	igCanvas.height = screenHeight/2;
-	
-	igCanvas.focus();
 	canvas.focus();
 
 	var width = 15;
@@ -48,9 +41,9 @@ window.addEventListener('DOMContentLoaded', function() {
 	var nbColumns = mapConfig.getMapNbColumns();
 	var physicsEngine = new PhysicsEngine(map);
 	var graphicsEngine = new GraphicsEngine(canvas, context, map, nbLines, nbColumns, eventHandler);
-	var ingameMenu = new IngameMenu(igCanvas, igContext, screenWidth, screenHeight);
+	var ingameMenu = new IngameMenu(canvas, context, screenWidth, screenHeight);
 	var master = new Master(physicsEngine, graphicsEngine, ingameMenu, solver);
-	var eventHandler = new EventHandler(canvas, screenWidth/2, screenHeight/2, igCanvas, master);
+	var eventHandler = new EventHandler(canvas, screenWidth/2, screenHeight/2, master);
 
 	master.beginDrawing();
 
