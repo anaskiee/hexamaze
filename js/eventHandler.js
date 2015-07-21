@@ -8,7 +8,6 @@ function EventHandler(gameCanvas, initX, initY, master) {
 
 	this.charX = -1;
 	this.charY = -1;
-	master.updateCharacterCoordinates();
 	this.direction = "top";
 
 	// A first fake event is pushed to force display

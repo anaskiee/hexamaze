@@ -33,6 +33,8 @@ Master.prototype.draw = function() {
 			this.graphicsEngine.draw();
 		}
 		if (this.ingameMenu) {
+			// Game is drawn because menu is moving
+			this.graphicsEngine.draw();
 			this.ingameMenu.draw(date);
 		}
 	}
@@ -65,21 +67,32 @@ Master.prototype.push = function(event) {
 Master.prototype.applyEvents = function() {
 	var e;
 	var updateNeeded = false;
+
+	var eventTarget;
+	if (this.gameDisplayed) {
+		eventTarget = this.graphicsEngine;
+	} else if (this.ingameMenuDisplayed) {
+		eventTarget = this.ingameMenu;
+	} else {
+		console.log("error in state managment");
+		return;
+	}
+
 	while (this.events.length > 0) {
 		updateNeeded = true;
 		e = this.events.shift();
 		switch (e.type) {
 			case "M":
-				this.applyNewCursorPosition(e.x, e.y);
+				eventTarget.handleCursorMove(e.x, e.y);
 				break;
 			case "K":
 				this.applyKeyEvent(e.key);
 				break;
 			case "T":
-				this.applyNewCursorPosition(e.x, e.y);
+				eventTarget.handleCursorMove(e.x, e.y);
 				break;
 			case "C":
-				this.applyClickEvent();
+				eventTarget.handleClick();
 				break;
 			case "I":
 				break;
@@ -135,53 +148,5 @@ Master.prototype.applyKeyEvent = function(key) {
 		this.physicsEngine.computeHexagonsTowardsDirection(this.direction);
 
 		this.graphicsEngine.updateDirection(this.direction);
-	}
-}
-
-Master.prototype.applyNewCursorPosition = function(x, y) {
-	this.x = x;
-	this.y = y;
-
-	var direction = this.computeDirection();
-	if (direction != this.direction) {
-		this.direction = direction;
-		this.physicsEngine.cleanPreselectedHexagons();
-		this.physicsEngine.computeHexagonsTowardsDirection(this.direction);
-
-		this.graphicsEngine.updateDirection(this.direction);
-	}
-}
-
-Master.prototype.applyClickEvent = function() {
-	this.physicsEngine.applyMove(this.direction);
-	this.updateCharacterCoordinates();
-}
-
-// Others functions
-Master.prototype.updateCharacterCoordinates= function() {
-	var characterCoordinates = this.graphicsEngine.computeCharacterCoordinates();
-	this.charX = characterCoordinates.x;
-	this.charY = characterCoordinates.y;
-}
-
-Master.prototype.computeDirection = function() {
-	var theta = Math.atan((this.y - this.charY) / (this.x - this.charX));
-	if (this.x - this.charX < 0) {
-		theta += Math.PI;
-	}
-
-	let side = (theta / (Math.PI/3) + 6) % 6 ;
-	if (side < 1) {
-		return "botRight";
-	} else if (side < 2) {
-		return "bot";
-	} else if (side < 3) {
-		return "botLeft";
-	} else if (side < 4) {
-		return "topLeft";
-	} else if (side < 5) {
-		return "top";
-	} else {
-		return "topRight";
 	}
 }

@@ -40,7 +40,7 @@ window.addEventListener('DOMContentLoaded', function() {
 	var nbLines = mapConfig.getMapNbLines();
 	var nbColumns = mapConfig.getMapNbColumns();
 	var physicsEngine = new PhysicsEngine(map);
-	var graphicsEngine = new GraphicsEngine(canvas, context, map, nbLines, nbColumns, eventHandler);
+	var graphicsEngine = new GraphicsEngine(canvas, context, map, nbLines, nbColumns, physicsEngine);
 	var ingameMenu = new IngameMenu(canvas, context, screenWidth, screenHeight);
 	var master = new Master(physicsEngine, graphicsEngine, ingameMenu, solver);
 	var eventHandler = new EventHandler(canvas, screenWidth/2, screenHeight/2, master);

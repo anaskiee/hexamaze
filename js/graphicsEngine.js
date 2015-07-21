@@ -1,14 +1,21 @@
 "use strict";
 
-function GraphicsEngine(canvas, context, map, nbLines, nbColumns) {
+function GraphicsEngine(canvas, context, map, nbLines, nbColumns, physicsEngine) {
 	this.canvas = canvas;
 	this.ctx = context;
 	this.map = map;
 	this.nbLines = nbLines;
 	this.nbColumns = nbColumns;
 
+	// To apply events
+	this.physicsEngine = physicsEngine;
+
 	// Direction given by eventHandler
 	this.direction = "top";
+
+	// Character position on screen
+	this.charX = -1;
+	this.charY = -1;
 
 	// Patterns
 	this.radius = 50;
@@ -23,6 +30,7 @@ function GraphicsEngine(canvas, context, map, nbLines, nbColumns) {
 
 	// Pre computation of each hexagons position for the drawing
 	this.computeHexagonCoordinates();
+	this.updateCharacterCoordinates();
 }
 
 GraphicsEngine.prototype.draw = function() {
@@ -84,15 +92,51 @@ GraphicsEngine.prototype.computeHexagonCoordinates = function() {
 	}
 }
 
-GraphicsEngine.prototype.computeCharacterCoordinates = function() {
+GraphicsEngine.prototype.updateCharacterCoordinates = function() {
 	for (let hexagon of this.map) {
 		if (hexagon.characterHere) {
-			return {x : hexagon.x + this.patternWidth/2, 
-					y : hexagon.y + this.patternHeight/2};
+			this.charX = hexagon.x + this.patternWidth/2;
+			this.charY = hexagon.y + this.patternHeight/2; 
 		}
 	}
 }
 
-GraphicsEngine.prototype.updateDirection = function(direction) {
-	this.direction = direction;
+GraphicsEngine.prototype.computeDirection = function(x, y) {
+	var theta = Math.atan((y - this.charY) / (x - this.charX));
+	if (x - this.charX < 0) {
+		theta += Math.PI;
+	}
+
+	let side = (theta / (Math.PI/3) + 6) % 6 ;
+	if (side < 1) {
+		return "botRight";
+	} else if (side < 2) {
+		return "bot";
+	} else if (side < 3) {
+		return "botLeft";
+	} else if (side < 4) {
+		return "topLeft";
+	} else if (side < 5) {
+		return "top";
+	} else {
+		return "topRight";
+	}
+}
+
+//   +--------------+
+//   |    Events    |
+//   +--------------+
+
+GraphicsEngine.prototype.handleCursorMove = function(x, y) {
+	var direction = this.computeDirection(x, y);
+	if (direction != this.direction) {
+		this.direction = direction;
+		this.physicsEngine.cleanPreselectedHexagons();
+		this.physicsEngine.computeHexagonsTowardsDirection(this.direction);
+	}
+}
+
+GraphicsEngine.prototype.handleClick = function() {
+	this.physicsEngine.applyMove(this.direction);
+	this.updateCharacterCoordinates();
 }
