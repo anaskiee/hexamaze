@@ -16,6 +16,16 @@ function IngameMenu(canvas, context, screenWidth, screenHeight) {
 	this.finalOffsetY = -1;
 	this.finalWidth = -1;
 
+	this.metrology = {};
+	this.metrology["reduce"] = {
+		offsetX : (this.screenWidth - this.width) / 2,
+		offsetY : -0.97*this.height,
+		width : 0};
+	this.metrology["expand"] = {
+		offsetX : (this.screenWidth - this.width) / 2,
+		offsetY : (this.screenHeight - this.height) / 2,
+		width : 0.7*this.width};
+
 	// Menu characteristics
 	this.offsetX = screenWidth/4;
 	this.offsetY = -0.97*this.height;
@@ -25,59 +35,71 @@ function IngameMenu(canvas, context, screenWidth, screenHeight) {
 	this.animationRunning = false;
 	this.animationDuration = 300;
 	this.animation = "";
+
+	// Buttons
+	this.buttons = new Set();
+	this.addButtons();
 }
 
 IngameMenu.prototype.reduce = function(date) {
-	this.beginning = date;
-	this.animationRunning = true;
 	this.animation = "reduce";
-
-	this.initialOffsetX = this.offsetX;
-	this.initialOffsetY = this.offsetY;
-	this.initialWidth = this.menuWidth;
-
-	this.finalOffsetX = (this.screenWidth - this.width) / 2;
-	this.finalOffsetY = -0.97*this.height;
-	this.finalWidth = 0;
+	this.initAnimation(date);
 }
 
 IngameMenu.prototype.expand = function(date) {
+	this.animation = "expand";
+	this.initAnimation(date);
+}
+
+IngameMenu.prototype.initAnimation = function(date) {
 	this.beginning = date;
 	this.animationRunning = true;
-	this.animation = "expand";
 
 	this.initialOffsetX = this.offsetX;
 	this.initialOffsetY = this.offsetY;
 	this.initialWidth = this.menuWidth;
-
-	this.finalOffsetX = (this.screenWidth - this.width) / 2;
-	this.finalOffsetY = (this.screenHeight - this.height) / 2;
-	this.finalWidth = 0.7*this.width;
 }
 
 IngameMenu.prototype.computeMenuCharacteristics = function(factor) {
+	var dim = this.metrology[this.animation];
 	switch (this.animation) {
 		case "expand":
 			if (factor < 1) {
-				this.offsetY = this.initialOffsetY + factor*(this.finalOffsetY - this.initialOffsetY);
-				this.offsetX = this.initialOffsetX + factor*(this.finalOffsetX - this.initialOffsetX);
+				this.offsetX = this.initialOffsetX + factor*(dim.offsetX - this.initialOffsetX);
+				this.offsetY = this.initialOffsetY + factor*(dim.offsetY - this.initialOffsetY);
 			} else {
-				this.offsetX = this.finalOffsetX;
-				this.offsetY = this.finalOffsetY;
-				this.menuWidth = this.initialWidth + (factor - 1)*(this.finalWidth - this.initialWidth);
+				this.offsetX = dim.offsetX;
+				this.offsetY = dim.offsetY;
+				this.menuWidth = this.initialWidth + (factor - 1)*(dim.width - this.initialWidth);
 			}
 			break;
 
 		case "reduce":
 			if (factor < 1) {
-				this.menuWidth = this.initialWidth + factor*(this.finalWidth - this.initialWidth);
+				this.menuWidth = this.initialWidth + factor*(dim.width - this.initialWidth);
 			} else {
-				this.menuWidth = this.finalWidth;
-				this.offsetX = this.initialOffsetX + (factor - 1)*(this.finalOffsetX - this.initialOffsetX);
-				this.offsetY = this.initialOffsetY + (factor - 1)*(this.finalOffsetY - this.initialOffsetY);
+				this.menuWidth = dim.width;
+				this.offsetX = this.initialOffsetX + (factor - 1)*(dim.offsetX - this.initialOffsetX);
+				this.offsetY = this.initialOffsetY + (factor - 1)*(dim.offsetY - this.initialOffsetY);
 			}
 			break;
 	}
+}
+
+IngameMenu.prototype.addButtons = function() {
+	this.ctx.font = this.height/6 + "px motorwerk";
+	var textWidth = this.ctx.measureText("again").width;
+	var offsetX = this.metrology["expand"].offsetX + this.width/2;
+	var offsetY = this.metrology["expand"].offsetY + this.height/2;
+	var button = {
+		color : "#000000",
+		xMin : offsetX - textWidth/2,
+		xMax : offsetX + textWidth/2,
+		yMin : offsetY + (1/6 - 1/13)*this.height,
+		yMax : offsetY + (1/6 + 1/10)*this.height,
+		process : this.highlightButton,
+		default : this.default}
+	this.buttons.add(button);
 }
 
 IngameMenu.prototype.draw = function(date) {
@@ -109,8 +131,11 @@ IngameMenu.prototype.draw = function(date) {
 	this.ctx.font = this.height/6 + "px motorwerk";
 	this.ctx.textAlign = "center";
 	this.ctx.fillText("Ingame menu text !", 0, -this.height/6);
-	this.ctx.fillText("Play", 0, this.height/6);
-	this.ctx.fillText("again", 0, (1/6 + 1/10)*this.height);
+	for (let button of this.buttons) {
+		this.ctx.fillStyle = button.color;
+		this.ctx.fillText("Play", 0, this.height/6);
+		this.ctx.fillText("again", 0, (1/6 + 1/10)*this.height);
+	}
 
 	this.ctx.restore();
 }
@@ -132,13 +157,28 @@ IngameMenu.prototype.cleanCanvas = function() {
 	this.ctx.clearRect(0, 0, this.width, this.height);
 }
 
-
 //   +--------------+
 //   |    Events    |
 //   +--------------+
 
 IngameMenu.prototype.handleCursorMove = function(x, y) {
+	console.log("x : " + x + ", y : " + y);
+	for (let button of this.buttons) {
+		if (button.xMin < x && x < button.xMax && button.yMin < y && y < button.yMax) {
+			button.process();
+		} else {
+			button.default();
+		}
+	}
 }
 
 IngameMenu.prototype.handleClick = function() {
+}
+
+IngameMenu.prototype.highlightButton = function() {
+	this.color = "#698469";
+}
+
+IngameMenu.prototype.default = function() {
+	this.color = "#000000";
 }
