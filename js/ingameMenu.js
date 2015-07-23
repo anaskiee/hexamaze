@@ -1,12 +1,12 @@
 "use strict";
 
-function IngameMenu(canvas, context, screenWidth, screenHeight) {
+function IngameMenu(canvas, context) {
 	this.canvas = canvas;
 	this.ctx = context;
-	this.width = screenWidth/2;
-	this.height = screenHeight/2;
-	this.screenWidth = screenWidth;
-	this.screenHeight = screenHeight;
+	this.screenWidth = canvas.width;
+	this.screenHeight = canvas.height;
+	this.width = this.screenWidth/2;
+	this.height = this.screenHeight/2;
 
 	// For animations
 	this.initialOffsetX = -1;
@@ -27,7 +27,7 @@ function IngameMenu(canvas, context, screenWidth, screenHeight) {
 		width : 0.7*this.width};
 
 	// Menu characteristics
-	this.offsetX = screenWidth/4;
+	this.offsetX = this.screenWidth/4;
 	this.offsetY = -0.97*this.height;
 	this.menuWidth = 0;
 
@@ -39,6 +39,7 @@ function IngameMenu(canvas, context, screenWidth, screenHeight) {
 	// Buttons
 	this.buttons = new Set();
 	this.addButtons();
+	this.buttonSelected = null;
 }
 
 IngameMenu.prototype.reduce = function(date) {
@@ -92,13 +93,12 @@ IngameMenu.prototype.addButtons = function() {
 	var offsetX = this.metrology["expand"].offsetX + this.width/2;
 	var offsetY = this.metrology["expand"].offsetY + this.height/2;
 	var button = {
-		color : "#000000",
+		action : "newgame",
+		selected : false,
 		xMin : offsetX - textWidth/2,
 		xMax : offsetX + textWidth/2,
 		yMin : offsetY + (1/6 - 1/13)*this.height,
-		yMax : offsetY + (1/6 + 1/10)*this.height,
-		process : this.highlightButton,
-		default : this.default}
+		yMax : offsetY + (1/6 + 1/10)*this.height};
 	this.buttons.add(button);
 }
 
@@ -132,7 +132,11 @@ IngameMenu.prototype.draw = function(date) {
 	this.ctx.textAlign = "center";
 	this.ctx.fillText("Ingame menu text !", 0, -this.height/6);
 	for (let button of this.buttons) {
-		this.ctx.fillStyle = button.color;
+		if (button.selected == true) {
+			this.ctx.fillStyle = "#698469";
+		} else {
+			this.ctx.fillStyle = "#000000";
+		}
 		this.ctx.fillText("Play", 0, this.height/6);
 		this.ctx.fillText("again", 0, (1/6 + 1/10)*this.height);
 	}
@@ -162,23 +166,21 @@ IngameMenu.prototype.cleanCanvas = function() {
 //   +--------------+
 
 IngameMenu.prototype.handleCursorMove = function(x, y) {
-	console.log("x : " + x + ", y : " + y);
 	for (let button of this.buttons) {
 		if (button.xMin < x && x < button.xMax && button.yMin < y && y < button.yMax) {
-			button.process();
-		} else {
-			button.default();
+			this.buttonSelected = button;
+			button.selected = true;
+		} else if (button.selected) {
+			button.selected = false;
+			if (this.buttonSelected == button) {
+				this.buttonSelected = null;
+			}
 		}
 	}
 }
 
 IngameMenu.prototype.handleClick = function() {
-}
-
-IngameMenu.prototype.highlightButton = function() {
-	this.color = "#698469";
-}
-
-IngameMenu.prototype.default = function() {
-	this.color = "#000000";
+	if (this.buttonSelected) {
+		return this.buttonSelected.action;
+	}
 }

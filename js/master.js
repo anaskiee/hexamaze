@@ -1,16 +1,18 @@
 "use strict";
 
-function Master(physicsEngine, graphicsEngine, ingameMenu, solver) {
+function Master(physicsEngine, graphicsEngine, ingameMenu, solver, mapCreator, menuDisplayed) {
 	this.physicsEngine = physicsEngine;
 	this.graphicsEngine = graphicsEngine;
 	this.ingameMenu = ingameMenu;
 	this.solver = solver;
+	this.mapCreator = mapCreator;
 	
-	this.mainMenuDisplayed = false;
-	this.gameDisplayed = true;
-	this.ingameMenuDisplayed = false;
+	//this.mainMenuDisplayed = false;
+	this.gameDisplayed = !menuDisplayed;
+	this.ingameMenuDisplayed = menuDisplayed;
 
 	this.events = [];
+	this.gameRunning = true;
 }
 
 
@@ -23,7 +25,9 @@ Master.prototype.beginDrawing = function() {
 }
 
 Master.prototype.draw = function() {
-	requestAnimationFrame(this.draw.bind(this));
+	if (this.gameRunning) {
+		requestAnimationFrame(this.draw.bind(this));
+	}
 
 	var date = new Date();
 	var animationRunning = this.ingameMenu.animationRunning;
@@ -67,6 +71,7 @@ Master.prototype.push = function(event) {
 Master.prototype.applyEvents = function() {
 	var e;
 	var updateNeeded = false;
+	var action;
 
 	var eventTarget;
 	if (this.gameDisplayed) {
@@ -83,18 +88,24 @@ Master.prototype.applyEvents = function() {
 		e = this.events.shift();
 		switch (e.type) {
 			case "M":
-				eventTarget.handleCursorMove(e.x, e.y);
+				action = eventTarget.handleCursorMove(e.x, e.y);
 				break;
 			case "K":
-				this.applyKeyEvent(e.key);
+				action = this.applyKeyEvent(e.key);
 				break;
 			case "T":
-				eventTarget.handleCursorMove(e.x, e.y);
+				action = eventTarget.handleCursorMove(e.x, e.y);
 				break;
 			case "C":
-				eventTarget.handleClick();
+				action = eventTarget.handleClick();
 				break;
 			case "I":
+				break;
+		}
+
+		switch (action) {
+			case "newgame":
+				this.mapCreator.newGame();
 				break;
 		}
 	}
