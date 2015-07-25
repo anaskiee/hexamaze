@@ -112,6 +112,10 @@ Master.prototype.applyEvents = function() {
 				this.gameLoader.newGame();
 				this.switchIngameMenuState();
 				break;
+			case "win":
+				this.ingameMenu.setText("You win !");
+				this.switchIngameMenuState();
+				break;
 		}
 	}
 	return updateNeeded;
@@ -154,6 +158,7 @@ Master.prototype.applyKeyEvent = function(key) {
 			this.physicsEngine.cleanHighlight();
 			break;
 		case "Escape":
+			this.ingameMenu.setText("So many choices...");
 			this.switchIngameMenuState();
 			break;
 

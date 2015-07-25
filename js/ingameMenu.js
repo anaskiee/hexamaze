@@ -8,6 +8,9 @@ function IngameMenu(canvas, context) {
 	this.width = this.screenWidth/2;
 	this.height = this.screenHeight/2;
 
+	// Text
+	this.text = "Ingame menu text !";
+
 	// For animations
 	this.initialOffsetX = -1;
 	this.initialOffsetY = -1;
@@ -52,6 +55,10 @@ IngameMenu.prototype.reduce = function(date) {
 IngameMenu.prototype.expand = function(date) {
 	this.animation = "expand";
 	this.initAnimation(date);
+}
+
+IngameMenu.prototype.setText = function(text) {
+	this.text = text;
 }
 
 IngameMenu.prototype.initAnimation = function(date) {
@@ -132,7 +139,7 @@ IngameMenu.prototype.draw = function(date) {
 	this.ctx.fillStyle = "#000000";
 	this.ctx.font = this.height/6 + "px motorwerk";
 	this.ctx.textAlign = "center";
-	this.ctx.fillText("Ingame menu text !", 0, -this.height/6);
+	this.ctx.fillText(this.text, 0, -this.height/6);
 	for (let button of this.buttons) {
 		if (button.selected == true) {
 			this.ctx.fillStyle = "#698469";

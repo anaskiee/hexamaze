@@ -143,6 +143,7 @@ GraphicsEngine.prototype.handleCursorMove = function(x, y) {
 }
 
 GraphicsEngine.prototype.handleClick = function() {
-	this.physicsEngine.applyMove(this.direction);
+	var action = this.physicsEngine.applyMove(this.direction);
 	this.updateCharacterCoordinates();
+	return action;
 }

@@ -54,6 +54,12 @@ PhysicsEngine.prototype.applyMove = function(direction) {
 	}
 	this.characterHexagon = currHexagon;
 	this.characterHexagon.characterHere = true;
+
+	if (this.characterHexagon.exitHere) {
+		return "win";
+	} else {
+		return "";
+	}
 }
 
 PhysicsEngine.prototype.cleanMap = function() {
