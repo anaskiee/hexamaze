@@ -45,6 +45,8 @@ function IngameMenu(canvas, context) {
 IngameMenu.prototype.reduce = function(date) {
 	this.animation = "reduce";
 	this.initAnimation(date);
+	this.buttonSelected.selected = false;
+	this.buttonSelected = null;
 }
 
 IngameMenu.prototype.expand = function(date) {

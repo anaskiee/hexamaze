@@ -1,9 +1,9 @@
 "use strict";
 
-function GraphicsEngine(canvas, context, map, nbLines, nbColumns, physicsEngine) {
+function GraphicsEngine(canvas, context, mapStructures, nbLines, nbColumns, physicsEngine) {
 	this.canvas = canvas;
 	this.ctx = context;
-	this.map = map;
+	this.map = mapStructures.hexagons;
 	this.nbLines = nbLines;
 	this.nbColumns = nbColumns;
 
@@ -28,6 +28,10 @@ function GraphicsEngine(canvas, context, map, nbLines, nbColumns, physicsEngine)
 	var exitHeight = 25;
 	this.exitPatterns = new ExitPatterns(exitHeight, this.patternWidth, this.patternHeight);
 
+	this.computeGraphicsData();
+}
+
+GraphicsEngine.prototype.computeGraphicsData = function() {
 	// Pre computation of each hexagons position for the drawing
 	this.computeHexagonCoordinates();
 	this.updateCharacterCoordinates();
@@ -75,20 +79,22 @@ GraphicsEngine.prototype.computeHexagonCoordinates = function() {
 	var hexagon;
 	var posX, posY;
 	var offsetY;
-	for (let j = 0; j < this.nbColumns; j++) {
+	var i, j;
+
+	for (let hexagon of this.map) {
+		i = hexagon.i;
+		j = hexagon.j;
+		
 		if ((j % 2) == 0) {
 			offsetY = preComputedOffsetY;
 		} else {
 			offsetY = 0;
 		}
-		for (let i = 0; i < this.nbLines; i++) {
-			hexagon = this.map[i*this.nbColumns + j];
-			posX = j * (width + preComputedOffsetX);
-			posY = i * height + offsetY;
+		posX = j * (width + preComputedOffsetX);
+		posY = i * height + offsetY;
 
-			hexagon.x = posX;
-			hexagon.y = posY;
-		}
+		hexagon.x = posX;
+		hexagon.y = posY;
 	}
 }
 

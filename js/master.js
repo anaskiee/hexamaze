@@ -1,26 +1,30 @@
 "use strict";
 
-function Master(physicsEngine, graphicsEngine, ingameMenu, solver, mapCreator, menuDisplayed) {
+function Master(physicsEngine, graphicsEngine, ingameMenu, solver, gameLoader) {
 	this.physicsEngine = physicsEngine;
 	this.graphicsEngine = graphicsEngine;
 	this.ingameMenu = ingameMenu;
 	this.solver = solver;
-	this.mapCreator = mapCreator;
+	this.gameLoader = gameLoader;
 	
 	//this.mainMenuDisplayed = false;
-	this.gameDisplayed = !menuDisplayed;
-	this.ingameMenuDisplayed = menuDisplayed;
+	this.gameDisplayed = true;
+	this.ingameMenuDisplayed = false;
 
 	this.events = [];
 	this.gameRunning = true;
 }
 
-
 // +--------------------------+
 // |    Drawing management    |
 // +--------------------------+
 
+Master.prototype.stopDrawing = function() {
+	this.gameRunning = false;
+}
+
 Master.prototype.beginDrawing = function() {
+	this.gameRunning = true;
 	this.draw();
 }
 
@@ -105,7 +109,8 @@ Master.prototype.applyEvents = function() {
 
 		switch (action) {
 			case "newgame":
-				this.mapCreator.newGame();
+				this.gameLoader.newGame();
+				this.switchIngameMenuState();
 				break;
 		}
 	}

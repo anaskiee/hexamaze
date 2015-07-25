@@ -1,9 +1,13 @@
 "use strict";
 
-function PhysicsEngine(map) {
-	this.map = map;
+function PhysicsEngine(mapStructures) {
+	this.map = mapStructures.hexagons;
 	this.characterHexagon = null;
 
+	this.computePhysicsData();
+}
+
+PhysicsEngine.prototype.computePhysicsData = function() {
 	this.searchForCharacter();
 }
 

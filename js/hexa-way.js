@@ -24,5 +24,5 @@ window.addEventListener('DOMContentLoaded', function() {
 
 	canvas.focus();
 
-	new MapCreator(canvas, context);
+	new GameLoader(canvas, context);
 });

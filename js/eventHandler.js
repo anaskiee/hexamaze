@@ -29,10 +29,3 @@ EventHandler.prototype.handleTouch = function(event, isMouse) {
 EventHandler.prototype.handleClick = function(event) {
 	this.master.push({type : "C"});
 }
-
-EventHandler.prototype.removeEventListeners = function() {
-	this.canvas.removeEventListener("touchmove", this.handleTouch.bind(this), false);
-	this.canvas.removeEventListener("mousemove", this.handleMouse.bind(this), false);
-	this.canvas.removeEventListener("keypress", this.handleKey.bind(this), false);
-	this.canvas.removeEventListener("click", this.handleClick.bind(this), false);
-}

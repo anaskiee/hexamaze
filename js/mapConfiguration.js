@@ -1,6 +1,6 @@
 "use strict";
 
-function MapConfiguration(nbLines, nbColumns) {
+function MapConfiguration(mapStructures, nbLines, nbColumns) {
 	this.nbLines = nbLines + 2;
 	this.nbColumns = nbColumns + 2;
 	var characterLine = 3;
@@ -8,16 +8,19 @@ function MapConfiguration(nbLines, nbColumns) {
 	var exitLine = 4;
 	var exitColumn = 5;
 
+	mapStructures.initializeData();
+
 	// Contstruct map
 	// Initialiaze block types
+	var hex;
 	this.map = new Array(this.nbLines * this.nbColumns);
 	for (let i = 0; i < this.nbLines; i++) {
 		for (let j = 0; j < this.nbColumns; j++) {
 			let idx = i*this.nbColumns + j;
 			if (i == 0 || j == 0 || i == this.nbLines-1 || j == this.nbColumns-1) {
-				this.map[idx] = new Hexagon("block");
+				this.map[idx] = mapStructures.addHexagon("block");
 			} else {
-				this.map[idx] = new Hexagon("space");
+				this.map[idx] = mapStructures.addHexagon("space");
 			}
 			this.map[idx].i = i;
 			this.map[idx].j = j;
@@ -82,14 +85,6 @@ function MapConfiguration(nbLines, nbColumns) {
 					hexagon.botRight = this.map[i*this.nbColumns + j+1];
 				}
 			}
-
-/*			// Character positionning
-			if (i == characterLine && j == characterColumn) {
-				hexagon.characterHere = true;
-			}
-			if (i == exitLine && j == exitColumn) {
-				hexagon.exitHere = true;
-			}*/
 		}
 	}
 

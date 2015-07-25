@@ -22,9 +22,8 @@ MapSolver.prototype.getExitHexagon = function() {
 }
 
 MapSolver.prototype.getMin = function() {
-	if (this.solution == null) {
-		this.solution = this.solve();
-	}
+	this.solution = this.solve();
+
 	if (this.solution == "undefined") {
 		return 9000;
 	}
