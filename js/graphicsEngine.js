@@ -18,14 +18,14 @@ function GraphicsEngine(canvas, context, mapStructures, nbLines, nbColumns, phys
 	this.charY = -1;
 
 	// Patterns
-	this.radius = 50;
+	this.radius = this.computeHexagonSize(canvas.width, canvas.height);
 	var hexagonPatterns = new HexagonPatterns(this.radius);
 	this.patterns = hexagonPatterns.getPatterns();
-	var characterHeight = 20;
+	var characterHeight = 2/5*this.radius;
 	this.patternWidth = this.patterns.get("block").width;
 	this.patternHeight = this.patterns.get("block").height;
 	this.characterPatterns = new CharacterPatterns(characterHeight, this.patternWidth, this.patternHeight);
-	var exitHeight = 25;
+	var exitHeight = 3/5*this.radius;
 	this.exitPatterns = new ExitPatterns(exitHeight, this.patternWidth, this.patternHeight);
 
 	this.computeGraphicsData();
@@ -35,6 +35,12 @@ GraphicsEngine.prototype.computeGraphicsData = function() {
 	// Pre computation of each hexagons position for the drawing
 	this.computeHexagonCoordinates();
 	this.updateCharacterCoordinates();
+}
+
+GraphicsEngine.prototype.computeHexagonSize = function(screenWidth, screenHeight) {
+	var a = 2 / Math.sqrt(3) / (2*this.nbLines + 1) * screenHeight;
+	var b = screenWidth / (2*this.nbColumns);
+	return Math.floor(Math.min(a, b));
 }
 
 GraphicsEngine.prototype.draw = function() {

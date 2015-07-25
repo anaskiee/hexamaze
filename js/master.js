@@ -129,7 +129,7 @@ Master.prototype.applyKeyEvent = function(key) {
 			break;
 		case "KeyQ":
 			this.direction = "topLeft";
-			changed = true;
+			changed = true; 
 			break;
 		case "KeyW":
 			this.direction = "top";
