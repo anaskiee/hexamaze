@@ -1,18 +1,21 @@
 "use strict";
 
-function Master(physicsEngine, graphicsEngine, ingameMenu, solver, gameLoader) {
+function Master(physicsEngine, graphicsEngine, ingameMenu, solver, gameLoader, worker, mapStructure) {
 	this.physicsEngine = physicsEngine;
 	this.graphicsEngine = graphicsEngine;
 	this.ingameMenu = ingameMenu;
 	this.solver = solver;
 	this.gameLoader = gameLoader;
+	this.worker = worker;
+	this.mapStructure = mapStructure;
 	
 	//this.mainMenuDisplayed = false;
 	this.gameDisplayed = true;
 	this.ingameMenuDisplayed = false;
+	this.elementsToRender = [];
 
 	this.events = [];
-	this.gameRunning = true;
+	this.mapDrawAllowed = false;
 }
 
 // +--------------------------+
@@ -20,47 +23,117 @@ function Master(physicsEngine, graphicsEngine, ingameMenu, solver, gameLoader) {
 // +--------------------------+
 
 Master.prototype.stopDrawing = function() {
-	this.gameRunning = false;
+	this.mapDrawAllowed = false;
+	this.expandMenu();
 }
 
 Master.prototype.beginDrawing = function() {
-	this.gameRunning = true;
-	this.draw();
+	this.mapDrawAllowed = true;
+	this.switchIngameMenuState();
 }
 
 Master.prototype.draw = function() {
-	if (this.gameRunning) {
-		requestAnimationFrame(this.draw.bind(this));
-	}
+	requestAnimationFrame(this.draw.bind(this));
+	//console.log("render");
+
+	// Check if some elements doesn't need to be processed
+	this.checkStateTransition();
 
 	var date = new Date();
-	var animationRunning = this.ingameMenu.animationRunning;
+	//var animationRunning = this.ingameMenu.animationRunning || this.state == "computing";
 
-	if (this.applyEvents() || animationRunning) {
-		if (this.gameDisplayed) {
-			this.graphicsEngine.draw();
-		}
-		if (this.ingameMenu) {
-			// Game is drawn because menu is moving
-			this.graphicsEngine.draw();
-			this.ingameMenu.draw(date);
-		}
+	// Apply events
+	this.applyEvents();
+
+	// Render
+	for (let element of this.elementsToRender) {
+		element.draw(date);
 	}
+/*	if (this.applyEvents() || animationRunning) {
+		if (this.mapDrawAllowed) {
+			this.graphicsEngine.draw();
+		}
+		this.ingameMenu.draw(date);
+	}*/
 }
 
+Master.prototype.manualDraw = function() {
+	var date = new Date();
+	// Render
+	for (let element of this.elementsToRender) {
+		element.draw(date);
+	}
+}
 
 // +----------------------+
 // |   States managment   |
 // +----------------------+
 
-Master.prototype.switchIngameMenuState = function() {
-	this.ingameMenuDisplayed = !this.ingameMenuDisplayed;
-	this.gameDisplayed = !this.gameDisplayed;
-	if (this.ingameMenuDisplayed) {
-		this.ingameMenu.expand(new Date());
-	} else {
-		this.ingameMenu.reduce(new Date());
+Master.prototype.start = function() {
+	this.expandMenu();
+	this.worker.postMessage("compute");
+	this.draw();
+}
+
+Master.prototype.mapComputed = function() {
+	this.elementsToRender.unshift(this.graphicsEngine);
+	setTimeout(this.reduceMenu.bind(this), 1000, true);
+}
+
+Master.prototype.loadMap = function(map) {
+	this.mapStructure.initializeData();
+	this.mapStructure.fill(map);
+	this.physicsEngine.computePhysicsData();
+	this.graphicsEngine.computeGraphicsData();
+}
+
+Master.prototype.checkStateTransition = function() {
+	for (let element of this.elementsToRender) {
+		if (element.active == 0) {
+			let idx = this.elementsToRender.indexOf(element);
+			if (idx > -1) {
+				this.elementsToRender.splice(idx, 1);
+			} else {
+				console.log("error : element not found");
+			}
+		}
 	}
+}
+
+Master.prototype.switchIngameMenuState = function() {
+	if (this.elementsToRender.indexOf(this.ingameMenu) == -1) {
+		this.expandMenu();
+	} else {
+		this.reduceMenu();
+	}
+}
+
+Master.prototype.expandMenu = function() {
+	this.elementsToRender.push(this.ingameMenu);
+	this.ingameMenu.expand(new Date());
+}
+
+Master.prototype.reduceMenu = function() {
+	this.ingameMenu.reduce(new Date());
+}
+
+Master.prototype.displayMenu = function() {
+	this.ingameMenu.setText("So many choices...");
+	this.switchIngameMenuState();
+}
+
+Master.prototype.displayWin = function() {
+	this.ingameMenu.setText("You win !");
+	this.switchIngameMenuState();
+}
+
+Master.prototype.displayComputing = function() {
+	this.ingameMenu.setText("Computing... (0)");
+	this.switchIngameMenuState();
+}
+
+Master.prototype.updateComputingMenu = function(nbTries) {
+	this.ingameMenu.setText("Computing... (" + nbTries + ")");
 }
 
 // +----------------------+
@@ -78,44 +151,52 @@ Master.prototype.applyEvents = function() {
 	var action;
 
 	var eventTarget;
-	if (this.gameDisplayed) {
-		eventTarget = this.graphicsEngine;
-	} else if (this.ingameMenuDisplayed) {
-		eventTarget = this.ingameMenu;
-	} else {
-		console.log("error in state managment");
-		return;
-	}
 
+	var elementsNumber = this.elementsToRender.length;
 	while (this.events.length > 0) {
 		updateNeeded = true;
 		e = this.events.shift();
-		switch (e.type) {
-			case "M":
-				action = eventTarget.handleCursorMove(e.x, e.y);
-				break;
-			case "K":
-				action = this.applyKeyEvent(e.key);
-				break;
-			case "T":
-				action = eventTarget.handleCursorMove(e.x, e.y);
-				break;
-			case "C":
-				action = eventTarget.handleClick();
-				break;
-			case "I":
-				break;
-		}
+		for (var i = elementsNumber - 1; 0 <= i; i--) {
+			eventTarget = this.elementsToRender[i];
+			switch (e.type) {
+				case "M":
+					action = eventTarget.handleCursorMove(e.x, e.y);
+					break;
+				case "K":
+					action = this.applyKeyEvent(e.key);
+					break;
+				case "T":
+					action = eventTarget.handleCursorMove(e.x, e.y);
+					break;
+				case "C":
+					action = eventTarget.handleClick();
+					break;
+				case "I":
+					break;
+				case "MG":
+					console.log(e.nb);
+					this.updateComputingMenu(e.nb);
+					break;
+				case "MC":
+					this.loadMap(e.map);
+					this.mapComputed();
+					break;
+			}
+	
+			switch (action) {
+				case "newgame":
+					this.elementsToRender.shift();
+					this.updateComputingMenu(0);
+					this.worker.postMessage("compute");
+					break;
+				case "win":
+					this.displayWin();
+					break;
+			}
 
-		switch (action) {
-			case "newgame":
-				this.gameLoader.newGame();
-				this.switchIngameMenuState();
+			if (eventTarget.blockEventsSpread) {
 				break;
-			case "win":
-				this.ingameMenu.setText("You win !");
-				this.switchIngameMenuState();
-				break;
+			}
 		}
 	}
 	return updateNeeded;
@@ -129,7 +210,7 @@ Master.prototype.applyKeyEvent = function(key) {
 			break;
 		case "KeyQ":
 			this.direction = "topLeft";
-			changed = true; 
+			changed = true;
 			break;
 		case "KeyW":
 			this.direction = "top";
@@ -158,10 +239,8 @@ Master.prototype.applyKeyEvent = function(key) {
 			this.physicsEngine.cleanHighlight();
 			break;
 		case "Escape":
-			this.ingameMenu.setText("So many choices...");
-			this.switchIngameMenuState();
+			this.displayMenu();
 			break;
-
 	}
 
 	if (changed) {

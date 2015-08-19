@@ -14,9 +14,9 @@ function MapConfiguration(mapStructures, nbLines, nbColumns) {
 	// Initialiaze block types
 	var hex;
 	this.map = new Array(this.nbLines * this.nbColumns);
-	for (let i = 0; i < this.nbLines; i++) {
-		for (let j = 0; j < this.nbColumns; j++) {
-			let idx = i*this.nbColumns + j;
+	for (var i = 0; i < this.nbLines; i++) {
+		for (var j = 0; j < this.nbColumns; j++) {
+			var idx = i*this.nbColumns + j;
 			if (i == 0 || j == 0 || i == this.nbLines-1 || j == this.nbColumns-1) {
 				this.map[idx] = mapStructures.addHexagon("block");
 			} else {
@@ -29,9 +29,9 @@ function MapConfiguration(mapStructures, nbLines, nbColumns) {
 
 	var hexagon;
 	// Initialize links between hexagons
-	for (let i = 0; i < this.nbLines; i++) {
-		for (let j = 0; j < this.nbColumns; j++) {
-			let idx = i*this.nbColumns + j;
+	for (var i = 0; i < this.nbLines; i++) {
+		for (var j = 0; j < this.nbColumns; j++) {
+			var idx = i*this.nbColumns + j;
 			hexagon = this.map[idx];
 
 			// Links
@@ -120,8 +120,8 @@ MapConfiguration.prototype.randomize = function(blockPercent) {
 	exitHexagon.exitHere = true;
 
 	// Blocks
-	for (let i = 1; i < this.nbLines-1; i++) {
-		for (let j = 1; j < this.nbColumns-1; j++) {
+	for (var i = 1; i < this.nbLines-1; i++) {
+		for (var j = 1; j < this.nbColumns-1; j++) {
 			idx = i*this.nbColumns + j;
 			hexagon = this.map[idx];
 			if (hexagon.type == "space" && !hexagon.characterHere && !hexagon.exitHere) {

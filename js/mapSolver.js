@@ -6,7 +6,7 @@ function MapSolver(map) {
 }
 
 MapSolver.prototype.getCharacterHexagon = function() {
-	for (let hexagon of this.map) {
+	for (var hexagon of this.map) {
 		if (hexagon.characterHere) {
 			return hexagon;
 		}
@@ -14,7 +14,7 @@ MapSolver.prototype.getCharacterHexagon = function() {
 }
 
 MapSolver.prototype.getExitHexagon = function() {
-	for (let hexagon of this.map) {
+	for (var hexagon of this.map) {
 		if (hexagon.exitHere) {
 			return hexagon;
 		}
@@ -61,11 +61,11 @@ MapSolver.prototype.solve = function() {
 	var solution = new Map();
 	solution.set(characterHexagon, {prevHexagon : null, depth : 0, direction : ""});
 	while (toExplore.length > 0) {
-		let hexagon = toExplore.shift();
-		let depth = solution.get(hexagon).depth;
-		for (let direction of directions) {
-			let oppositeDirection = directions[(directions.indexOf(direction) + 3) % 6];
-			let nextHexagon = this.computeNextHexagon(hexagon, direction);
+		var hexagon = toExplore.shift();
+		var depth = solution.get(hexagon).depth;
+		for (var direction of directions) {
+			var oppositeDirection = directions[(directions.indexOf(direction) + 3) % 6];
+			var nextHexagon = this.computeNextHexagon(hexagon, direction);
 			if (!solution.has(nextHexagon)) {
 				solution.set(nextHexagon, {prevHexagon : hexagon, depth : depth + 1, direction : oppositeDirection});
 				if (nextHexagon.exitHere) {

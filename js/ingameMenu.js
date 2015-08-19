@@ -38,6 +38,8 @@ function IngameMenu(canvas, context) {
 	this.animationRunning = false;
 	this.animationDuration = 300;
 	this.animation = "";
+	this.active = false;
+	this.blockEventsSpread = true;
 
 	// Buttons
 	this.buttons = new Set();
@@ -48,8 +50,10 @@ function IngameMenu(canvas, context) {
 IngameMenu.prototype.reduce = function(date) {
 	this.animation = "reduce";
 	this.initAnimation(date);
-	this.buttonSelected.selected = false;
-	this.buttonSelected = null;
+	if (this.buttonSelected) {
+		this.buttonSelected.selected = false;
+		this.buttonSelected = null;
+	}
 }
 
 IngameMenu.prototype.expand = function(date) {
@@ -64,6 +68,7 @@ IngameMenu.prototype.setText = function(text) {
 IngameMenu.prototype.initAnimation = function(date) {
 	this.beginning = date;
 	this.animationRunning = true;
+	this.active = true;
 
 	this.initialOffsetX = this.offsetX;
 	this.initialOffsetY = this.offsetY;
@@ -120,6 +125,9 @@ IngameMenu.prototype.draw = function(date) {
 		if (factor > 2) {
 			factor = 2;
 			this.animationRunning = false;
+			if (this.animation == "reduce") {
+				this.active = false;
+			}
 		}
 		this.computeMenuCharacteristics(factor);
 	}

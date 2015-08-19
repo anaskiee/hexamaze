@@ -7,6 +7,9 @@ function GraphicsEngine(canvas, context, mapStructures, nbLines, nbColumns, phys
 	this.nbLines = nbLines;
 	this.nbColumns = nbColumns;
 
+	this.active = true;
+	this.blockEventsSpread = false;
+
 	// To apply events
 	this.physicsEngine = physicsEngine;
 
