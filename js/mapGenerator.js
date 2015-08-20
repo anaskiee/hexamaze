@@ -16,7 +16,7 @@ function computeNewMap() {
 	var mapStructures = new MapStructures();
 	var solver = new MapSolver(mapStructures.hexagons);
 	var mapConfig;
-	while (difficulty < 10 || difficulty == 9000) {
+	while (difficulty < 5 || difficulty == 9000) {
 		nb++;
 		mapConfig = new MapConfiguration(mapStructures, height, width);
 		difficulty = solver.getMin();

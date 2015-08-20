@@ -1,6 +1,6 @@
 "use strict";
 
-function Master(physicsEngine, graphicsEngine, ingameMenu, solver, gameLoader, worker, mapStructure) {
+function Master(physicsEngine, graphicsEngine, ingameMenu, solver, gameLoader, worker, mapStructure, developerConsole) {
 	this.physicsEngine = physicsEngine;
 	this.graphicsEngine = graphicsEngine;
 	this.ingameMenu = ingameMenu;
@@ -8,6 +8,7 @@ function Master(physicsEngine, graphicsEngine, ingameMenu, solver, gameLoader, w
 	this.gameLoader = gameLoader;
 	this.worker = worker;
 	this.mapStructure = mapStructure;
+	this.developerConsole = developerConsole;
 	
 	//this.mainMenuDisplayed = false;
 	this.gameDisplayed = true;
@@ -34,7 +35,6 @@ Master.prototype.beginDrawing = function() {
 
 Master.prototype.draw = function() {
 	requestAnimationFrame(this.draw.bind(this));
-	//console.log("render");
 
 	// Check if some elements doesn't need to be processed
 	this.checkStateTransition();
@@ -71,6 +71,7 @@ Master.prototype.manualDraw = function() {
 
 Master.prototype.start = function() {
 	this.expandMenu();
+	this.showConsole();
 	this.worker.postMessage("compute");
 	this.draw();
 }
@@ -136,6 +137,15 @@ Master.prototype.updateComputingMenu = function(nbTries) {
 	this.ingameMenu.setText("Computing... (" + nbTries + ")");
 }
 
+Master.prototype.showConsole = function() {
+	this.elementsToRender.push(this.developerConsole);
+	this.developerConsole.show();
+}
+
+Master.prototype.hideConsole = function() {
+	this.developerConsole.hide();
+}
+
 // +----------------------+
 // |   Events managment   |
 // +----------------------+
@@ -163,13 +173,14 @@ Master.prototype.applyEvents = function() {
 					action = eventTarget.handleCursorMove(e.x, e.y);
 					break;
 				case "K":
-					action = this.applyKeyEvent(e.key);
+					action = eventTarget.handleKey(e.code);
+					//action = this.applyKeyEvent(e.key);
 					break;
 				case "T":
 					action = eventTarget.handleCursorMove(e.x, e.y);
 					break;
 				case "C":
-					action = eventTarget.handleClick();
+					action = eventTarget.handleClick(e.x, e.y);
 					break;
 				case "I":
 					break;

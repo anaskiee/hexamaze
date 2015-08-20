@@ -21,7 +21,7 @@ EventHandler.prototype.handleMouse = function(event) {
 }
 
 EventHandler.prototype.handleKey = function(event) {
-	this.master.push({type : "K", key : event.code});
+	this.master.push({type : "K", code : event.keyCode + event.charCode});
 }
 
 EventHandler.prototype.handleTouch = function(event, isMouse) {
@@ -29,7 +29,7 @@ EventHandler.prototype.handleTouch = function(event, isMouse) {
 }
 
 EventHandler.prototype.handleClick = function(event) {
-	this.master.push({type : "C"});
+	this.master.push({type : "C", x : event.pageX, y : event.pageY});
 }
 
 EventHandler.prototype.handleMessage = function(event) {
