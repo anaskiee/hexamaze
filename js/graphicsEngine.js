@@ -1,11 +1,10 @@
 "use strict";
 
-function GraphicsEngine(canvas, context, mapStructures, nbLines, nbColumns, physicsEngine) {
+function GraphicsEngine(canvas, context, mapStructures, physicsEngine) {
 	this.canvas = canvas;
 	this.ctx = context;
 	this.map = mapStructures.hexagons;
-	this.nbLines = nbLines;
-	this.nbColumns = nbColumns;
+	this.mapStructures = mapStructures;
 
 	this.active = true;
 	this.blockEventsSpread = false;
@@ -19,9 +18,13 @@ function GraphicsEngine(canvas, context, mapStructures, nbLines, nbColumns, phys
 	// Character position on screen
 	this.charX = -1;
 	this.charY = -1;
+}
+
+GraphicsEngine.prototype.computeGraphicsData = function() {
+	// Pre computation of each hexagons position for the drawing
+	this.radius = this.computeMapSize(this.canvas.width, this.canvas.height);
 
 	// Patterns
-	this.radius = this.computeHexagonSize(canvas.width, canvas.height);
 	var hexagonPatterns = new HexagonPatterns(this.radius);
 	this.patterns = hexagonPatterns.getPatterns();
 	var characterHeight = 2/5*this.radius;
@@ -30,20 +33,87 @@ function GraphicsEngine(canvas, context, mapStructures, nbLines, nbColumns, phys
 	this.characterPatterns = new CharacterPatterns(characterHeight, this.patternWidth, this.patternHeight);
 	var exitHeight = 3/5*this.radius;
 	this.exitPatterns = new ExitPatterns(exitHeight, this.patternWidth, this.patternHeight);
-
-	this.computeGraphicsData();
-}
-
-GraphicsEngine.prototype.computeGraphicsData = function() {
-	// Pre computation of each hexagons position for the drawing
-	this.computeHexagonCoordinates();
+	
 	this.updateCharacterCoordinates();
 }
 
-GraphicsEngine.prototype.computeHexagonSize = function(screenWidth, screenHeight) {
+/*GraphicsEngine.prototype.computeHexagonSize = function(screenWidth, screenHeight) {
 	var a = 2 / Math.sqrt(3) / (2*this.nbLines + 1) * screenHeight;
 	var b = screenWidth / (2*this.nbColumns);
 	return Math.floor(Math.min(a, b));
+}*/
+
+GraphicsEngine.prototype.computeMapSize = function(width, height) {
+	var currHex, nextHex;
+	var directions = ["top", "topLeft", "topRight", "bot", "botLeft", "botRight"];
+	var hexagons = [];
+	var marks = new Map();
+	hexagons.push(this.mapStructures.exitHexagon);
+	marks.set(this.mapStructures.exitHexagon, [0, 0]);
+	var offset, offsetX, offsetY;
+
+	// Compute all relative positions
+	while (hexagons.length > 0) {
+		currHex = hexagons.shift();
+		offset = marks.get(currHex);
+		offsetX = offset[0];
+		offsetY = offset[1];
+		for (var dir of directions) {
+			nextHex = currHex[dir];
+			if (nextHex !== null && !marks.has(nextHex)) {
+				hexagons.push(nextHex);
+				switch (dir) {
+					case "top":
+						marks.set(nextHex, [offsetX, offsetY - 1]);
+						break;
+					case "topLeft":
+						marks.set(nextHex, [offsetX - 1, offsetY - 1/2]);
+						break;
+					case "topRight":
+						marks.set(nextHex, [offsetX + 1, offsetY - 1/2]);
+						break;
+					case "bot":
+						marks.set(nextHex, [offsetX, offsetY + 1]);
+						break;
+					case "botLeft":
+						marks.set(nextHex, [offsetX - 1, offsetY + 1/2]);
+						break;
+					case "botRight": 
+						marks.set(nextHex, [offsetX + 1, offsetY + 1/2]);
+						break;
+				}
+			}
+		}
+	}
+
+	// Compute max dimensions
+	var minX = 0
+	var maxX = 0
+	var minY = 0
+	var maxY = 0;
+	for (var relPos of marks.values()) {
+		minX = Math.min(minX, relPos[0]);
+		maxX = Math.max(maxX, relPos[0]);
+		minY = Math.min(minY, relPos[1]);
+		maxY = Math.max(maxY, relPos[1]);
+	}
+
+	var a = height / (Math.sqrt(3)*(maxY - minY + 1));
+	var b = width / (2*(maxX - minX + 1))
+	var l = Math.floor(Math.min(a, b));
+
+	for (var [key, value] of marks) {
+		value[0] -= minX;
+		value[1] -= minY;
+	}
+
+	for (var [hex, offset] of marks) {
+		hex.x = offset[0] * 3/2 * l;
+		hex.y = offset[1] * Math.sqrt(3) * l;
+	}
+
+	return l;
+
 }
 
 GraphicsEngine.prototype.draw = function() {
