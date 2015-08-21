@@ -1,6 +1,8 @@
 "use strict";
 
 function DeveloperConsole(canvas, context) {
+	GraphicalElement.call(this);
+
 	this.name = "DeveloperConsole";
 
 	this.canvas = canvas;
@@ -17,6 +19,9 @@ function DeveloperConsole(canvas, context) {
 
 	this.text = "";
 }
+
+DeveloperConsole.prototype = Object.create(GraphicalElement.prototype);
+DeveloperConsole.prototype.constructor = DeveloperConsole;
 
 DeveloperConsole.prototype.draw = function(date) {
 	this.ctx.fillStyle = "#222222";
@@ -54,10 +59,4 @@ DeveloperConsole.prototype.handleKey = function(code) {
 		this.text = "";
 		return copy;
 	}
-}
-
-DeveloperConsole.prototype.handleCursorMove = function(x, y) {
-}
-
-DeveloperConsole.prototype.handleClick = function(x, y) {
 }

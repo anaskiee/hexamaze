@@ -1,6 +1,8 @@
 "use strict";
 
 function GraphicsEngine(canvas, context, mapStructures, physicsEngine) {
+	GraphicalElement.call(this);
+
 	this.name = "GraphicsEngine";
 	this.width = canvas.width;
 	this.height = canvas.height;
@@ -23,6 +25,9 @@ function GraphicsEngine(canvas, context, mapStructures, physicsEngine) {
 	this.charX = -1;
 	this.charY = -1;
 }
+
+GraphicsEngine.prototype = Object.create(GraphicalElement.prototype);
+GraphicsEngine.prototype.constructor = GraphicsEngine;
 
 GraphicsEngine.prototype.computeGraphicsData = function() {
 	// Pre computation of each hexagons position for the drawing

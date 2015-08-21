@@ -217,7 +217,6 @@ Master.prototype.applyEvents = function() {
 				case "I":
 					break;
 				case "MG":
-					console.log(e.nb);
 					this.updateComputingMenu(e.nb);
 					break;
 				case "MC":

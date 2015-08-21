@@ -1,6 +1,7 @@
 "use strict";
 
 function IngameMenu(canvas, context) {
+	GraphicalElement.call(this);
 	this.name = "IngameMenu";
 
 	this.canvas = canvas;
@@ -48,6 +49,9 @@ function IngameMenu(canvas, context) {
 	this.addButtons();
 	this.buttonSelected = null;
 }
+
+IngameMenu.prototype = Object.create(GraphicalElement.prototype);
+IngameMenu.prototype.constructor = IngameMenu;
 
 IngameMenu.prototype.reduce = function(date) {
 	this.animation = "reduce";
