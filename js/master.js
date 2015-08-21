@@ -1,18 +1,15 @@
 "use strict";
 
-function Master(physicsEngine, graphicsEngine, ingameMenu, solver, gameLoader, worker, mapStructure, developerConsole) {
+function Master(canvas, physicsEngine, graphicsEngine, ingameMenu, worker, mapStructure, developerConsole) {
 	this.physicsEngine = physicsEngine;
 	this.graphicsEngine = graphicsEngine;
 	this.ingameMenu = ingameMenu;
-	this.solver = solver;
-	this.gameLoader = gameLoader;
 	this.worker = worker;
 	this.mapStructure = mapStructure;
 	this.developerConsole = developerConsole;
+	this.width = canvas.width;
+	this.height = canvas.height;
 	
-	//this.mainMenuDisplayed = false;
-	this.gameDisplayed = true;
-	this.ingameMenuDisplayed = false;
 	// 0 -> GraphicsEngine
 	// 1 -> IngameMenu
 	// 2 -> DeveloperConsole
@@ -40,12 +37,10 @@ Master.prototype.beginDrawing = function() {
 
 Master.prototype.draw = function() {
 	requestAnimationFrame(this.draw.bind(this));
+	var date = new Date();
 
 	// Check if some elements doesn't need to be processed
 	this.checkStateTransition();
-
-	var date = new Date();
-	//var animationRunning = this.ingameMenu.animationRunning || this.state == "computing";
 
 	// Apply events
 	this.applyEvents();
@@ -56,12 +51,6 @@ Master.prototype.draw = function() {
 			element.draw(date);
 		}
 	}
-/*	if (this.applyEvents() || animationRunning) {
-		if (this.mapDrawAllowed) {
-			this.graphicsEngine.draw();
-		}
-		this.ingameMenu.draw(date);
-	}*/
 }
 
 Master.prototype.manualDraw = function() {
@@ -177,12 +166,6 @@ Master.prototype.updateComputingMenu = function(nbTries) {
 	this.ingameMenu.setText("Computing... (" + nbTries + ")");
 }
 
-Master.prototype.showConsole = function() {
-	//this.elementsToRender.push(this.developerConsole);
-	this.addElementToRender("DeveloperConsole");
-	this.developerConsole.show();
-}
-
 Master.prototype.hideConsole = function() {
 	this.developerConsole.hide();
 }
@@ -284,6 +267,12 @@ Master.prototype.help = function() {
 		help += commandName + "\n"
 	}
 	alert(help);
+}
+
+Master.prototype.showConsole = function() {
+	this.graphicsEngine.height -= this.developerConsole.height;
+	this.addElementToRender("DeveloperConsole");
+	this.developerConsole.show();
 }
 
 

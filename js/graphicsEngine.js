@@ -2,6 +2,8 @@
 
 function GraphicsEngine(canvas, context, mapStructures, physicsEngine) {
 	this.name = "GraphicsEngine";
+	this.width = canvas.width;
+	this.height = canvas.height;
 
 	this.canvas = canvas;
 	this.ctx = context;
@@ -24,7 +26,7 @@ function GraphicsEngine(canvas, context, mapStructures, physicsEngine) {
 
 GraphicsEngine.prototype.computeGraphicsData = function() {
 	// Pre computation of each hexagons position for the drawing
-	this.radius = this.computeMapSize(this.canvas.width, this.canvas.height);
+	this.radius = this.computeMapSize(this.width, this.height);
 
 	// Patterns
 	var hexagonPatterns = new HexagonPatterns(this.radius);

@@ -1,17 +1,14 @@
 "use strict";
 
 function GameLoader(canvas, context) {
-	this.canvas = canvas;
-	this.context = context;
+	var worker = new Worker("./js/mapGenerator.js");
+	var mapStructures = new MapStructures();
+	var physicsEngine = new PhysicsEngine(mapStructures);
+	var graphicsEngine = new GraphicsEngine(canvas, context, mapStructures, physicsEngine);;
+	var ingameMenu = new IngameMenu(canvas, context);
+	var developerConsole = new DeveloperConsole(canvas, context);
+	var master = new Master(canvas, physicsEngine, graphicsEngine, ingameMenu, worker, mapStructures, developerConsole);
+	var eventHandler = new EventHandler(canvas, master, worker);
 
-	this.worker = new Worker("./js/mapGenerator.js");
-	this.mapStructures = new MapStructures();
-	this.physicsEngine = new PhysicsEngine(this.mapStructures);
-	this.graphicsEngine = new GraphicsEngine(this.canvas, this.context, this.mapStructures, this.physicsEngine);;
-	this.ingameMenu = new IngameMenu(canvas, context);
-	this.developerConsole = new DeveloperConsole(canvas, context);
-	this.master = new Master(this.physicsEngine, this.graphicsEngine, this.ingameMenu, this.solver, this, this.worker, this.mapStructures, this.developerConsole);
-	this.eventHandler = new EventHandler(this.canvas, this.master, this.worker);
-
-	this.master.start();
+	master.start();
 }
