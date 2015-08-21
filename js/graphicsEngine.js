@@ -1,6 +1,8 @@
 "use strict";
 
 function GraphicsEngine(canvas, context, mapStructures, physicsEngine) {
+	this.name = "GraphicsEngine";
+
 	this.canvas = canvas;
 	this.ctx = context;
 	this.map = mapStructures.hexagons;

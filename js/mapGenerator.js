@@ -3,15 +3,24 @@
 importScripts("./mapConfiguration.js", "./mapSolver.js", "./mapStructures.js", "./hexagon.js");
 
 onmessage = function(msg) {
-	computeNewMap();
+	var parameters = msg.data.split(" ");
+	var nbLines, nbColumns;
+	if (parameters.length == 3) {
+		nbLines = parseInt(parameters[1]);
+		nbColumns = parseInt(parameters[2]);
+	} else {
+		nbLines = 7;
+		nbColumns = 15;
+	}
+	computeNewMap(nbLines, nbColumns);
 }
 
-function computeNewMap() {
+function computeNewMap(nbLines, nbColumns) {
 	var difficulty = 9000;
 	var nb = 0;
 
-	var height = 7;
-	var width = 15;
+	var height = nbLines;
+	var width = nbColumns;
 
 	var mapStructures = new MapStructures();
 	var solver = new MapSolver(mapStructures.hexagons);

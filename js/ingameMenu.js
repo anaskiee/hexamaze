@@ -1,6 +1,8 @@
 "use strict";
 
 function IngameMenu(canvas, context) {
+	this.name = "IngameMenu";
+
 	this.canvas = canvas;
 	this.ctx = context;
 	this.screenWidth = canvas.width;

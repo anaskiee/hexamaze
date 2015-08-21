@@ -13,7 +13,12 @@ function Master(physicsEngine, graphicsEngine, ingameMenu, solver, gameLoader, w
 	//this.mainMenuDisplayed = false;
 	this.gameDisplayed = true;
 	this.ingameMenuDisplayed = false;
-	this.elementsToRender = [];
+	// 0 -> GraphicsEngine
+	// 1 -> IngameMenu
+	// 2 -> DeveloperConsole
+	this.elementsToRender = new Array(3);
+	this.commands = new Map();
+	this.initializeCommandsBinding();
 
 	this.events = [];
 	this.mapDrawAllowed = false;
@@ -47,7 +52,9 @@ Master.prototype.draw = function() {
 
 	// Render
 	for (let element of this.elementsToRender) {
-		element.draw(date);
+		if (element) {
+			element.draw(date);
+		}
 	}
 /*	if (this.applyEvents() || animationRunning) {
 		if (this.mapDrawAllowed) {
@@ -61,7 +68,9 @@ Master.prototype.manualDraw = function() {
 	var date = new Date();
 	// Render
 	for (let element of this.elementsToRender) {
-		element.draw(date);
+		if (element) {
+			element.draw(date);
+		}
 	}
 }
 
@@ -76,8 +85,37 @@ Master.prototype.start = function() {
 	this.draw();
 }
 
+Master.prototype.removeElementToRender = function(name) {
+	switch (name) {
+		case "GraphicsEngine":
+			this.elementsToRender[0] = null;
+			break;
+		case "IngameMenu":
+			this.elementsToRender[1] = null;
+			break;
+		case "DeveloperConsole":
+			this.elementsToRender[2] = null;
+			break;
+	}
+}
+
+Master.prototype.addElementToRender = function(name) {
+	switch (name) {
+		case "GraphicsEngine":
+			this.elementsToRender[0] = this.graphicsEngine;
+			break;
+		case "IngameMenu":
+			this.elementsToRender[1] = this.ingameMenu;
+			break;
+		case "DeveloperConsole":
+			this.elementsToRender[2] = this.developerConsole;
+			break;
+	}
+}
+
 Master.prototype.mapComputed = function() {
-	this.elementsToRender.unshift(this.graphicsEngine);
+	this.addElementToRender("GraphicsEngine");
+	//this.elementsToRender.unshift(this.graphicsEngine);
 	setTimeout(this.reduceMenu.bind(this), 1000, true);
 }
 
@@ -90,27 +128,29 @@ Master.prototype.loadMap = function(map) {
 
 Master.prototype.checkStateTransition = function() {
 	for (let element of this.elementsToRender) {
-		if (element.active == 0) {
-			let idx = this.elementsToRender.indexOf(element);
+		if (element && element.active == 0) {
+			this.removeElementToRender(element.name);
+			/*let idx = this.elementsToRender.indexOf(element);
 			if (idx > -1) {
 				this.elementsToRender.splice(idx, 1);
 			} else {
 				console.log("error : element not found");
-			}
+			}*/
 		}
 	}
 }
 
-Master.prototype.switchIngameMenuState = function() {
+/*Master.prototype.switchIngameMenuState = function() {
 	if (this.elementsToRender.indexOf(this.ingameMenu) == -1) {
 		this.expandMenu();
 	} else {
 		this.reduceMenu();
 	}
-}
+}*/
 
 Master.prototype.expandMenu = function() {
-	this.elementsToRender.push(this.ingameMenu);
+	//this.elementsToRender.push(this.ingameMenu);
+	this.addElementToRender("IngameMenu");
 	this.ingameMenu.expand(new Date());
 }
 
@@ -138,7 +178,8 @@ Master.prototype.updateComputingMenu = function(nbTries) {
 }
 
 Master.prototype.showConsole = function() {
-	this.elementsToRender.push(this.developerConsole);
+	//this.elementsToRender.push(this.developerConsole);
+	this.addElementToRender("DeveloperConsole");
 	this.developerConsole.show();
 }
 
@@ -168,6 +209,14 @@ Master.prototype.applyEvents = function() {
 		e = this.events.shift();
 		for (var i = elementsNumber - 1; 0 <= i; i--) {
 			eventTarget = this.elementsToRender[i];
+			
+			// This element is not active
+			if (!eventTarget) {
+				continue;
+			}
+
+			action = "";
+
 			switch (e.type) {
 				case "M":
 					action = eventTarget.handleCursorMove(e.x, e.y);
@@ -194,15 +243,11 @@ Master.prototype.applyEvents = function() {
 					break;
 			}
 	
-			switch (action) {
-				case "newgame":
-					this.elementsToRender.shift();
-					this.updateComputingMenu(0);
-					this.worker.postMessage("compute");
-					break;
-				case "win":
-					this.displayWin();
-					break;
+			if (action) {
+				var mainCommand = action.split(" ")[0];
+				if (this.commands.has(mainCommand)) {
+					this.commands.get(mainCommand)(action);
+				}
 			}
 
 			if (eventTarget.blockEventsSpread) {
@@ -213,7 +258,36 @@ Master.prototype.applyEvents = function() {
 	return updateNeeded;
 }
 
-Master.prototype.applyKeyEvent = function(key) {
+Master.prototype.initializeCommandsBinding = function() {
+	this.commands.set("new_map", this.randomMap.bind(this));
+	this.commands.set("win", this.win.bind(this));
+	this.commands.set("help", this.help.bind(this));
+}
+
+Master.prototype.randomMap = function(commandLine) {
+	this.removeElementToRender("GraphicsEngine");
+	this.addElementToRender("IngameMenu");
+	this.ingameMenu.expand(new Date());
+	this.updateComputingMenu(0);
+	this.worker.postMessage(commandLine);
+}
+
+Master.prototype.win = function() {
+	this.addElementToRender("IngameMenu");
+	this.ingameMenu.setText("You win !");
+	this.ingameMenu.expand(new Date());
+}
+
+Master.prototype.help = function() {
+	var help = "list of available commands : \n";
+	for (var commandName of this.commands.keys()) {
+		help += commandName + "\n"
+	}
+	alert(help);
+}
+
+
+/*Master.prototype.applyKeyEvent = function(key) {
 	var changed = false;
 	switch (key) {
 		case "Enter":
@@ -260,4 +334,4 @@ Master.prototype.applyKeyEvent = function(key) {
 
 		this.graphicsEngine.updateDirection(this.direction);
 	}
-}
+}*/

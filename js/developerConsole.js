@@ -1,6 +1,8 @@
 "use strict";
 
 function DeveloperConsole(canvas, context) {
+	this.name = "DeveloperConsole";
+
 	this.canvas = canvas;
 	this.ctx = context;
 	this.screenWidth = canvas.width;
@@ -13,7 +15,7 @@ function DeveloperConsole(canvas, context) {
 
 	this.focus = false;
 
-	this.text = "test";
+	this.text = "";
 }
 
 DeveloperConsole.prototype.draw = function(date) {
@@ -48,7 +50,9 @@ DeveloperConsole.prototype.handleKey = function(code) {
 	} else if (code === 8) {
 		this.text = this.text.slice(0, -1);
 	} else if (code === 13) {
-		alert("not implemented yet");
+		var copy = this.text;
+		this.text = "";
+		return copy;
 	}
 }
 

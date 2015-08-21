@@ -3,10 +3,6 @@
 function MapConfiguration(mapStructures, nbLines, nbColumns) {
 	this.nbLines = nbLines + 2;
 	this.nbColumns = nbColumns + 2;
-	var characterLine = 3;
-	var characterColumn = 4;
-	var exitLine = 4;
-	var exitColumn = 5;
 
 	mapStructures.initializeData();
 
