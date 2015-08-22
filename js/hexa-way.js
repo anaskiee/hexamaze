@@ -24,12 +24,5 @@ window.addEventListener('DOMContentLoaded', function() {
 
 	canvas.focus();
 
-	// prevent backspace key from navigating back
-	document.onkeydown = function (e) {
-		if (e.which === 8 && !$(e.target).is("input, textarea")) {
-			e.preventDefault();
-		}
-	};
-
 	new GameLoader(canvas, context);
 });
