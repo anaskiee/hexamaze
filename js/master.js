@@ -1,12 +1,14 @@
 "use strict";
 
-function Master(canvas, physicsEngine, graphicsEngine, ingameMenu, worker, mapStructure, developerConsole) {
+function Master(canvas, physicsEngine, graphicsEngine, ingameMenu, worker, mapStructure, developerConsole, commands) {
 	this.physicsEngine = physicsEngine;
 	this.graphicsEngine = graphicsEngine;
 	this.ingameMenu = ingameMenu;
 	this.worker = worker;
 	this.mapStructure = mapStructure;
 	this.developerConsole = developerConsole;
+	this.commands = commands;
+
 	this.width = canvas.width;
 	this.height = canvas.height;
 	
@@ -14,8 +16,6 @@ function Master(canvas, physicsEngine, graphicsEngine, ingameMenu, worker, mapSt
 	// 1 -> IngameMenu
 	// 2 -> DeveloperConsole
 	this.elementsToRender = new Array(3);
-	this.commands = new Map();
-	this.initializeCommandsBinding();
 
 	this.events = [];
 	this.mapDrawAllowed = false;
@@ -228,7 +228,8 @@ Master.prototype.applyEvents = function() {
 			if (action) {
 				var mainCommand = action.split(" ")[0];
 				if (this.commands.has(mainCommand)) {
-					this.commands.get(mainCommand)(action);
+					var test = this.commands.get(mainCommand);
+					this.commands.get(mainCommand).execute(action);
 				}
 			}
 
@@ -238,34 +239,6 @@ Master.prototype.applyEvents = function() {
 		}
 	}
 	return updateNeeded;
-}
-
-Master.prototype.initializeCommandsBinding = function() {
-	this.commands.set("new_map", this.randomMap.bind(this));
-	this.commands.set("win", this.win.bind(this));
-	this.commands.set("help", this.help.bind(this));
-}
-
-Master.prototype.randomMap = function(commandLine) {
-	this.removeElementToRender("GraphicsEngine");
-	this.addElementToRender("IngameMenu");
-	this.ingameMenu.expand(new Date());
-	this.updateComputingMenu(0);
-	this.worker.postMessage(commandLine);
-}
-
-Master.prototype.win = function() {
-	this.addElementToRender("IngameMenu");
-	this.ingameMenu.setText("You win !");
-	this.ingameMenu.expand(new Date());
-}
-
-Master.prototype.help = function() {
-	var help = "list of available commands : \n";
-	for (var commandName of this.commands.keys()) {
-		help += commandName + "\n"
-	}
-	alert(help);
 }
 
 Master.prototype.showConsole = function() {

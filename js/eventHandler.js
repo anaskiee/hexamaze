@@ -22,7 +22,9 @@ EventHandler.prototype.handleMouse = function(event) {
 
 EventHandler.prototype.handleKey = function(event) {
 	// prevent backspace key from navigating back
-	event.preventDefault();
+	if (event.keyCode == 8) {
+		event.preventDefault();
+	}
 	this.master.push({type : "K", code : event.keyCode + event.charCode});
 }
 
