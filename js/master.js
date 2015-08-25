@@ -126,7 +126,6 @@ Master.prototype.mapComputed = function() {
 Master.prototype.loadMap = function(map) {
 	this.mapStructure.initializeData();
 	this.mapStructure.fill(map);
-	this.physicsEngine.computePhysicsData();
 	this.graphicsEngine.computeGraphicsData();
 }
 

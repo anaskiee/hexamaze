@@ -1,6 +1,6 @@
 "use strict";
 
-function GraphicsEngine(canvas, context, mapStructures, physicsEngine) {
+function GraphicsEngine(canvas, context, system, physicsEngine) {
 	GraphicalElement.call(this);
 
 	this.name = "GraphicsEngine";
@@ -9,8 +9,8 @@ function GraphicsEngine(canvas, context, mapStructures, physicsEngine) {
 
 	this.canvas = canvas;
 	this.ctx = context;
-	this.map = mapStructures.hexagons;
-	this.mapStructures = mapStructures;
+	//this.map = mapStructures.hexagons;
+	this.system = system;
 
 	this.active = true;
 	this.blockEventsSpread = false;
@@ -52,13 +52,14 @@ GraphicsEngine.prototype.computeGraphicsData = function() {
 	return Math.floor(Math.min(a, b));
 }*/
 
+// Super function to compute hexagons size and position on screen
 GraphicsEngine.prototype.computeMapSize = function(width, height) {
 	var currHex, nextHex;
 	var directions = ["top", "topLeft", "topRight", "bot", "botLeft", "botRight"];
 	var hexagons = [];
 	var marks = new Map();
-	hexagons.push(this.mapStructures.exitHexagon);
-	marks.set(this.mapStructures.exitHexagon, [0, 0]);
+	hexagons.push(this.system.exitHexagon);
+	marks.set(this.system.exitHexagon, [0, 0]);
 	var offset, offsetX, offsetY;
 
 	// Compute all relative positions
@@ -130,69 +131,39 @@ GraphicsEngine.prototype.draw = function() {
 	this.ctx.fillStyle = "#003333";
 	this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-	var posX, posY;
-	var style;
-	for (let hexagon of this.map) {
+	var posX, posY, style;
+
+	// Draw all basic hexagons
+	for (let hexagon of this.system.hexagons) {
 		posX = hexagon.x;
 		posY = hexagon.y;
+		style = hexagon.type;
 		
-		if (hexagon.exitHere) {
-			this.ctx.drawImage(this.exitPatterns.get("basic"), posX, posY);
-		}
-
-		if (hexagon.characterHere) {
-			// Draw character
-			this.ctx.drawImage(this.characterPatterns.get("basic"), posX, posY);
-			this.ctx.drawImage(this.patterns.get("space-" + this.direction), posX, posY);
+		if (hexagon.isPreselected) {
+			this.ctx.drawImage(this.patterns.get("highlight"), posX, posY);
+		} else if (hexagon.isReachable) {
+			this.ctx.drawImage(this.patterns.get("reachable"), posX, posY);
 		} else {
-			// Draw hexagons
-			style = hexagon.type;
-			if (hexagon.isPreselected) {
-				this.ctx.drawImage(this.patterns.get("highlight"), posX, posY);
-			} else if (hexagon.isReachable) {
-				this.ctx.drawImage(this.patterns.get("reachable"), posX, posY);
-			} else {
-				this.ctx.drawImage(this.patterns.get(style), posX, posY);
-			}
+			this.ctx.drawImage(this.patterns.get(style), posX, posY);
 		}
-
 	}
-}
 
-GraphicsEngine.prototype.computeHexagonCoordinates = function() {
-	var preComputedOffsetX = - this.radius/2;
-	var preComputedOffsetY = Math.sqrt(3)/2 * this.radius;
-	var width = 2*this.radius;
-	var height = Math.sqrt(3) * this.radius;
-	var hexagon;
-	var posX, posY;
-	var offsetY;
-	var i, j;
+	// Draw character and direction preselected
+	posX = this.system.characterHexagon.x;
+	posY = this.system.characterHexagon.y;
+	this.ctx.drawImage(this.characterPatterns.get("basic"), posX, posY);
+	this.ctx.drawImage(this.patterns.get("space-" + this.direction), posX, posY);
 
-	for (let hexagon of this.map) {
-		i = hexagon.i;
-		j = hexagon.j;
-		
-		if ((j % 2) == 0) {
-			offsetY = preComputedOffsetY;
-		} else {
-			offsetY = 0;
-		}
-		posX = j * (width + preComputedOffsetX);
-		posY = i * height + offsetY;
-
-		hexagon.x = posX;
-		hexagon.y = posY;
-	}
+	// Draw exit
+	posX = this.system.exitHexagon.x;
+	posY = this.system.exitHexagon.y;
+	this.ctx.drawImage(this.exitPatterns.get("basic"), posX, posY);
 }
 
 GraphicsEngine.prototype.updateCharacterCoordinates = function() {
-	for (let hexagon of this.map) {
-		if (hexagon.characterHere) {
-			this.charX = hexagon.x + this.patternWidth/2;
-			this.charY = hexagon.y + this.patternHeight/2; 
-		}
-	}
+	var hexagon = this.system.characterHexagon;
+	this.charX = hexagon.x + this.patternWidth/2;
+	this.charY = hexagon.y + this.patternHeight/2; 
 }
 
 GraphicsEngine.prototype.computeDirection = function(x, y) {

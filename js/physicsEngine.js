@@ -1,27 +1,14 @@
 "use strict";
 
-function PhysicsEngine(mapStructures) {
-	this.map = mapStructures.hexagons;
-	this.characterHexagon = null;
-}
-
-PhysicsEngine.prototype.computePhysicsData = function() {
-	this.searchForCharacter();
-}
-
-PhysicsEngine.prototype.searchForCharacter = function() {
-	for (let hexagon of this.map) {
-		if (hexagon.characterHere) {
-			this.characterHexagon = hexagon;
-			break;
-		}
-	}
+function PhysicsEngine(system) {
+	// The physcics engine describes law ruling the changes of this system
+	this.system = system
 }
 
 PhysicsEngine.prototype.computeReachableHexagons = function() {
 	var directions = ["top", "topRight", "topLeft", "bot", "botRight", "botLeft"];
 	for (let direction of directions) {
-		var currHexagon = this.characterHexagon;
+		var currHexagon = this.system.characterHexagon;
 		var nextHexagon = currHexagon[direction];
 		while (nextHexagon != null && nextHexagon.type != "block" && !currHexagon.exitHere) {
 			nextHexagon.isReachable = true;
@@ -32,7 +19,7 @@ PhysicsEngine.prototype.computeReachableHexagons = function() {
 }
 
 PhysicsEngine.prototype.computeHexagonsTowardsDirection = function(direction) {
-	var currHexagon = this.characterHexagon;
+	var currHexagon = this.system.characterHexagon;
 	var nextHexagon = currHexagon[direction];
 	while (nextHexagon != null && nextHexagon.type != "block" && !currHexagon.exitHere) {
 		nextHexagon.isPreselected = true;
@@ -44,16 +31,16 @@ PhysicsEngine.prototype.computeHexagonsTowardsDirection = function(direction) {
 PhysicsEngine.prototype.applyMove = function(direction) {
 	this.cleanMap();
 
-	var currHexagon = this.characterHexagon;
+	var currHexagon = this.system.characterHexagon;
 	var nextHexagon = currHexagon[direction];
 	while (nextHexagon != null && nextHexagon.type != "block" && !currHexagon.exitHere) {
 		currHexagon = nextHexagon;
 		nextHexagon = nextHexagon[direction];
 	}
-	this.characterHexagon = currHexagon;
-	this.characterHexagon.characterHere = true;
+	this.system.characterHexagon = currHexagon;
+	this.system.characterHexagon.characterHere = true;
 
-	if (this.characterHexagon.exitHere) {
+	if (this.system.characterHexagon === this.system.exitHexagon) {
 		return "win";
 	} else {
 		return "";
@@ -61,20 +48,20 @@ PhysicsEngine.prototype.applyMove = function(direction) {
 }
 
 PhysicsEngine.prototype.cleanMap = function() {
-	for (let hexagon of this.map) {
+	for (let hexagon of this.system.hexagons) {
 		hexagon.characterHere = false;
 		hexagon.isPreselected = false;
 	}
 }
 
 PhysicsEngine.prototype.cleanHighlight = function() {
-	for (let hexagon of this.map) {
+	for (let hexagon of this.system.hexagons) {
 		hexagon.isReachable = false;
 	}
 }
 
 PhysicsEngine.prototype.cleanPreselectedHexagons = function() {
-	for (let hexagon of this.map) {
+	for (let hexagon of this.system.hexagons) {
 		hexagon.isPreselected = false;
 	}
 }
