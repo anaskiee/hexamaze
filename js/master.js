@@ -53,16 +53,6 @@ Master.prototype.draw = function() {
 	}
 }
 
-Master.prototype.manualDraw = function() {
-	var date = new Date();
-	// Render
-	for (let element of this.elementsToRender) {
-		if (element) {
-			element.draw(date);
-		}
-	}
-}
-
 // +----------------------+
 // |   States managment   |
 // +----------------------+
@@ -102,9 +92,34 @@ Master.prototype.addElementToRender = function(name) {
 	}
 }
 
+Master.prototype.checkStateTransition = function() {
+	for (let element of this.elementsToRender) {
+		if (element && element.active == 0) {
+			this.removeElementToRender(element.name);
+		}
+	}
+}
+
+// +-------------------------+
+// |   Top level functions   |
+// +-------------------------+
+
+Master.prototype.computeNewMap = function(commandLine) {
+	this.removeElementToRender("GraphicsEngine");
+	this.addElementToRender("IngameMenu");
+	this.ingameMenu.expand(new Date());
+	this.updateComputingMenu(0);
+	this.worker.postMessage(commandLine);
+}
+
+Master.prototype.onWinEvent = function() {
+	this.addElementToRender("IngameMenu");
+	this.ingameMenu.setText("You win !");
+	this.ingameMenu.expand(new Date());
+}
+
 Master.prototype.mapComputed = function() {
 	this.addElementToRender("GraphicsEngine");
-	//this.elementsToRender.unshift(this.graphicsEngine);
 	setTimeout(this.reduceMenu.bind(this), 1000, true);
 }
 
@@ -115,30 +130,7 @@ Master.prototype.loadMap = function(map) {
 	this.graphicsEngine.computeGraphicsData();
 }
 
-Master.prototype.checkStateTransition = function() {
-	for (let element of this.elementsToRender) {
-		if (element && element.active == 0) {
-			this.removeElementToRender(element.name);
-			/*let idx = this.elementsToRender.indexOf(element);
-			if (idx > -1) {
-				this.elementsToRender.splice(idx, 1);
-			} else {
-				console.log("error : element not found");
-			}*/
-		}
-	}
-}
-
-/*Master.prototype.switchIngameMenuState = function() {
-	if (this.elementsToRender.indexOf(this.ingameMenu) == -1) {
-		this.expandMenu();
-	} else {
-		this.reduceMenu();
-	}
-}*/
-
 Master.prototype.expandMenu = function() {
-	//this.elementsToRender.push(this.ingameMenu);
 	this.addElementToRender("IngameMenu");
 	this.ingameMenu.expand(new Date());
 }
@@ -149,11 +141,6 @@ Master.prototype.reduceMenu = function() {
 
 Master.prototype.displayMenu = function() {
 	this.ingameMenu.setText("So many choices...");
-	this.switchIngameMenuState();
-}
-
-Master.prototype.displayWin = function() {
-	this.ingameMenu.setText("You win !");
 	this.switchIngameMenuState();
 }
 
@@ -168,6 +155,12 @@ Master.prototype.updateComputingMenu = function(nbTries) {
 
 Master.prototype.hideConsole = function() {
 	this.developerConsole.hide();
+}
+
+Master.prototype.showConsole = function() {
+	this.graphicsEngine.height -= this.developerConsole.height;
+	this.addElementToRender("DeveloperConsole");
+	this.developerConsole.show();
 }
 
 // +----------------------+
@@ -241,43 +234,9 @@ Master.prototype.applyEvents = function() {
 	return updateNeeded;
 }
 
-Master.prototype.showConsole = function() {
-	this.graphicsEngine.height -= this.developerConsole.height;
-	this.addElementToRender("DeveloperConsole");
-	this.developerConsole.show();
-}
-
-
 /*Master.prototype.applyKeyEvent = function(key) {
 	var changed = false;
 	switch (key) {
-		case "Enter":
-			this.applyClickEvent();
-			break;
-		case "KeyQ":
-			this.direction = "topLeft";
-			changed = true;
-			break;
-		case "KeyW":
-			this.direction = "top";
-			changed = true;
-			break;
-		case "KeyE":
-			this.direction = "topRight";
-			changed = true;
-			break;
-		case "KeyA":
-			this.direction = "botLeft";
-			changed = true;
-			break;
-		case "KeyS":
-			this.direction = "bot";
-			changed = true;
-			break;
-		case "KeyD":
-			this.direction = "botRight";
-			changed = true;
-			break;
 		case "KeyH":
 			this.solver.highlightSolution();
 			break;

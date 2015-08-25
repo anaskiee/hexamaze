@@ -13,9 +13,9 @@ function GameLoader(canvas, context) {
 	var eventHandler = new EventHandler(canvas, master, worker);
 
 	// Initialize all commands
-	commands.set("new_map", new NewMap("new_map", master, ingameMenu, worker));
 	commands.set("help", new Help("help", commands));
-	commands.set("win", new Win("win", master, ingameMenu));
+	commands.set("new_map", new NewMap("new_map", master));
+	commands.set("win", new Win("win", master));
 
 	master.start();
 }
