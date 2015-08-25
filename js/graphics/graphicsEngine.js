@@ -123,7 +123,6 @@ GraphicsEngine.prototype.computeMapSize = function(width, height) {
 	}
 
 	return l;
-
 }
 
 GraphicsEngine.prototype.draw = function() {
