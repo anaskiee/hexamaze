@@ -1,6 +1,6 @@
 "use strict";
 
-importScripts("./mapConfiguration.js", "./mapSolver.js", "./mapStructures.js", "./hexagon.js");
+importScripts("./mapCreator.js", "./mapSolver.js", "./mapStructures.js", "./hexagon.js");
 
 onmessage = function(msg) {
 	var parameters = msg.data.split(" ");
@@ -27,7 +27,7 @@ function computeNewMap(nbLines, nbColumns) {
 	var mapConfig;
 	while (difficulty < 5 || difficulty == 9000) {
 		nb++;
-		mapConfig = new MapConfiguration(mapStructures, height, width);
+		mapConfig = new MapCreator(mapStructures, height, width);
 		difficulty = solver.getMin();
 		if (nb % 30 == 0) {
 			postMessage(nb);
