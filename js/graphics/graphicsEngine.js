@@ -42,6 +42,7 @@ GraphicsEngine.prototype.computeGraphicsData = function() {
 	this.characterPatterns = new CharacterPatterns(characterHeight, this.patternWidth, this.patternHeight);
 	var exitHeight = 3/5*this.radius;
 	this.exitPatterns = new ExitPatterns(exitHeight, this.patternWidth, this.patternHeight);
+	this.plusMinuePatterns = new PlusMinusPatterns(this.radius);
 	
 	this.updateCharacterCoordinates();
 }
