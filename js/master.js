@@ -1,11 +1,11 @@
 "use strict";
 
-function Master(canvas, physicsEngine, graphicsEngine, ingameMenu, worker, mapStructure, developerConsole, commands) {
+function Master(canvas, physicsEngine, graphicsEngine, ingameMenu, worker, level, developerConsole, commands) {
 	this.physicsEngine = physicsEngine;
 	this.graphicsEngine = graphicsEngine;
 	this.ingameMenu = ingameMenu;
 	this.worker = worker;
-	this.mapStructure = mapStructure;
+	this.level = level;
 	this.developerConsole = developerConsole;
 	this.commands = commands;
 
@@ -124,8 +124,8 @@ Master.prototype.mapComputed = function() {
 }
 
 Master.prototype.loadMap = function(map) {
-	this.mapStructure.initializeData();
-	this.mapStructure.fill(map);
+	this.level.initializeData();
+	this.level.fill(map);
 	this.graphicsEngine.computeGraphicsData();
 }
 

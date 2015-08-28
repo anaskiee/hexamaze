@@ -1,12 +1,12 @@
 "use strict";
 
-function MapStructures() {
+function Level() {
 	this.hexagons = new Set();
 	this.characterHexagon = null;
 	this.exitHexagon = null;
 }
 
-MapStructures.prototype.initializeData = function() {
+Level.prototype.initializeData = function() {
 	if (this.hexagons.size > 0) {
 		this.hexagons.clear();
 		this.characterHexagon = null;
@@ -14,13 +14,13 @@ MapStructures.prototype.initializeData = function() {
 	}
 }
 
-MapStructures.prototype.addHexagon = function(type) {
+Level.prototype.addHexagon = function(type) {
 	var hex = new Hexagon(type);
 	this.hexagons.add(hex);
 	return hex;
 }
 
-MapStructures.prototype.toString = function() {
+Level.prototype.toString = function() {
 	var idx = 0;
 	var hexa;
 	var hexagons = "";
@@ -48,13 +48,9 @@ MapStructures.prototype.toString = function() {
 			botRight : indexes.get(hex.botRight)
 		};
 
-		if (hex.characterHere) {
-			idxCharacter = hexa.index;
-		}
-
-		if (hex.exitHere) {
-			idxExit = hexa.index;
-		}
+		// Save character and exit hexagon
+		idxCharacter = indexes.get(this.characterHexagon);
+		idxExit = indexes.get(this.exitHexagon);
 
 		if (first) {
 			first = false;
@@ -67,7 +63,7 @@ MapStructures.prototype.toString = function() {
 	return idxCharacter + "\n" + idxExit + "\n" + hexagons;
 }
 
-MapStructures.prototype.fill = function(data) {
+Level.prototype.fill = function(data) {
 	var structures = data.split("\n");
 	
 	var idxCharacter = parseInt(structures[0]);
@@ -118,7 +114,5 @@ MapStructures.prototype.fill = function(data) {
 
 	// Character and exit
 	this.characterHexagon = indexes.get(idxCharacter);
-	this.characterHexagon.characterHere = true;
 	this.exitHexagon = indexes.get(idxExit);
-	this.exitHexagon.exitHere = true;
 }

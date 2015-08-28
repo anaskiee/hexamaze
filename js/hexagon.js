@@ -14,8 +14,6 @@ function Hexagon(type)
 	this.botLeft 	= null;
 	this.botRight 	= null;
 
-	this.characterHere = false;
-	this.exitHere = false;
 	this.isReachable = false;
 	this.isPreselected = false;
 

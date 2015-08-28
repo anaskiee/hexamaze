@@ -1,6 +1,6 @@
 "use strict";
 
-function GraphicsEngine(canvas, context, system, physicsEngine) {
+function GraphicsEngine(canvas, context, level, physicsEngine) {
 	GraphicalElement.call(this);
 
 	this.name = "GraphicsEngine";
@@ -9,8 +9,7 @@ function GraphicsEngine(canvas, context, system, physicsEngine) {
 
 	this.canvas = canvas;
 	this.ctx = context;
-	//this.map = mapStructures.hexagons;
-	this.system = system;
+	this.level = level;
 
 	this.active = true;
 	this.blockEventsSpread = false;
@@ -59,8 +58,8 @@ GraphicsEngine.prototype.computeMapSize = function(width, height) {
 	var directions = ["top", "topLeft", "topRight", "bot", "botLeft", "botRight"];
 	var hexagons = [];
 	var marks = new Map();
-	hexagons.push(this.system.exitHexagon);
-	marks.set(this.system.exitHexagon, [0, 0]);
+	hexagons.push(this.level.exitHexagon);
+	marks.set(this.level.exitHexagon, [0, 0]);
 	var offset, offsetX, offsetY;
 
 	// Compute all relative positions
@@ -146,7 +145,7 @@ GraphicsEngine.prototype.draw = function() {
 	var posX, posY, style;
 
 	// Draw all basic hexagons
-	for (let hexagon of this.system.hexagons) {
+	for (let hexagon of this.level.hexagons) {
 		posX = hexagon.x;
 		posY = hexagon.y;
 		style = hexagon.type;
@@ -161,19 +160,19 @@ GraphicsEngine.prototype.draw = function() {
 	}
 
 	// Draw character and direction preselected
-	posX = this.system.characterHexagon.x;
-	posY = this.system.characterHexagon.y;
+	posX = this.level.characterHexagon.x;
+	posY = this.level.characterHexagon.y;
 	this.ctx.drawImage(this.characterPatterns.get("basic"), posX, posY);
 	this.ctx.drawImage(this.patterns.get("space-" + this.direction), posX, posY);
 
 	// Draw exit
-	posX = this.system.exitHexagon.x;
-	posY = this.system.exitHexagon.y;
+	posX = this.level.exitHexagon.x;
+	posY = this.level.exitHexagon.y;
 	this.ctx.drawImage(this.exitPatterns.get("basic"), posX, posY);
 }
 
 GraphicsEngine.prototype.updateCharacterCoordinates = function() {
-	var hexagon = this.system.characterHexagon;
+	var hexagon = this.level.characterHexagon;
 	this.charX = hexagon.x + this.patternWidth/2;
 	this.charY = hexagon.y + this.patternHeight/2; 
 }

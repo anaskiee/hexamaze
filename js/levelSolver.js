@@ -1,37 +1,21 @@
 "use strict";
 
-function MapSolver(map) {
-	this.map = map
+function LevelSolver(level) {
+	this.level = level;
 	this.solution = null;
 }
 
-MapSolver.prototype.getCharacterHexagon = function() {
-	for (var hexagon of this.map) {
-		if (hexagon.characterHere) {
-			return hexagon;
-		}
-	}
-}
-
-MapSolver.prototype.getExitHexagon = function() {
-	for (var hexagon of this.map) {
-		if (hexagon.exitHere) {
-			return hexagon;
-		}
-	}
-}
-
-MapSolver.prototype.getMin = function() {
+LevelSolver.prototype.getMin = function() {
 	this.solution = this.solve();
 
 	if (this.solution == "undefined") {
 		return 9000;
 	}
-	var exitHexagon = this.getExitHexagon();
+	var exitHexagon = this.level.exitHexagon;
 	return this.solution.get(exitHexagon).depth;
 }
 
-MapSolver.prototype.highlightSolution = function() {
+LevelSolver.prototype.highlightSolution = function() {
 	if (this.solution == null) {
 		this.solution = this.solve();
 	}
@@ -39,11 +23,11 @@ MapSolver.prototype.highlightSolution = function() {
 		// no solution
 		return;
 	}
-	var exitHexagon = this.getExitHexagon();
+	var exitHexagon = this.level.exitHexagon;
 
 	var currHexagon = exitHexagon;
 	var nextHexagon, direction;
-	while (!currHexagon.characterHere) {
+	while (currHexagon != this.level.characterHexagon) {
 		nextHexagon = this.solution.get(currHexagon).prevHexagon;
 		direction = this.solution.get(currHexagon).direction;
 		while (currHexagon != nextHexagon) {
@@ -53,8 +37,11 @@ MapSolver.prototype.highlightSolution = function() {
 	} 
 }
 
-MapSolver.prototype.solve = function() {
-	var characterHexagon = this.getCharacterHexagon();
+LevelSolver.prototype.solve = function() {
+	var characterHexagon = this.level.characterHexagon;
+	if (characterHexagon == null) {
+		console.log("ici");
+	}
 
 	var directions = ["top", "topLeft", "topRight", "bot", "botRight", "botLeft"];
 	var toExplore = [characterHexagon];
@@ -68,7 +55,7 @@ MapSolver.prototype.solve = function() {
 			var nextHexagon = this.computeNextHexagon(hexagon, direction);
 			if (!solution.has(nextHexagon)) {
 				solution.set(nextHexagon, {prevHexagon : hexagon, depth : depth + 1, direction : oppositeDirection});
-				if (nextHexagon.exitHere) {
+				if (nextHexagon == this.level.exitHexagon) {
 					return solution;
 				}
 				toExplore.push(nextHexagon);
@@ -78,10 +65,10 @@ MapSolver.prototype.solve = function() {
 	return "undefined";
 }
 
-MapSolver.prototype.computeNextHexagon = function(hexagon, direction) {
+LevelSolver.prototype.computeNextHexagon = function(hexagon, direction) {
 	var currHexagon = hexagon;
 	var nextHexagon = currHexagon[direction];
-	while (nextHexagon != null && nextHexagon.type != "block" && !currHexagon.exitHere) {
+	while (nextHexagon != null && nextHexagon.type != "block" && currHexagon != this.level.exitHexagon) {
 		currHexagon = nextHexagon;
 		nextHexagon = nextHexagon[direction];
 	}

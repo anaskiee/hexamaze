@@ -1,28 +1,29 @@
 "use strict";
 
-function MapCreator(mapStructures, nbLines, nbColumns) {
+function LevelCreator(level, nbLines, nbColumns) {
+	this.level = level;
 	this.nbLines = nbLines + 2;
 	this.nbColumns = nbColumns + 2;
 
 	// Object where cleaned data are stored
-	mapStructures.initializeData();
+	level.initializeData();
 
 	// Contstruct map
 	// Initialiaze block types
 	var hex;
 	
 	// Init reference structure
-	this.map = new Array(this.nbLines);
+	this.hexagons = new Array(this.nbLines);
 	for (var i = 0; i < this.nbLines; i++) {
-		this.map[i] = new Array(this.nbColumns);
+		this.hexagons[i] = new Array(this.nbColumns);
 	}
 
 	for (var i = 0; i < this.nbLines; i++) {
 		for (var j = 0; j < this.nbColumns; j++) {
 			if (i == 0 || j == 0 || i == this.nbLines-1 || j == this.nbColumns-1) {
-				this.map[i][j] = mapStructures.addHexagon("block");
+				this.hexagons[i][j] = level.addHexagon("block");
 			} else {
-				this.map[i][j] = mapStructures.addHexagon("space");
+				this.hexagons[i][j] = level.addHexagon("space");
 			}
 		}
 	}
@@ -32,17 +33,17 @@ function MapCreator(mapStructures, nbLines, nbColumns) {
 	for (var i = 0; i < this.nbLines; i++) {
 		for (var j = 0; j < this.nbColumns; j++) {
 			var idx = i*this.nbColumns + j;
-			hexagon = this.map[i][j];
+			hexagon = this.hexagons[i][j];
 
 			// Links
 			// top
 			if (i > 0) {
-				hexagon.top = this.map[i-1][j];
+				hexagon.top = this.hexagons[i-1][j];
 			}
 
 			// bot
 			if (i < this.nbLines - 1) {
-				hexagon.bot = this.map[i+1][j];
+				hexagon.bot = this.hexagons[i+1][j];
 			}
 
 			// topright
@@ -51,18 +52,18 @@ function MapCreator(mapStructures, nbLines, nbColumns) {
 			if ((j % 2) == 1) {
 				if (i > 0) {
 					if (j > 0) {
-					hexagon.topLeft = this.map[i-1][j-1];
+					hexagon.topLeft = this.hexagons[i-1][j-1];
 					}
 					if (j < this.nbColumns-1) {
-						hexagon.topRight = this.map[i-1][j+1];
+						hexagon.topRight = this.hexagons[i-1][j+1];
 					}
 				}
 			} else {
 				if (j > 0) {
-					hexagon.topLeft = this.map[i][j-1];
+					hexagon.topLeft = this.hexagons[i][j-1];
 				}
 				if (j < this.nbColumns-1) {
-					hexagon.topRight = this.map[i][j+1];
+					hexagon.topRight = this.hexagons[i][j+1];
 				}
 			}
 			// botright
@@ -71,18 +72,18 @@ function MapCreator(mapStructures, nbLines, nbColumns) {
 			if ((j % 2) == 0) {
 				if (i < this.nbLines-1) {
 					if (j > 0) {
-						hexagon.botLeft = this.map[i+1][j-1];
+						hexagon.botLeft = this.hexagons[i+1][j-1];
 					}
 					if (j < this.nbColumns-1) {
-						hexagon.botRight = this.map[i+1][j+1];
+						hexagon.botRight = this.hexagons[i+1][j+1];
 					}
 				}
 			} else {
 				if (j > 0) {
-					hexagon.botLeft = this.map[i][j-1];
+					hexagon.botLeft = this.hexagons[i][j-1];
 				}
 				if (j < this.nbColumns-1) {
-					hexagon.botRight = this.map[i][j+1];
+					hexagon.botRight = this.hexagons[i][j+1];
 				}
 			}
 		}
@@ -91,27 +92,35 @@ function MapCreator(mapStructures, nbLines, nbColumns) {
 	this.randomize(15);
 }
 
-MapCreator.prototype.randomize = function(blockPercent) {
+LevelCreator.prototype.createRandomMap = function() {
+	this.createBasicMap();
+	this.randomize(15);
+}
+
+LevelCreator.prototype.createBasicMap = function() {
+}
+
+LevelCreator.prototype.randomize = function(blockPercent) {
 	var limit = blockPercent / 100;
 	var hexagon;
 	var idx;
 
 	// Character
 	var characterHexagon = this.getRandomHexagon();
-	characterHexagon.characterHere = true;
+	this.level.characterHexagon = characterHexagon;
 	
 	// Exit
 	var exitHexagon = this.getRandomHexagon();
 	while (exitHexagon == characterHexagon) {
 		var exitHexagon = this.getRandomHexagon();
 	}
-	exitHexagon.exitHere = true;
+	this.level.exitHexagon = exitHexagon;
 
 	// Blocks
 	for (var i = 1; i < this.nbLines-1; i++) {
 		for (var j = 1; j < this.nbColumns-1; j++) {
-			hexagon = this.map[i][j];
-			if (hexagon.type == "space" && !hexagon.characterHere && !hexagon.exitHere) {
+			hexagon = this.hexagons[i][j];
+			if (hexagon.type == "space" && hexagon != characterHexagon && hexagon != exitHexagon) {
 				if (Math.random() < limit) {
 					hexagon.type = "block";
 				}
@@ -120,8 +129,8 @@ MapCreator.prototype.randomize = function(blockPercent) {
 	}
 }
 
-MapCreator.prototype.getRandomHexagon = function() {
+LevelCreator.prototype.getRandomHexagon = function() {
 	var x = Math.floor(Math.random() * (this.nbColumns - 2)) + 1;
 	var y = Math.floor(Math.random() * (this.nbLines - 2)) + 1;
-	return this.map[y][x];
+	return this.hexagons[y][x];
 }
