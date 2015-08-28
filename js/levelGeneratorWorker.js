@@ -19,15 +19,12 @@ function computeNewLevel(nbLines, nbColumns) {
 	var difficulty = 9000;
 	var nb = 0;
 
-	var height = nbLines;
-	var width = nbColumns;
-
 	var level = new Level();
 	var solver = new LevelSolver(level);
-	var levelCreator;
+	var	levelCreator = new LevelCreator(level, nbLines, nbColumns);
 	while (difficulty < 5 || difficulty == 9000) {
 		nb++;
-		levelCreator = new LevelCreator(level, height, width);
+		levelCreator.createRandomLevel();
 		difficulty = solver.getMin();
 		if (nb % 30 == 0) {
 			postMessage(nb);

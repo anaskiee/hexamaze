@@ -4,9 +4,16 @@ function LevelCreator(level, nbLines, nbColumns) {
 	this.level = level;
 	this.nbLines = nbLines + 2;
 	this.nbColumns = nbColumns + 2;
+}
 
+LevelCreator.prototype.createRandomLevel = function() {
+	this.createBasicLevel();
+	this.randomize(15);
+}
+
+LevelCreator.prototype.createBasicLevel = function() {
 	// Object where cleaned data are stored
-	level.initializeData();
+	this.level.clearData();
 
 	// Contstruct map
 	// Initialiaze block types
@@ -21,9 +28,9 @@ function LevelCreator(level, nbLines, nbColumns) {
 	for (var i = 0; i < this.nbLines; i++) {
 		for (var j = 0; j < this.nbColumns; j++) {
 			if (i == 0 || j == 0 || i == this.nbLines-1 || j == this.nbColumns-1) {
-				this.hexagons[i][j] = level.addHexagon("block");
+				this.hexagons[i][j] = this.level.addHexagon("block");
 			} else {
-				this.hexagons[i][j] = level.addHexagon("space");
+				this.hexagons[i][j] = this.level.addHexagon("space");
 			}
 		}
 	}
@@ -88,16 +95,6 @@ function LevelCreator(level, nbLines, nbColumns) {
 			}
 		}
 	}
-
-	this.randomize(15);
-}
-
-LevelCreator.prototype.createRandomMap = function() {
-	this.createBasicMap();
-	this.randomize(15);
-}
-
-LevelCreator.prototype.createBasicMap = function() {
 }
 
 LevelCreator.prototype.randomize = function(blockPercent) {

@@ -124,7 +124,7 @@ Master.prototype.mapComputed = function() {
 }
 
 Master.prototype.loadMap = function(map) {
-	this.level.initializeData();
+	this.level.clearData();
 	this.level.fill(map);
 	this.graphicsEngine.computeGraphicsData();
 }

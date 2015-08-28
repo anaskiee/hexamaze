@@ -6,7 +6,7 @@ function Level() {
 	this.exitHexagon = null;
 }
 
-Level.prototype.initializeData = function() {
+Level.prototype.clearData = function() {
 	if (this.hexagons.size > 0) {
 		this.hexagons.clear();
 		this.characterHexagon = null;
