@@ -15,16 +15,13 @@ LevelCreator.prototype.createBasicLevel = function() {
 	// Object where cleaned data are stored
 	this.level.clearData();
 
-	// Contstruct map
-	// Initialiaze block types
-	var hex;
-	
 	// Init reference structure
 	this.hexagons = new Array(this.nbLines);
 	for (var i = 0; i < this.nbLines; i++) {
 		this.hexagons[i] = new Array(this.nbColumns);
 	}
 
+	// Initialiaze block types
 	for (var i = 0; i < this.nbLines; i++) {
 		for (var j = 0; j < this.nbColumns; j++) {
 			if (i == 0 || j == 0 || i == this.nbLines-1 || j == this.nbColumns-1) {

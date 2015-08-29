@@ -19,30 +19,30 @@ Help.prototype.execute = function(commandLine) {
 
 /*--------------------------------------------------*/
 
-function NewMap(name, master) {
+function NewMap(name, game) {
 	Command.call(name, "create a random maze");
 
-	this.master = master;
+	this.game = game;
 }
 
 NewMap.prototype = Object.create(Command.prototype);
 NewMap.prototype.constructor = NewMap;
 
 NewMap.prototype.execute = function(commandLine) {
-	this.master.computeNewMap(commandLine);
+	this.game.computeNewMap(commandLine);
 }
 
 /*--------------------------------------------------*/
 
-function Win(name, master) {
+function Win(name, game) {
 	Command.call(name, "display the win menu");
 
-	this.master = master;
+	this.game = game;
 }
 
 Win.prototype = Object.create(Command.prototype);
 Win.prototype.constructor = Win;
 
 Win.prototype.execute = function(commandLine) {
-	this.master.onWinEvent();
+	this.game.onWinEvent();
 }
