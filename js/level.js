@@ -89,26 +89,16 @@ Level.prototype.fill = function(data) {
 		// one must not update them
 		for (var prop in partialHex) {
 			switch (prop) {
-				case "i":
-					hexagon.i = partialHex.i;
-					break;
-				case "j":
-					hexagon.j = partialHex.j;
-					break;
 				case "index":
 					break;
 				case "type":
 					break;
 				default:
+					// some directions are not taken
+					// they're let set to null
 					hexagon[prop] = indexes.get(partialHex[prop]);
 					break;
 			}
-			//hexagon.top 		= indexes.get(partialHex.top);
-			//hexagon.topLeft		= indexes.get(partialHex.topLeft);
-			//hexagon.topRight	= indexes.get(partialHex.topRight);
-			//hexagon.bot 		= indexes.get(partialHex.bot);
-			//hexagon.botLeft		= indexes.get(partialHex.botLeft);
-			//hexagon.botRight	= indexes.get(partialHex.botRight);
 		}
 	}
 

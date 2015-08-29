@@ -3,9 +3,6 @@
 function EventHandler(canvas, master, worker) {
 	this.master = master;
 
-	// A first fake event is pushed to force display
-	this.master.push({type : "I"});
-
 	this.canvas = canvas;
 	canvas.addEventListener("touchmove", this.handleTouch.bind(this), false);
 	canvas.addEventListener("mousemove", this.handleMouse.bind(this), false);
@@ -17,7 +14,8 @@ function EventHandler(canvas, master, worker) {
 
 // Functions to catch events in order to apply them asynchronously
 EventHandler.prototype.handleMouse = function(event) {
-	this.master.push({type : "M", x : event.pageX, y : event.pageY});
+	var evt = new CursorMoveEvent(event.pageX, event.pageY);
+	this.master.push(evt);
 }
 
 EventHandler.prototype.handleKey = function(event) {
@@ -25,24 +23,21 @@ EventHandler.prototype.handleKey = function(event) {
 	if (event.keyCode == 8) {
 		event.preventDefault();
 	}
-	this.master.push({type : "K", code : event.keyCode + event.charCode});
+	var evt = new KeyEvent(event.keyCode + event.charCode);
+	this.master.push(evt);
 }
 
 EventHandler.prototype.handleTouch = function(event, isMouse) {
-	this.master.push({type : "T", x : event.touches[0].pageX, y : event.touches[0].pageY});
+	var evt = new CursorMoveEvent(event.touches[0].pageX, event.touches[0].pageY);
+	this.master.push(evt);
 }
 
 EventHandler.prototype.handleClick = function(event) {
-	this.master.push({type : "C", x : event.pageX, y : event.pageY});
+	var evt = new ClickEvent(event.pageX, event.pageY);
+	this.master.push(evt);
 }
 
 EventHandler.prototype.handleMessage = function(event) {
-	var msg = event.data;
-	console.log(msg);
-	if (msg.length > 4 && msg.substr(0, 4) == "done") {
-		//this.master.mapComputed();
-		this.master.push({type : "MC", map : msg.substr(4)});
-	} else {
-		this.master.push({type : "MG", nb : msg});
-	}
+	var evt = new WorkerMessageEvent(event.data);
+	this.master.push(evt);
 }

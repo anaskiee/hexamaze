@@ -21,6 +21,9 @@ function Game(width, height, physicsEngine, graphicsEngine, ingameMenu,
 	this.events = [];
 }
 
+// +---------------------+
+// |   Basic functions   |
+// +---------------------+
 // Manage module start and stop
 Game.prototype.startModule = function() {
 	this.expandMenu();
@@ -31,7 +34,6 @@ Game.prototype.startModule = function() {
 Game.prototype.stopModule = function() {
 }
 
-// Basic functions
 Game.prototype.computeNewFrameAndDraw = function(date) {
 	// Check if some elements doesn't need to be processed
 	this.checkStateTransition();
@@ -47,86 +49,82 @@ Game.prototype.computeNewFrameAndDraw = function(date) {
 	}
 }
 
-// Event managment
+// +----------------------+
+// |   Events managment   |
+// +----------------------+
+
 Game.prototype.push = function(event) {
 	this.events.push(event);
 }
 
 Game.prototype.applyEvents = function() {
-	var e;
-	var updateNeeded = false;
-	var action;
-
-	var eventTarget;
-
-	var elementsNumber = this.elementsToRender.length;
+	var event;
 	while (this.events.length > 0) {
-		updateNeeded = true;
-		e = this.events.shift();
-		for (var i = elementsNumber - 1; 0 <= i; i--) {
-			eventTarget = this.elementsToRender[i];
-			
-			// This element is not active
-			if (!eventTarget) {
-				continue;
-			}
-
-			action = "";
-
-			switch (e.type) {
-				case "M":
-					action = eventTarget.handleCursorMove(e.x, e.y);
-					break;
-				case "K":
-					action = eventTarget.handleKey(e.code);
-					//action = this.applyKeyEvent(e.key);
-					break;
-				case "T":
-					action = eventTarget.handleCursorMove(e.x, e.y);
-					break;
-				case "C":
-					action = eventTarget.handleClick(e.x, e.y);
-					break;
-				case "I":
-					break;
-				case "MG":
-					this.updateComputingMenu(e.nb);
-					break;
-				case "MC":
-					this.loadMap(e.map);
-					this.mapComputed();
-					break;
-			}
-	
-			if (action) {
-				var mainCommand = action.split(" ")[0];
-				if (this.commands.has(mainCommand)) {
-					var test = this.commands.get(mainCommand);
-					this.commands.get(mainCommand).execute(action);
-				}
-			}
-
-			if (eventTarget.blockEventsSpread) {
-				break;
-			}
-		}
+		event = this.events.shift();
+		event.execute();
 	}
-	return updateNeeded;
 }
 
 Game.prototype.handleCursorMove = function(x, y) {
+	var action;
+	if (this.ingameMenu.active) {
+		action = this.ingameMenu.handleCursorMove(x, y);
+		if (action) {
+			this.handleAction(action);
+		}
+	}
+	if (this.graphicsEngine.active) {
+		action = this.graphicsEngine.handleCursorMove(x, y);
+		if (action) {
+			this.handleAction(action);
+		}
+	}
 }
 
 Game.prototype.handleClick = function(x, y) {
+	var action;
+	if (this.ingameMenu.active) {
+		action = this.ingameMenu.handleClick(x, y);
+		if (action) {
+			this.handleAction(action);
+		}
+	}
+	if (this.graphicsEngine.active) {
+		action = this.graphicsEngine.handleClick(x, y);
+		if (action) {
+			this.handleAction(action);
+		}
+	}
 }
 
-Game.prototype.handleKey = function(code) {
+Game.prototype.handleKey = function(keyCode) {
+	var action = this.developerConsole.handleKey(keyCode);
+	if (action) {
+		this.handleAction(action);
+	}
 }
 
 Game.prototype.handleWorkerMessage = function(msg) {
+	if (msg.length > 4 && msg.substr(0, 4) == "done") {
+		this.loadMap(msg.substr(4));
+		this.mapComputed();
+	} else {
+		this.updateComputingMenu(msg);
+	}
 }
 
-// Manage states
+Game.prototype.handleAction = function(action) {
+	var mainCommand = action.split(" ")[0];
+	if (this.commands.has(mainCommand)) {
+		this.commands.get(mainCommand).execute(action);
+	}
+}
+
+
+// +----------------------+
+// |   States managment   |
+// +----------------------+
+
 Game.prototype.removeElementToRender = function(name) {
 	switch (name) {
 		case "GraphicsEngine":
@@ -163,7 +161,9 @@ Game.prototype.checkStateTransition = function() {
 	}
 }
 
-// Top level functions
+// +-------------------------+
+// |   Top level functions   |
+// +-------------------------+
 
 Game.prototype.computeNewMap = function(commandLine) {
 	this.removeElementToRender("GraphicsEngine");

@@ -4,11 +4,11 @@ function GraphicalElement() {
 	this.name = "";
 }
 
-GraphicalElement.prototype.handleCursorMove = function() {
+GraphicalElement.prototype.handleCursorMove = function(x, y) {
 }
 
-GraphicalElement.prototype.handleClick = function() {
+GraphicalElement.prototype.handleClick = function(x, y) {
 }
 
-GraphicalElement.prototype.handleKey = function() {
+GraphicalElement.prototype.handleKey = function(keyCode) {
 }

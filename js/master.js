@@ -5,10 +5,6 @@ function Master(game) {
 	this.module = game;
 }
 
-// +--------------------------+
-// |    Drawing management    |
-// +--------------------------+
-
 Master.prototype.draw = function() {
 	requestAnimationFrame(this.draw.bind(this));
 	var date = new Date();
@@ -16,24 +12,13 @@ Master.prototype.draw = function() {
 	this.module.computeNewFrameAndDraw(date);
 }
 
-// +----------------------+
-// |   States managment   |
-// +----------------------+
-
 Master.prototype.start = function() {
-	//this.expandMenu();
-	//this.showConsole();
-	//this.worker.postMessage("compute");
 	this.module.startModule();
 	this.draw();
 }
 
-// +----------------------+
-// |   Events managment   |
-// +----------------------+
-
 Master.prototype.push = function(event) {
-	//this.events.push(event);
+	event.setReceiver(this.module);
 	this.module.push(event);
 }
 
