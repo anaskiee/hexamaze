@@ -26,6 +26,10 @@ function Game(width, height, physicsEngine, graphicsEngine, ingameMenu,
 // +---------------------+
 // Manage module start and stop
 Game.prototype.startModule = function() {
+	this.ingameMenu.setDrawingRect(0, 0, this.width, this.height);
+	this.graphicsEngine.setDrawingRect(0, 0, this.width, this.height);
+	this.developerConsole.setDrawingRect(0, 19/20*this.height - 0.5, 
+											this.width, this.height/20);
 	this.expandMenu();
 	this.showConsole();
 	this.worker.postMessage("compute");
@@ -218,7 +222,8 @@ Game.prototype.hideConsole = function() {
 }
 
 Game.prototype.showConsole = function() {
-	this.graphicsEngine.height -= this.developerConsole.height;
+	this.graphicsEngine.adjustDrawingRect(0, 0, 0, -this.developerConsole.maxHeight);
+	this.ingameMenu.adjustDrawingRect(0, 0, 0, -this.developerConsole.maxHeight);
 	this.addElementToRender("DeveloperConsole");
 	this.developerConsole.show();
 }

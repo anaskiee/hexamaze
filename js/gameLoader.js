@@ -10,11 +10,12 @@ function GameLoader(canvas, context) {
 	var width = canvas.width;
 	var height = canvas.height;
 
-	// Graphical modules
 	var physicsEngine = new PhysicsEngine(level);
-	var graphicsEngine = new GraphicsEngine(canvas, context, level, physicsEngine);
-	var ingameMenu = new IngameMenu(canvas, context);
-	var developerConsole = new DeveloperConsole(canvas, context);
+	
+	// Graphical modules
+	var graphicsEngine = new GraphicsEngine(context, level, physicsEngine);
+	var ingameMenu = new IngameMenu(context);
+	var developerConsole = new DeveloperConsole(context);
 	
 	// Game modules
 	var game = new Game(width, height, physicsEngine, graphicsEngine, ingameMenu, 

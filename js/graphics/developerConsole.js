@@ -1,17 +1,9 @@
 "use strict";
 
-function DeveloperConsole(canvas, context) {
-	GraphicalElement.call(this);
+function DeveloperConsole(context) {
+	GraphicalElement.call(this, "DeveloperConsole");
 
-	this.name = "DeveloperConsole";
-
-	this.canvas = canvas;
 	this.ctx = context;
-	this.screenWidth = canvas.width;
-	this.screenHeight = canvas.height;
-	this.width = this.screenWidth;
-	this.height = this.screenHeight/20;
-
 	this.active = false;
 	this.blockEventsSpread = false;
 
@@ -23,19 +15,24 @@ function DeveloperConsole(canvas, context) {
 DeveloperConsole.prototype = Object.create(GraphicalElement.prototype);
 DeveloperConsole.prototype.constructor = DeveloperConsole;
 
-DeveloperConsole.prototype.draw = function(date) {
+DeveloperConsole.prototype.onDrawingRectSet = function() {
+	this.width = this.maxWidth;
+	this.height = this.maxHeight;
+}
+
+DeveloperConsole.prototype.drawElement = function(date) {
 	this.ctx.fillStyle = "#222222";
-	this.ctx.fillRect(0, this.screenHeight - this.height, this.width, this.height);
+	this.ctx.fillRect(0, 0, this.width, this.height);
 
 	this.ctx.strokeStyle = "#000000";
-	this.ctx.strokeRect(0, this.screenHeight - this.height, this.width, this.height);
+	this.ctx.strokeRect(0, 0, this.width, this.height);
 
 	this.ctx.font = 4/5*this.height + "px Consolas";
 	this.ctx.fillStyle = "#FFFFFF";
 	if (date % 1000 > 500) {
-		this.ctx.fillText(this.text + "|", 0, this.screenHeight - 1/4 * this.height)
+		this.ctx.fillText(this.text + "|", 0, this.maxHeight - 1/4 * this.height)
 	} else {
-		this.ctx.fillText(this.text, 0, this.screenHeight - 1/4 * this.height)
+		this.ctx.fillText(this.text, 0, this.maxHeight - 1/4 * this.height)
 	}
 }
 

@@ -1,13 +1,8 @@
 "use strict";
 
-function GraphicsEngine(canvas, context, level, physicsEngine) {
-	GraphicalElement.call(this);
+function GraphicsEngine(context, level, physicsEngine) {
+	GraphicalElement.call(this, GraphicsEngine);
 
-	this.name = "GraphicsEngine";
-	this.width = canvas.width;
-	this.height = canvas.height;
-
-	this.canvas = canvas;
 	this.ctx = context;
 	this.level = level;
 
@@ -27,6 +22,15 @@ function GraphicsEngine(canvas, context, level, physicsEngine) {
 
 GraphicsEngine.prototype = Object.create(GraphicalElement.prototype);
 GraphicsEngine.prototype.constructor = GraphicsEngine;
+
+GraphicsEngine.prototype.onDrawingRectSet = function() {
+	this.width = this.maxWidth;
+	this.height = this.maxHeight;
+
+	if (this.level.hexagons.length > 0) {
+		this.computeGraphicsData();
+	}
+}
 
 GraphicsEngine.prototype.computeGraphicsData = function() {
 	// Pre computation of each hexagons position for the drawing
@@ -54,6 +58,8 @@ GraphicsEngine.prototype.computeGraphicsData = function() {
 
 // Super function to compute hexagons size and position on screen
 GraphicsEngine.prototype.computeMapSize = function(width, height) {
+	console.log("width", width);
+	console.log("height", height);
 	var currHex, nextHex;
 	var directions = ["top", "topLeft", "topRight", "bot", "botLeft", "botRight"];
 	var hexagons = [];
@@ -109,9 +115,14 @@ GraphicsEngine.prototype.computeMapSize = function(width, height) {
 	}
 
 	// Compute hexagon radius by maximizing their size on screen
-	var maxWidthRadius = width / (2*(maxX - minX + 1));
+	var maxWidthRadius = width / (3/2*(maxX - minX + 1) + 1/2);
 	var maxHeightRadius = height / (Math.sqrt(3)*(maxY - minY + 1));
 	var radius = Math.floor(Math.min(maxHeightRadius, maxWidthRadius));
+	if (maxWidthRadius < maxHeightRadius) {
+		console.log("width limit");
+	} else {
+		console.log("height limit");
+	}
 
 	// Compute real dimensions in order to center everything
 	var usedWidth = radius * (3/2 * (maxX - minX + 1) + 1/2);
@@ -124,6 +135,7 @@ GraphicsEngine.prototype.computeMapSize = function(width, height) {
 	} else {
 		offsetY = 0;
 	}
+
 	for (var [key, value] of marks) {
 		value[0] -= minX;
 		value[1] -= minY;
@@ -137,10 +149,10 @@ GraphicsEngine.prototype.computeMapSize = function(width, height) {
 	return radius;
 }
 
-GraphicsEngine.prototype.draw = function() {
+GraphicsEngine.prototype.drawElement = function(date) {
 	// Clean screen
 	this.ctx.fillStyle = "#003333";
-	this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+	this.ctx.fillRect(0, 0, this.width, this.height);
 
 	var posX, posY, style;
 

@@ -1,15 +1,9 @@
 "use strict";
 
-function IngameMenu(canvas, context) {
-	GraphicalElement.call(this);
-	this.name = "IngameMenu";
+function IngameMenu(context) {
+	GraphicalElement.call(this, "IngameMenu");
 
-	this.canvas = canvas;
 	this.ctx = context;
-	this.screenWidth = canvas.width;
-	this.screenHeight = canvas.height;
-	this.width = this.screenWidth/2;
-	this.height = this.screenHeight/2;
 
 	// Text
 	this.text = "Ingame menu text !";
@@ -18,24 +12,6 @@ function IngameMenu(canvas, context) {
 	this.initialOffsetX = -1;
 	this.initialOffsetY = -1;
 	this.initialWidth = -1;
-	this.finalOffsetX = -1;
-	this.finalOffsetY = -1;
-	this.finalWidth = -1;
-
-	this.metrology = {};
-	this.metrology["reduce"] = {
-		offsetX : (this.screenWidth - this.width) / 2,
-		offsetY : -0.97*this.height,
-		width : 0};
-	this.metrology["expand"] = {
-		offsetX : (this.screenWidth - this.width) / 2,
-		offsetY : (this.screenHeight - this.height) / 2,
-		width : 0.7*this.width};
-
-	// Menu characteristics
-	this.offsetX = this.screenWidth/4;
-	this.offsetY = -0.97*this.height;
-	this.menuWidth = 0;
 
 	this.beginning = -1;
 	this.animationRunning = false;
@@ -43,15 +19,35 @@ function IngameMenu(canvas, context) {
 	this.animation = "";
 	this.active = false;
 	this.blockEventsSpread = true;
+}
 
+IngameMenu.prototype = Object.create(GraphicalElement.prototype);
+IngameMenu.prototype.constructor = IngameMenu;
+
+IngameMenu.prototype.onDrawingRectSet = function() {
+	this.width = this.maxWidth/2;
+	this.height = this.maxHeight/2;
+	
+	this.metrology = {};
+	this.metrology["reduce"] = {
+		offsetX : (this.maxWidth - this.width) / 2,
+		offsetY : -0.97*this.height,
+		width : 0};
+	this.metrology["expand"] = {
+		offsetX : (this.maxWidth - this.width) / 2,
+		offsetY : (this.maxHeight - this.height) / 2,
+		width : 0.7*this.width};
+
+	// Menu characteristics
+	this.posX = this.maxWidth/4;
+	this.posY = -0.97*this.height;
+	this.menuWidth = 0;
+	
 	// Buttons
 	this.buttons = new Set();
 	this.addButtons();
 	this.buttonSelected = null;
 }
-
-IngameMenu.prototype = Object.create(GraphicalElement.prototype);
-IngameMenu.prototype.constructor = IngameMenu;
 
 IngameMenu.prototype.reduce = function(date) {
 	this.animation = "reduce";
@@ -76,8 +72,8 @@ IngameMenu.prototype.initAnimation = function(date) {
 	this.animationRunning = true;
 	this.active = true;
 
-	this.initialOffsetX = this.offsetX;
-	this.initialOffsetY = this.offsetY;
+	this.initialOffsetX = this.posX;
+	this.initialOffsetY = this.posY;
 	this.initialWidth = this.menuWidth;
 }
 
@@ -86,11 +82,11 @@ IngameMenu.prototype.computeMenuCharacteristics = function(factor) {
 	switch (this.animation) {
 		case "expand":
 			if (factor < 1) {
-				this.offsetX = this.initialOffsetX + factor*(dim.offsetX - this.initialOffsetX);
-				this.offsetY = this.initialOffsetY + factor*(dim.offsetY - this.initialOffsetY);
+				this.posX = this.initialOffsetX + factor*(dim.offsetX - this.initialOffsetX);
+				this.posY = this.initialOffsetY + factor*(dim.offsetY - this.initialOffsetY);
 			} else {
-				this.offsetX = dim.offsetX;
-				this.offsetY = dim.offsetY;
+				this.posX = dim.offsetX;
+				this.posY = dim.offsetY;
 				this.menuWidth = this.initialWidth + (factor - 1)*(dim.width - this.initialWidth);
 			}
 			break;
@@ -100,8 +96,8 @@ IngameMenu.prototype.computeMenuCharacteristics = function(factor) {
 				this.menuWidth = this.initialWidth + factor*(dim.width - this.initialWidth);
 			} else {
 				this.menuWidth = dim.width;
-				this.offsetX = this.initialOffsetX + (factor - 1)*(dim.offsetX - this.initialOffsetX);
-				this.offsetY = this.initialOffsetY + (factor - 1)*(dim.offsetY - this.initialOffsetY);
+				this.posX = this.initialOffsetX + (factor - 1)*(dim.offsetX - this.initialOffsetX);
+				this.posY = this.initialOffsetY + (factor - 1)*(dim.offsetY - this.initialOffsetY);
 			}
 			break;
 	}
@@ -122,7 +118,7 @@ IngameMenu.prototype.addButtons = function() {
 	this.buttons.add(button);
 }
 
-IngameMenu.prototype.draw = function(date) {
+IngameMenu.prototype.drawElement = function(date) {
 	var factor;
 	if (!this.animationRunning) {
 		factor = 2;
@@ -142,7 +138,7 @@ IngameMenu.prototype.draw = function(date) {
 	var x = h / 2 / Math.sqrt(3);
 
 	this.ctx.save();
-	this.ctx.translate(this.offsetX + this.width/2, this.offsetY + this.height/2);
+	this.ctx.translate(this.posX + this.width/2, this.posY + this.height/2);
 
 	// Draw hexagon style menu
 	this.drawDistortedHexagon(this.ctx, this.menuWidth, h, x, "#000000");
