@@ -9,6 +9,7 @@ Master.prototype.draw = function() {
 	requestAnimationFrame(this.draw.bind(this));
 	var date = new Date();
 
+	this.applyEvents();
 	this.module.computeNewFrameAndDraw(date);
 }
 
@@ -17,9 +18,30 @@ Master.prototype.start = function() {
 	this.draw();
 }
 
-Master.prototype.push = function(event) {
-	event.setReceiver(this.module);
-	this.module.push(event);
+// A message is destinated to a module
+Master.prototype.pushMessageEvent = function(event) {
+	this.module.setMessageEventReceivers(event);
+	this.events.push(event);
+}
+
+// Other events are destinated to a graphical elements, but only
+// the module know which one
+Master.prototype.pushMouseEvent = function(event) {
+	this.module.setMouseEventReceivers(event);
+	this.events.push(event);
+}
+
+Master.prototype.pushKeyboardEvent = function(event) {
+	this.module.setKeyboardEventReceivers(event);
+	this.events.push(event);
+}
+
+Master.prototype.applyEvents = function() {
+	var event;
+	while (this.events.length > 0) {
+		event = this.events.shift();
+		event.execute();
+	}
 }
 
 // Functions to apply events before drawing

@@ -1,14 +1,19 @@
 "use strict";
 
 function KeyEvent(keyCode) {
+	Event.call(this);
 	this.keyCode = keyCode;
-	this.receiver = null;
 }
 
-KeyEvent.prototype.setReceiver = function(receiver) {
-	this.receiver = receiver;
-}
+KeyEvent.prototype = Object.create(Event.prototype);
+KeyEvent.prototype.constructor = KeyEvent;
 
 KeyEvent.prototype.execute = function() {
-	this.receiver.handleKey(this.keyCode);
+	if (this.receiver != null) {
+		var result = this.receiver.handleKey(this.keyCode);
+
+		if (result) {
+			this.handleResult(result);
+		}
+	}
 }

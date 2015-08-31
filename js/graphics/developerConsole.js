@@ -28,7 +28,7 @@ DeveloperConsole.prototype.drawElement = function(date) {
 	this.ctx.strokeRect(0, 0, this.width, this.height);
 
 	this.ctx.font = 4/5*this.height + "px Consolas";
-	this.ctx.fillStyle = "#FFFFFF";
+	this.ctx.fillStyle = "#EEEEEE";
 	if (date % 1000 > 500) {
 		this.ctx.fillText(this.text + "|", 0, this.maxHeight - 1/4 * this.height)
 	} else {

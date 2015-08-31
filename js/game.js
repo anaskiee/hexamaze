@@ -13,12 +13,10 @@ function Game(width, height, physicsEngine, graphicsEngine, ingameMenu,
 	this.level = level;
 	this.commands = commands;
 
-	// 0 -> GraphicsEngine
-	// 1 -> IngameMenu
-	// 2 -> DeveloperConsole
+	// 0 -> DeveloperConsole
+	// 1 -> GraphicsEngine
+	// 2 -> IngameMenu
 	this.elementsToRender = new Array(3);
-
-	this.events = [];
 }
 
 // +---------------------+
@@ -42,9 +40,6 @@ Game.prototype.computeNewFrameAndDraw = function(date) {
 	// Check if some elements doesn't need to be processed
 	this.checkStateTransition();
 
-	// Apply events
-	this.applyEvents();
-
 	// Render
 	for (let element of this.elementsToRender) {
 		if (element) {
@@ -57,55 +52,44 @@ Game.prototype.computeNewFrameAndDraw = function(date) {
 // |   Events managment   |
 // +----------------------+
 
-Game.prototype.push = function(event) {
-	this.events.push(event);
+Game.prototype.setMessageEventReceivers = function(event) {
+	event.setReceiver(this);
+	event.setResultReceiver(null);
 }
 
-Game.prototype.applyEvents = function() {
-	var event;
-	while (this.events.length > 0) {
-		event = this.events.shift();
-		event.execute();
+Game.prototype.setMouseEventReceivers = function(event) {
+	var assigned = false;
+	for (var i = 2; i >= 0; i--) {
+		if (this.elementsToRender[i] != null) {
+			event.setReceiver(this.elementsToRender[i]);
+			event.setResultReceiver(this);
+			assigned = true;
+			break;
+		}
+	}
+	if (!assigned) {
+		event.setReceiver(null);
+		event.setResultReceiver(null);
+	}
+}
+
+Game.prototype.setKeyboardEventReceivers = function(event) {
+	if (this.elementsToRender[0] != null) {
+		event.setReceiver(this.developerConsole);
+		event.setResultReceiver(this);
+	} else {
+		event.setReceiver(null);
+		event.setResultReceiver(null);
 	}
 }
 
 Game.prototype.handleCursorMove = function(x, y) {
-	var action;
-	if (this.ingameMenu.active) {
-		action = this.ingameMenu.handleCursorMove(x, y);
-		if (action) {
-			this.handleAction(action);
-		}
-	}
-	if (this.graphicsEngine.active) {
-		action = this.graphicsEngine.handleCursorMove(x, y);
-		if (action) {
-			this.handleAction(action);
-		}
-	}
 }
 
 Game.prototype.handleClick = function(x, y) {
-	var action;
-	if (this.ingameMenu.active) {
-		action = this.ingameMenu.handleClick(x, y);
-		if (action) {
-			this.handleAction(action);
-		}
-	}
-	if (this.graphicsEngine.active) {
-		action = this.graphicsEngine.handleClick(x, y);
-		if (action) {
-			this.handleAction(action);
-		}
-	}
 }
 
 Game.prototype.handleKey = function(keyCode) {
-	var action = this.developerConsole.handleKey(keyCode);
-	if (action) {
-		this.handleAction(action);
-	}
 }
 
 Game.prototype.handleWorkerMessage = function(msg) {
@@ -117,10 +101,10 @@ Game.prototype.handleWorkerMessage = function(msg) {
 	}
 }
 
-Game.prototype.handleAction = function(action) {
-	var mainCommand = action.split(" ")[0];
+Game.prototype.handleEventResult = function(res) {
+	var mainCommand = res.split(" ")[0];
 	if (this.commands.has(mainCommand)) {
-		this.commands.get(mainCommand).execute(action);
+		this.commands.get(mainCommand).execute(res);
 	}
 }
 
@@ -131,13 +115,13 @@ Game.prototype.handleAction = function(action) {
 
 Game.prototype.removeElementToRender = function(name) {
 	switch (name) {
-		case "GraphicsEngine":
+		case "DeveloperConsole":
 			this.elementsToRender[0] = null;
 			break;
-		case "IngameMenu":
+		case "GraphicsEngine":
 			this.elementsToRender[1] = null;
 			break;
-		case "DeveloperConsole":
+		case "IngameMenu":
 			this.elementsToRender[2] = null;
 			break;
 	}
@@ -145,14 +129,14 @@ Game.prototype.removeElementToRender = function(name) {
 
 Game.prototype.addElementToRender = function(name) {
 	switch (name) {
+		case "DeveloperConsole":
+			this.elementsToRender[0] = this.developerConsole;
+			break;
 		case "GraphicsEngine":
-			this.elementsToRender[0] = this.graphicsEngine;
+			this.elementsToRender[1] = this.graphicsEngine;
 			break;
 		case "IngameMenu":
-			this.elementsToRender[1] = this.ingameMenu;
-			break;
-		case "DeveloperConsole":
-			this.elementsToRender[2] = this.developerConsole;
+			this.elementsToRender[2] = this.ingameMenu;
 			break;
 	}
 }

@@ -58,8 +58,6 @@ GraphicsEngine.prototype.computeGraphicsData = function() {
 
 // Super function to compute hexagons size and position on screen
 GraphicsEngine.prototype.computeMapSize = function(width, height) {
-	console.log("width", width);
-	console.log("height", height);
 	var currHex, nextHex;
 	var directions = ["top", "topLeft", "topRight", "bot", "botLeft", "botRight"];
 	var hexagons = [];
@@ -118,11 +116,6 @@ GraphicsEngine.prototype.computeMapSize = function(width, height) {
 	var maxWidthRadius = width / (3/2*(maxX - minX + 1) + 1/2);
 	var maxHeightRadius = height / (Math.sqrt(3)*(maxY - minY + 1));
 	var radius = Math.floor(Math.min(maxHeightRadius, maxWidthRadius));
-	if (maxWidthRadius < maxHeightRadius) {
-		console.log("width limit");
-	} else {
-		console.log("height limit");
-	}
 
 	// Compute real dimensions in order to center everything
 	var usedWidth = radius * (3/2 * (maxX - minX + 1) + 1/2);
