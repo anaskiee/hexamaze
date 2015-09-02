@@ -11,6 +11,7 @@ function GameLoader(canvas, context) {
 	var height = canvas.height;
 
 	var physicsEngine = new PhysicsEngine(level);
+	var levelCreator = new LevelCreator(level);
 	
 	// Graphical modules
 	var graphicsEngine = new GraphicsEngine(context, level, physicsEngine);
@@ -20,8 +21,10 @@ function GameLoader(canvas, context) {
 	// Game modules
 	var game = new Game(width, height, physicsEngine, graphicsEngine, ingameMenu, 
 						developerConsole, worker, level, commands);
+	var forge = new Forge(width, height, graphicsEngine, developerConsole, level, 
+							levelCreator, commands);
 
-	var master = new Master(game);
+	var master = new Master(game, forge);
 	var eventHandler = new EventHandler(canvas, master, worker);
 
 	// Initialize all commands

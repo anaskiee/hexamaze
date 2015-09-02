@@ -1,8 +1,11 @@
 "use strict";
 
-function Master(game) {
+function Master(game, forge) {
+	this.game = game;
+	this.forge = forge;
+
 	this.events = [];
-	this.module = game;
+	this.module = forge;
 }
 
 Master.prototype.draw = function() {

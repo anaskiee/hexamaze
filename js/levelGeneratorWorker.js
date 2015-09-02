@@ -9,8 +9,8 @@ onmessage = function(msg) {
 		nbLines = parseInt(parameters[1]);
 		nbColumns = parseInt(parameters[2]);
 	} else {
-		nbLines = 7;
-		nbColumns = 15;
+		nbLines = 9;
+		nbColumns = 17;
 	}
 	computeNewLevel(nbLines, nbColumns);
 }
@@ -21,10 +21,10 @@ function computeNewLevel(nbLines, nbColumns) {
 
 	var level = new Level();
 	var solver = new LevelSolver(level);
-	var	levelCreator = new LevelCreator(level, nbLines, nbColumns);
+	var	levelCreator = new LevelCreator(level);
 	while (difficulty < 5 || difficulty == 9000) {
 		nb++;
-		levelCreator.createRandomLevel();
+		levelCreator.createRandomLevel(nbLines, nbColumns);
 		difficulty = solver.getMin();
 		if (nb % 30 == 0) {
 			postMessage(nb);

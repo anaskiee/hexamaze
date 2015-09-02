@@ -2,6 +2,7 @@
 
 function Game(width, height, physicsEngine, graphicsEngine, ingameMenu, 
 				developerConsole, worker, level, commands) {
+	GameMode.call(this, "Game");
 	this.width = width;
 	this.height = height;
 
@@ -18,6 +19,9 @@ function Game(width, height, physicsEngine, graphicsEngine, ingameMenu,
 	// 2 -> IngameMenu
 	this.elementsToRender = new Array(3);
 }
+
+Game.prototype = Object.create(GameMode.prototype);
+Game.prototype.constructor = Game;
 
 // +---------------------+
 // |   Basic functions   |

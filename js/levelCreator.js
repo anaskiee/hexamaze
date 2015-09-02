@@ -1,18 +1,27 @@
 "use strict";
 
-function LevelCreator(level, nbLines, nbColumns) {
-	this.hexagons = null;
+function LevelCreator(level) {
 	this.level = level;
-	this.nbLines = nbLines + 2;
-	this.nbColumns = nbColumns + 2;
+	
+	this.hexagons = null;
+	this.nbLines = -1;
+	this.nbColumns = -1;
 }
 
-LevelCreator.prototype.createRandomLevel = function() {
-	this.createBasicLevel();
+LevelCreator.prototype.createRandomLevel = function(nbLines, nbColumns) {
+	this.createBasicLevel(nbLines, nbColumns);
 	this.randomize(15);
 }
 
-LevelCreator.prototype.createBasicLevel = function() {
+LevelCreator.prototype.createEditingLevel = function(nbLines, nbColumns) {
+	this.createEmptyLevel(nbLines, nbColumns);
+	this.randomize(0);
+}
+
+LevelCreator.prototype.createEmptyLevel = function(nbLines, nbColumns) {
+	this.nbLines = nbLines;
+	this.nbColumns = nbColumns;
+
 	// Object where cleaned data are stored
 	this.level.clearData();
 
@@ -22,18 +31,28 @@ LevelCreator.prototype.createBasicLevel = function() {
 		this.hexagons[i] = new Array(this.nbColumns);
 	}
 
+	// Initialiaze empty blocks
+	for (var i = 0; i < this.nbLines; i++) {
+		for (var j = 0; j < this.nbColumns; j++) {
+			this.hexagons[i][j] = this.level.addHexagon("space");
+		}
+	}
+
+	// Link all hexagons
+	this.setLinks();
+}
+
+LevelCreator.prototype.createBasicLevel = function(nbLines, nbColumns) {
+	this.createEmptyLevel(nbLines, nbColumns);
+	
 	// Initialiaze block types
 	for (var i = 0; i < this.nbLines; i++) {
 		for (var j = 0; j < this.nbColumns; j++) {
 			if (i == 0 || j == 0 || i == this.nbLines-1 || j == this.nbColumns-1) {
-				this.hexagons[i][j] = this.level.addHexagon("block");
-			} else {
-				this.hexagons[i][j] = this.level.addHexagon("space");
+				this.hexagons[i][j].type = "block";
 			}
 		}
 	}
-
-	this.setLinks();
 }
 
 LevelCreator.prototype.setLinks = function() {
