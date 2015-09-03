@@ -1,7 +1,6 @@
 "use strict";
 
-function Forge(width, height, graphicsEngine, developerConsole, level, levelCreator, 
-				commands) {
+function Forge(width, height, graphicsEngine, developerConsole, level, levelCreator) {
 	GameMode.call(this, "Forge");
 	this.width = width;
 	this.height = height;
@@ -10,7 +9,7 @@ function Forge(width, height, graphicsEngine, developerConsole, level, levelCrea
 	this.developerConsole = developerConsole;
 	this.level = level;
 	this.levelCreator = levelCreator;
-	this.commands = commands;
+	this.commands = null;
 
 	// 0 -> DeveloperConsole
 	// 1 -> GraphicsEngine
@@ -49,6 +48,10 @@ Forge.prototype.computeNewFrameAndDraw = function(date) {
 	}
 }
 
+Forge.prototype.setCommandsPrototypeChain = function(commands) {
+	this.commands = Object.create(commands);
+}
+
 // +----------------------+
 // |   Events managment   |
 // +----------------------+
@@ -80,14 +83,6 @@ Forge.prototype.handleKey = function(keyCode) {
 
 Forge.prototype.handleWorkerMessage = function(msg) {
 }
-
-Forge.prototype.handleEventResult = function(res) {
-	var mainCommand = res.split(" ")[0];
-	if (this.commands.has(mainCommand)) {
-		this.commands.get(mainCommand).execute(res);
-	}
-}
-
 
 // +----------------------+
 // |   States managment   |

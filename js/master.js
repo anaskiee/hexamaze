@@ -4,8 +4,15 @@ function Master(game, forge) {
 	this.game = game;
 	this.forge = forge;
 
+	this.commands = null;
 	this.events = [];
-	this.module = forge;
+	this.module = game;
+}
+
+Master.prototype.setCommandsPrototypeChain = function(commands) {
+	this.commands = Object.create(commands);
+	this.game.setCommandsPrototypeChain(this.commands);
+	this.forge.setCommandsPrototypeChain(this.commands);
 }
 
 Master.prototype.draw = function() {

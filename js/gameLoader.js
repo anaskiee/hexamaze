@@ -6,7 +6,7 @@ function GameLoader(canvas, context) {
 	
 	// Basic structures
 	var level = new Level();
-	var commands = new Map();
+	var commands = {};
 	var width = canvas.width;
 	var height = canvas.height;
 
@@ -20,17 +20,22 @@ function GameLoader(canvas, context) {
 	
 	// Game modules
 	var game = new Game(width, height, physicsEngine, graphicsEngine, ingameMenu, 
-						developerConsole, worker, level, commands);
+						developerConsole, worker, level);
 	var forge = new Forge(width, height, graphicsEngine, developerConsole, level, 
-							levelCreator, commands);
+							levelCreator);
 
 	var master = new Master(game, forge);
 	var eventHandler = new EventHandler(canvas, master, worker);
 
 	// Initialize all commands
-	commands.set("help", new Help("help", commands));
-	commands.set("new_map", new NewMap("new_map", game));
-	commands.set("win", new Win("win", game));
+	commands.help = function(cmdLine) {
+		var help = "list of available commands : \n";
+		for (var commandName in this) {
+			help += commandName + "\n";
+		}
+		alert(help);
+	}
+	master.setCommandsPrototypeChain(commands);
 
 	master.start();
 }

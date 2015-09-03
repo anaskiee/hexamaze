@@ -1,7 +1,7 @@
 "use strict";
 
 function Game(width, height, physicsEngine, graphicsEngine, ingameMenu, 
-				developerConsole, worker, level, commands) {
+				developerConsole, worker, level) {
 	GameMode.call(this, "Game");
 	this.width = width;
 	this.height = height;
@@ -12,7 +12,7 @@ function Game(width, height, physicsEngine, graphicsEngine, ingameMenu,
 	this.developerConsole = developerConsole;
 	this.worker = worker;
 	this.level = level;
-	this.commands = commands;
+	this.commands = null;
 
 	// 0 -> DeveloperConsole
 	// 1 -> GraphicsEngine
@@ -50,6 +50,12 @@ Game.prototype.computeNewFrameAndDraw = function(date) {
 			element.draw(date);
 		}
 	}
+}
+
+Game.prototype.setCommandsPrototypeChain = function(commands) {
+	this.commands = Object.create(commands);
+	this.commands.new_level = this.computeNewMap.bind(this);
+	this.commands.win = this.onWinEvent.bind(this);
 }
 
 // +----------------------+
@@ -104,14 +110,6 @@ Game.prototype.handleWorkerMessage = function(msg) {
 		this.updateComputingMenu(msg);
 	}
 }
-
-Game.prototype.handleEventResult = function(res) {
-	var mainCommand = res.split(" ")[0];
-	if (this.commands.has(mainCommand)) {
-		this.commands.get(mainCommand).execute(res);
-	}
-}
-
 
 // +----------------------+
 // |   States managment   |

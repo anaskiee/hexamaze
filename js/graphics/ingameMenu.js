@@ -109,7 +109,7 @@ IngameMenu.prototype.addButtons = function() {
 	var offsetX = this.metrology["expand"].offsetX + this.width/2;
 	var offsetY = this.metrology["expand"].offsetY + this.height/2;
 	var button = {
-		action : "new_map",
+		action : "new_level",
 		selected : false,
 		xMin : offsetX - textWidth/2,
 		xMax : offsetX + textWidth/2,
