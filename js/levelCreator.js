@@ -6,6 +6,7 @@ function LevelCreator(level) {
 	this.hexagons = null;
 	this.nbLines = -1;
 	this.nbColumns = -1;
+	this.firstColumnOnTop = false;
 }
 
 LevelCreator.prototype.createRandomLevel = function(nbLines, nbColumns) {
@@ -18,9 +19,23 @@ LevelCreator.prototype.createEditingLevel = function(nbLines, nbColumns) {
 	this.randomize(0);
 }
 
+LevelCreator.prototype.createBasicLevel = function(nbLines, nbColumns) {
+	this.createEmptyLevel(nbLines, nbColumns);
+	
+	// Initialiaze block types
+	for (var i = 0; i < this.nbLines; i++) {
+		for (var j = 0; j < this.nbColumns; j++) {
+			if (i == 0 || j == 0 || i == this.nbLines-1 || j == this.nbColumns-1) {
+				this.hexagons[i][j].type = "block";
+			}
+		}
+	}
+}
+
 LevelCreator.prototype.createEmptyLevel = function(nbLines, nbColumns) {
 	this.nbLines = nbLines;
 	this.nbColumns = nbColumns;
+	this.firstColumnOnTop = true;
 
 	// Object where cleaned data are stored
 	this.level.clearData();
@@ -42,25 +57,11 @@ LevelCreator.prototype.createEmptyLevel = function(nbLines, nbColumns) {
 	this.setLinks();
 }
 
-LevelCreator.prototype.createBasicLevel = function(nbLines, nbColumns) {
-	this.createEmptyLevel(nbLines, nbColumns);
-	
-	// Initialiaze block types
-	for (var i = 0; i < this.nbLines; i++) {
-		for (var j = 0; j < this.nbColumns; j++) {
-			if (i == 0 || j == 0 || i == this.nbLines-1 || j == this.nbColumns-1) {
-				this.hexagons[i][j].type = "block";
-			}
-		}
-	}
-}
-
 LevelCreator.prototype.setLinks = function() {
 	var hexagon;
 	// Initialize links between hexagons
 	for (var i = 0; i < this.nbLines; i++) {
 		for (var j = 0; j < this.nbColumns; j++) {
-			var idx = i*this.nbColumns + j;
 			hexagon = this.hexagons[i][j];
 
 			if (hexagon == null) {
@@ -71,52 +72,80 @@ LevelCreator.prototype.setLinks = function() {
 			// top
 			if (i > 0) {
 				hexagon.top = this.hexagons[i-1][j];
+			} else {
+				hexagon.top = null;
 			}
 
 			// bot
 			if (i < this.nbLines - 1) {
 				hexagon.bot = this.hexagons[i+1][j];
+			} else {
+				hexagon.bot = null;
 			}
 
-			// topright
-			// topleft
-			// Column uneven -> line--
-			if ((j % 2) == 1) {
-				if (i > 0) {
-					if (j > 0) {
-					hexagon.topLeft = this.hexagons[i-1][j-1];
-					}
-					if (j < this.nbColumns-1) {
-						hexagon.topRight = this.hexagons[i-1][j+1];
-					}
+
+			var botSameLine, topSameLine;
+			var columnEven = j % 2 == 0;
+			if (this.firstColumnOnTop) {
+				if (columnEven) {
+					botSameLine = true;
+					topSameLine = false;
+				} else {
+					botSameLine = false;
+					topSameLine = true;
 				}
 			} else {
-				if (j > 0) {
-					hexagon.topLeft = this.hexagons[i][j-1];
-				}
-				if (j < this.nbColumns-1) {
-					hexagon.topRight = this.hexagons[i][j+1];
+				if (columnEven) {
+					botSameLine = false;
+					topSameLine = true;
+				} else {
+					botSameLine = true;
+					topSameLine = false;
 				}
 			}
-			// botright
-			// botleft
-			// Column even -> line++
-			if ((j % 2) == 0) {
-				if (i < this.nbLines-1) {
-					if (j > 0) {
-						hexagon.botLeft = this.hexagons[i+1][j-1];
-					}
-					if (j < this.nbColumns-1) {
-						hexagon.botRight = this.hexagons[i+1][j+1];
-					}
+
+			var botLine = botSameLine ? i : i+1;
+			var topLine = topSameLine ? i : i-1;
+
+			var topLineExists = topLine >= 0;
+			var botLineExists = botLine <= this.nbLines-1;
+			var leftColumnExists = j > 0;
+			var rightColumnExists = j < this.nbColumns-1;
+
+			// topLeft / topRight
+			if (topLineExists) {
+				if (leftColumnExists) {
+					hexagon.topLeft = this.hexagons[topLine][j-1];
+				} else {
+					hexagon.topLeft = null;
+				}
+
+				if (rightColumnExists) {
+					hexagon.topRight = this.hexagons[topLine][j+1];
+				} else {
+					hexagon.topRight = null;
 				}
 			} else {
-				if (j > 0) {
-					hexagon.botLeft = this.hexagons[i][j-1];
+				hexagon.topLeft = null;
+				hexagon.topRight = null;
+			}
+
+			// botLeft / botRight
+			if (botLineExists) {
+				if (leftColumnExists) {
+					hexagon.botLeft = this.hexagons[botLine][j-1];
+				} else {
+					hexagon.botLeft = null;
 				}
-				if (j < this.nbColumns-1) {
-					hexagon.botRight = this.hexagons[i][j+1];
+
+				if (rightColumnExists) {
+					hexagon.botRight = this.hexagons[botLine][j+1];
+				} else {
+					hexagon.botRight = null;
 				}
+			} else {
+				hexagon.botLeft = null;
+				hexagon.botRight = null;
 			}
 		}
 	}
@@ -142,7 +171,8 @@ LevelCreator.prototype.randomize = function(blockPercent) {
 	for (var i = 1; i < this.nbLines-1; i++) {
 		for (var j = 1; j < this.nbColumns-1; j++) {
 			hexagon = this.hexagons[i][j];
-			if (hexagon.type == "space" && hexagon != characterHexagon && hexagon != exitHexagon) {
+			if (hexagon.type == "space" && hexagon != characterHexagon 
+				&& hexagon != exitHexagon) {
 				if (Math.random() < limit) {
 					hexagon.type = "block";
 				}
@@ -250,5 +280,46 @@ LevelCreator.prototype.fillEditingStructure = function() {
 	}
 
 	// Init links
+	this.setLinks();
+}
+
+LevelCreator.prototype.getNewLine = function() {
+	var line = new Array(this.nbColumns);
+	for (var j = 0; j < this.nbColumns; j++) {
+		line[j] = this.level.addHexagon("space");
+	}
+	return line;
+}
+
+LevelCreator.prototype.addLineFirst = function() {
+	var line = this.getNewLine();
+	this.hexagons.unshift(line);
+	this.nbLines++;
+	this.setLinks();
+}
+
+LevelCreator.prototype.addLineLast = function() {
+	var line = this.getNewLine();
+	this.hexagons.push(line);
+	this.nbLines++;
+	this.setLinks();
+}
+
+LevelCreator.prototype.addColumnFirst = function() {
+	for (var i = 0; i < this.nbLines; i++) {
+		var hex = this.level.addHexagon("space");
+		this.hexagons[i].unshift(hex);
+	}
+	this.nbColumns++;
+	this.firstColumnOnTop = !this.firstColumnOnTop;
+	this.setLinks();
+}
+
+LevelCreator.prototype.addColumnLast = function() {
+	for (var i = 0; i < this.nbLines; i++) {
+		var hex = this.level.addHexagon("space");
+		this.hexagons[i].push(hex);
+	}
+	this.nbColumns++;
 	this.setLinks();
 }

@@ -6,7 +6,7 @@ function Master(game, forge) {
 
 	this.commands = null;
 	this.events = [];
-	this.module = game;
+	this.module = forge;
 }
 
 Master.prototype.setCommandsPrototypeChain = function(commands) {

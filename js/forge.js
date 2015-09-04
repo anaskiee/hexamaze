@@ -28,7 +28,7 @@ Forge.prototype.startModule = function() {
 	this.developerConsole.setDrawingRect(0, 19/20*this.height - 0.5, 
 											this.width, this.height/20);
 	this.showConsole();
-	this.levelCreator.createEditingLevel(5, 8);
+	this.levelCreator.createEditingLevel(4, 4);
 	this.graphicsEngine.computeGraphicsData();
 	this.addElementToRender("GraphicsEngine");
 }
@@ -50,6 +50,10 @@ Forge.prototype.computeNewFrameAndDraw = function(date) {
 
 Forge.prototype.setCommandsPrototypeChain = function(commands) {
 	this.commands = Object.create(commands);
+	this.commands.add_line_first = this.addLineFirst.bind(this);
+	this.commands.add_line_last = this.addLineLast.bind(this);
+	this.commands.add_column_first = this.addColumnFirst.bind(this);
+	this.commands.add_column_last = this.addColumnLast.bind(this);
 }
 
 // +----------------------+
@@ -130,4 +134,32 @@ Forge.prototype.showConsole = function() {
 	this.graphicsEngine.adjustDrawingRect(0, 0, 0, -this.developerConsole.maxHeight);
 	this.addElementToRender("DeveloperConsole");
 	this.developerConsole.show();
+}
+
+Forge.prototype.addLineFirst = function() {
+	this.removeElementToRender("GraphicsEngine");
+	this.levelCreator.addLineFirst();
+	this.graphicsEngine.computeGraphicsData();
+	this.addElementToRender("GraphicsEngine");
+}
+
+Forge.prototype.addLineLast = function() {
+	this.removeElementToRender("GraphicsEngine");
+	this.levelCreator.addLineLast();
+	this.graphicsEngine.computeGraphicsData();
+	this.addElementToRender("GraphicsEngine");
+}
+
+Forge.prototype.addColumnFirst = function() {
+	this.removeElementToRender("GraphicsEngine");
+	this.levelCreator.addColumnFirst();
+	this.graphicsEngine.computeGraphicsData();
+	this.addElementToRender("GraphicsEngine");
+}
+
+Forge.prototype.addColumnLast = function() {
+	this.removeElementToRender("GraphicsEngine");
+	this.levelCreator.addColumnLast();
+	this.graphicsEngine.computeGraphicsData();
+	this.addElementToRender("GraphicsEngine");
 }
