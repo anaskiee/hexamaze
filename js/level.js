@@ -20,6 +20,22 @@ Level.prototype.addHexagon = function(type) {
 	return hex;
 }
 
+Level.prototype.removeHexagon = function(hex) {
+	var done = this.hexagons.delete(hex);
+	if (hex == this.characterHexagon) {
+		this.characterHexagon = null;
+	}
+	if (hex == this.exitHexagon) {
+		this.exitHexagon = null;
+	}
+}
+
+Level.prototype.getAnHexagon = function() {
+	for (var hex of this.hexagons) {
+		return hex;
+	}
+}
+
 Level.prototype.toString = function() {
 	var idx = 0;
 	var hexa;

@@ -16,7 +16,6 @@ LevelCreator.prototype.createRandomLevel = function(nbLines, nbColumns) {
 
 LevelCreator.prototype.createEditingLevel = function(nbLines, nbColumns) {
 	this.createEmptyLevel(nbLines, nbColumns);
-	this.randomize(0);
 }
 
 LevelCreator.prototype.createBasicLevel = function(nbLines, nbColumns) {
@@ -192,8 +191,9 @@ LevelCreator.prototype.fillEditingStructure = function() {
 	var directions = ["top", "topLeft", "topRight", "bot", "botLeft", "botRight"];
 	var hexagons = [];
 	var marks = new Map();
-	hexagons.push(this.level.exitHexagon);
-	marks.set(this.level.exitHexagon, [0, 0]);
+	var hexagon = this.level.getAnHexagon();
+	hexagons.push(hexagon);
+	marks.set(hexagon, [0, 0]);
 	var position, i, j;
 
 	// Compute all relative positions
@@ -321,5 +321,55 @@ LevelCreator.prototype.addColumnLast = function() {
 		this.hexagons[i].push(hex);
 	}
 	this.nbColumns++;
+	this.setLinks();
+}
+
+LevelCreator.prototype.removeFirstLine = function() {
+	if (this.nbLines == 0)
+		return;
+	for (var j = 0; j < this.nbColumns; j++) {
+		var hex = this.hexagons[0][j];
+		this.level.removeHexagon(hex);
+	}
+	this.hexagons.splice(0, 1);
+	this.nbLines--;
+	this.setLinks();
+}
+
+LevelCreator.prototype.removeLastLine = function() {
+	if (this.nbLines == 0)
+		return;
+	for (var j = 0; j < this.nbColumns; j++) {
+		var hex = this.hexagons[this.nbLines-1][j];
+		this.level.removeHexagon(hex);
+	}
+	this.hexagons.splice(-1, 1);
+	this.nbLines--;
+	this.setLinks();
+}
+
+LevelCreator.prototype.removeFirstColumn = function() {
+	if (this.nbColumns == 0)
+		return;
+
+	for (var i = 0; i < this.nbLines; i++) {
+		var hex = this.hexagons[i][0];
+		this.level.removeHexagon(hex);
+		this.hexagons[i].splice(0, 1);
+	}
+	this.nbColumns--;
+	this.setLinks();
+}
+
+LevelCreator.prototype.removeLastColumn = function() {
+	if (this.nbColumns == 0)
+		return;
+
+	for (var i = 0; i < this.nbLines; i++) {
+		var hex = this.hexagons[i][this.nbColumns-1];
+		this.level.removeHexagon(hex);
+		this.hexagons[i].splice(-1, 1);
+	}
+	this.nbColumns--;
 	this.setLinks();
 }

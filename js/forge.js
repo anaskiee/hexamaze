@@ -54,6 +54,10 @@ Forge.prototype.setCommandsPrototypeChain = function(commands) {
 	this.commands.add_line_last = this.addLineLast.bind(this);
 	this.commands.add_column_first = this.addColumnFirst.bind(this);
 	this.commands.add_column_last = this.addColumnLast.bind(this);
+	this.commands.rm_first_line = this.removeFirstLine.bind(this);
+	this.commands.rm_last_line = this.removeLastLine.bind(this);
+	this.commands.rm_first_column = this.removeFirstColumn.bind(this);
+	this.commands.rm_last_column = this.removeLastColumn.bind(this);
 }
 
 // +----------------------+
@@ -136,30 +140,41 @@ Forge.prototype.showConsole = function() {
 	this.developerConsole.show();
 }
 
-Forge.prototype.addLineFirst = function() {
+Forge.prototype.editLevel = function(operation) {
 	this.removeElementToRender("GraphicsEngine");
-	this.levelCreator.addLineFirst();
+	operation();
 	this.graphicsEngine.computeGraphicsData();
 	this.addElementToRender("GraphicsEngine");
+}
+
+Forge.prototype.addLineFirst = function() {
+	this.editLevel(this.levelCreator.addLineFirst.bind(this.levelCreator));
 }
 
 Forge.prototype.addLineLast = function() {
-	this.removeElementToRender("GraphicsEngine");
-	this.levelCreator.addLineLast();
-	this.graphicsEngine.computeGraphicsData();
-	this.addElementToRender("GraphicsEngine");
+	this.editLevel(this.levelCreator.addLineLast.bind(this.levelCreator));
 }
 
 Forge.prototype.addColumnFirst = function() {
-	this.removeElementToRender("GraphicsEngine");
-	this.levelCreator.addColumnFirst();
-	this.graphicsEngine.computeGraphicsData();
-	this.addElementToRender("GraphicsEngine");
+	this.editLevel(this.levelCreator.addColumnFirst.bind(this.levelCreator));
 }
 
 Forge.prototype.addColumnLast = function() {
-	this.removeElementToRender("GraphicsEngine");
-	this.levelCreator.addColumnLast();
-	this.graphicsEngine.computeGraphicsData();
-	this.addElementToRender("GraphicsEngine");
+	this.editLevel(this.levelCreator.addColumnLast.bind(this.levelCreator));
+}
+
+Forge.prototype.removeFirstLine = function() {
+	this.editLevel(this.levelCreator.removeFirstLine.bind(this.levelCreator));
+}
+
+Forge.prototype.removeLastLine = function() {
+	this.editLevel(this.levelCreator.removeLastLine.bind(this.levelCreator));
+}
+
+Forge.prototype.removeFirstColumn = function() {
+	this.editLevel(this.levelCreator.removeFirstColumn.bind(this.levelCreator));
+}
+
+Forge.prototype.removeLastColumn = function() {
+	this.editLevel(this.levelCreator.removeLastColumn.bind(this.levelCreator));
 }

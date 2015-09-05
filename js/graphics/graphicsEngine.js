@@ -62,8 +62,15 @@ GraphicsEngine.prototype.computeMapSize = function(width, height) {
 	var directions = ["top", "topLeft", "topRight", "bot", "botLeft", "botRight"];
 	var hexagons = [];
 	var marks = new Map();
-	hexagons.push(this.level.exitHexagon);
-	marks.set(this.level.exitHexagon, [0, 0]);
+	var hexagon = this.level.getAnHexagon();
+
+	if (!hexagon) {
+		console.log("empty level WTF !!");
+		return;
+	}
+
+	hexagons.push(hexagon);
+	marks.set(hexagon, [0, 0]);
 	var offset, offsetX, offsetY;
 
 	// Compute all relative positions
@@ -165,21 +172,30 @@ GraphicsEngine.prototype.drawElement = function(date) {
 	}
 
 	// Draw character and direction preselected
-	posX = this.level.characterHexagon.x;
-	posY = this.level.characterHexagon.y;
-	this.ctx.drawImage(this.characterPatterns.get("basic"), posX, posY);
-	this.ctx.drawImage(this.patterns.get("space-" + this.direction), posX, posY);
+	if (this.level.characterHexagon != null) {
+		posX = this.level.characterHexagon.x;
+		posY = this.level.characterHexagon.y;
+		this.ctx.drawImage(this.characterPatterns.get("basic"), posX, posY);
+		this.ctx.drawImage(this.patterns.get("space-" + this.direction), posX, posY);
+	}
 
 	// Draw exit
-	posX = this.level.exitHexagon.x;
-	posY = this.level.exitHexagon.y;
-	this.ctx.drawImage(this.exitPatterns.get("basic"), posX, posY);
+	if (this.level.exitHexagon != null) {
+		posX = this.level.exitHexagon.x;
+		posY = this.level.exitHexagon.y;
+		this.ctx.drawImage(this.exitPatterns.get("basic"), posX, posY);
+	}
 }
 
 GraphicsEngine.prototype.updateCharacterCoordinates = function() {
 	var hexagon = this.level.characterHexagon;
-	this.charX = hexagon.x + this.patternWidth/2;
-	this.charY = hexagon.y + this.patternHeight/2; 
+	if (hexagon != null) {
+		this.charX = hexagon.x + this.patternWidth/2;
+		this.charY = hexagon.y + this.patternHeight/2; 
+	} else {
+		this.charX = -1;
+		this.charY = -1;
+	}
 }
 
 GraphicsEngine.prototype.computeDirection = function(x, y) {
