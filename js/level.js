@@ -4,6 +4,7 @@ function Level() {
 	this.hexagons = new Set();
 	this.characterHexagon = null;
 	this.exitHexagon = null;
+	this.firstColumnOnTop = false;
 }
 
 Level.prototype.clearData = function() {
@@ -11,6 +12,7 @@ Level.prototype.clearData = function() {
 		this.hexagons.clear();
 		this.characterHexagon = null;
 		this.exitHexagon = null;
+		this.firstColumnOnTop = false;
 	}
 }
 
@@ -28,6 +30,16 @@ Level.prototype.removeHexagon = function(hex) {
 	if (hex == this.exitHexagon) {
 		this.exitHexagon = null;
 	}
+}
+
+Level.prototype.isLevelFinished = function() {
+	if (this.characterHexagon == null)
+		return false;
+	if (this.exitHexagon == null)
+		return false;
+	if (this.hexagons.length == 0)
+		return false;
+	return true;
 }
 
 Level.prototype.getAnHexagon = function() {
@@ -76,15 +88,16 @@ Level.prototype.toString = function() {
 		hexagons += JSON.stringify(hexa);
 	}
 
-	return idxCharacter + "\n" + idxExit + "\n" + hexagons;
+	return this.firstColumnOnTop + ";" + idxCharacter + ";" + idxExit + ";" + hexagons;
 }
 
 Level.prototype.fill = function(data) {
-	var structures = data.split("\n");
-	
-	var idxCharacter = parseInt(structures[0]);
-	var idxExit = parseInt(structures[1]);
-	var hexagonsStringified = structures[2].split("|");
+	var structures = data.split(";");
+
+	this.firstColumnOnTop = structures[0] == "true";
+	var idxCharacter = parseInt(structures[1]);
+	var idxExit = parseInt(structures[2]);
+	var hexagonsStringified = structures[3].split("|");
 
 	var hexagons = new Set();
 	var indexes = new Map();

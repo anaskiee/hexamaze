@@ -16,6 +16,7 @@ LevelCreator.prototype.createRandomLevel = function(nbLines, nbColumns) {
 
 LevelCreator.prototype.createEditingLevel = function(nbLines, nbColumns) {
 	this.createEmptyLevel(nbLines, nbColumns);
+	this.randomize(0);
 }
 
 LevelCreator.prototype.createBasicLevel = function(nbLines, nbColumns) {
@@ -29,6 +30,7 @@ LevelCreator.prototype.createBasicLevel = function(nbLines, nbColumns) {
 			}
 		}
 	}
+
 }
 
 LevelCreator.prototype.createEmptyLevel = function(nbLines, nbColumns) {
@@ -52,6 +54,9 @@ LevelCreator.prototype.createEmptyLevel = function(nbLines, nbColumns) {
 		}
 	}
 
+	// Define first column position
+	this.level.firstColumnOnTop = this.firstColumnOnTop;
+
 	// Link all hexagons
 	this.setLinks();
 }
@@ -69,42 +74,14 @@ LevelCreator.prototype.setLinks = function() {
 
 			// Links
 			// top
-			if (i > 0) {
-				hexagon.top = this.hexagons[i-1][j];
-			} else {
-				hexagon.top = null;
-			}
+			hexagon.top = i > 0 ? this.hexagons[i-1][j] : null;
 
 			// bot
-			if (i < this.nbLines - 1) {
-				hexagon.bot = this.hexagons[i+1][j];
-			} else {
-				hexagon.bot = null;
-			}
+			hexagon.bot = i < this.nbLines - 1 ? this.hexagons[i+1][j] : null;
 
-
-			var botSameLine, topSameLine;
-			var columnEven = j % 2 == 0;
-			if (this.firstColumnOnTop) {
-				if (columnEven) {
-					botSameLine = true;
-					topSameLine = false;
-				} else {
-					botSameLine = false;
-					topSameLine = true;
-				}
-			} else {
-				if (columnEven) {
-					botSameLine = false;
-					topSameLine = true;
-				} else {
-					botSameLine = true;
-					topSameLine = false;
-				}
-			}
-
-			var botLine = botSameLine ? i : i+1;
-			var topLine = topSameLine ? i : i-1;
+			var lines = this.getBotAndTopLineIndex(i, j);
+			var botLine = lines.botLine;
+			var topLine = lines.topLine;
 
 			var topLineExists = topLine >= 0;
 			var botLineExists = botLine <= this.nbLines-1;
@@ -186,15 +163,71 @@ LevelCreator.prototype.getRandomHexagon = function() {
 	return this.hexagons[y][x];
 }
 
+LevelCreator.prototype.clearData = function() {
+	this.hexagons = null;
+	this.nbLines = -1;
+	this.nbColumns = -1;
+	this.firstColumnOnTop = false;
+}
+
+LevelCreator.prototype.getHexagonColumn = function(hexagon) {
+	var currHex, nextHex;
+	var directions = ["top", "topLeft", "topRight", "bot", "botLeft", "botRight"];
+	var hexagons = [];
+	// To store column of hexagons found
+	var marks = new Map();
+	hexagons.push(hexagon);
+	marks.set(hexagon, 0);
+	var column;
+
+	// Compute all relative positions
+	while (hexagons.length > 0) {
+		currHex = hexagons.shift();
+		column = marks.get(currHex);
+		for (var dir of directions) {
+			nextHex = currHex[dir];
+			if (nextHex !== null && !marks.has(nextHex)) {
+				hexagons.push(nextHex);
+				switch (dir) {
+					case "top":
+					case "bot":
+						marks.set(nextHex, column);
+						break;
+					case "topLeft":
+					case "botLeft":
+						marks.set(nextHex, column - 1);
+						break;
+					case "topRight":
+					case "botRight":
+						marks.set(nextHex, column + 1);
+						break;
+				}
+			}
+		}
+	}
+
+	var min = 0;
+	for (var column of marks.values()) {
+		var min = Math.min(min, column);
+	}
+
+	return -min;
+}
+
 LevelCreator.prototype.fillEditingStructure = function() {
+	this.firstColumnOnTop = this.level.firstColumnOnTop;
 	var currHex, nextHex;
 	var directions = ["top", "topLeft", "topRight", "bot", "botLeft", "botRight"];
 	var hexagons = [];
 	var marks = new Map();
 	var hexagon = this.level.getAnHexagon();
 	hexagons.push(hexagon);
-	marks.set(hexagon, [0, 0]);
+	var hexColumn = this.getHexagonColumn(hexagon);
+	marks.set(hexagon, [0, hexColumn]);
 	var position, i, j;
+	var columnEven;
+	var botSameLine, topSameLine;
+	var botLine, topLine;
 
 	// Compute all relative positions
 	while (hexagons.length > 0) {
@@ -202,6 +235,11 @@ LevelCreator.prototype.fillEditingStructure = function() {
 		position = marks.get(currHex);
 		i = position[0];
 		j = position[1];
+
+		var lines = this.getBotAndTopLineIndex(i, j);
+		var botLine = lines.botLine;
+		var topLine = lines.topLine;
+
 		for (var dir of directions) {
 			nextHex = currHex[dir];
 			if (nextHex !== null && !marks.has(nextHex)) {
@@ -214,32 +252,16 @@ LevelCreator.prototype.fillEditingStructure = function() {
 						marks.set(nextHex, [i + 1, j]);
 						break;
 					case "topLeft":
-						if (j % 2 == 0) {
-							marks.set(nextHex, [i - 1, j - 1]);
-						} else {
-							marks.set(nextHex, [i, j - 1]);
-						}
+						marks.set(nextHex, [topLine, j - 1]);
 						break;
 					case "topRight":
-						if (j % 2 == 0) {
-							marks.set(nextHex, [i - 1, j + 1]);
-						} else {
-							marks.set(nextHex, [i, j + 1]);
-						}
+						marks.set(nextHex, [topLine, j + 1]);
 						break;
 					case "botLeft":
-						if (j % 2 == 0) {
-							marks.set(nextHex, [i, j - 1]);
-						} else {
-							marks.set(nextHex, [i + 1, j - 1]);
-						}
+						marks.set(nextHex, [botLine, j - 1]);
 						break;
 					case "botRight":
-						if (j % 2 == 0) {
-							marks.set(nextHex, [i, j + 1]);
-						} else {
-							marks.set(nextHex, [i + 1, j + 1]);
-						}
+						marks.set(nextHex, [botLine, j + 1]);
 						break;
 				}
 			}
@@ -269,9 +291,10 @@ LevelCreator.prototype.fillEditingStructure = function() {
 		}
 	}
 
+	// Column offset is already done because the first hexagon was initialized
+	// with his real column number
 	for (var mark of marks.values()) {
 		mark[0] -= iMin;
-		mark[1] -= jMax;
 	}
 
 	// Place hexagons in array
@@ -281,6 +304,28 @@ LevelCreator.prototype.fillEditingStructure = function() {
 
 	// Init links
 	this.setLinks();
+}
+
+LevelCreator.prototype.getBotAndTopLineIndex = function(i, j) {
+	var botSameLine, topSameLine;
+	var columnEven = j % 2 == 0;
+
+	// Basic case : columnEven and firstColumnOnTop
+	botSameLine = true;
+
+	if (!columnEven)
+		botSameLine = !botSameLine;
+
+	if (!this.firstColumnOnTop)
+		botSameLine = !botSameLine;
+	
+	// top and bot can't be on the same line
+	topSameLine = !botSameLine;
+
+	var botLine = botSameLine ? i : i+1;
+	var topLine = topSameLine ? i : i-1;
+
+	return {botLine: botLine, topLine: topLine};
 }
 
 LevelCreator.prototype.getNewLine = function() {
@@ -312,6 +357,7 @@ LevelCreator.prototype.addColumnFirst = function() {
 	}
 	this.nbColumns++;
 	this.firstColumnOnTop = !this.firstColumnOnTop;
+	this.level.firstColumnOnTop = this.firstColumnOnTop;
 	this.setLinks();
 }
 

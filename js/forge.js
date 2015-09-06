@@ -58,6 +58,8 @@ Forge.prototype.setCommandsPrototypeChain = function(commands) {
 	this.commands.rm_last_line = this.removeLastLine.bind(this);
 	this.commands.rm_first_column = this.removeFirstColumn.bind(this);
 	this.commands.rm_last_column = this.removeLastColumn.bind(this);
+	this.commands.import = this.import.bind(this);
+	this.commands.export = this.export.bind(this);
 }
 
 // +----------------------+
@@ -177,4 +179,23 @@ Forge.prototype.removeFirstColumn = function() {
 
 Forge.prototype.removeLastColumn = function() {
 	this.editLevel(this.levelCreator.removeLastColumn.bind(this.levelCreator));
+}
+
+Forge.prototype.import = function() {
+	this.removeElementToRender("GraphicsEngine");
+	var level = window.prompt("enter the map previously exported");
+	this.level.clearData();
+	this.level.fill(level);
+	this.levelCreator.clearData();
+	this.levelCreator.fillEditingStructure();
+	this.graphicsEngine.computeGraphicsData();
+	this.addElementToRender("GraphicsEngine");
+}
+
+Forge.prototype.export = function() {
+	if (this.level.isLevelFinished()) {
+		alert(this.level.toString());
+	} else {
+		alert("export impossible, level is not complete ");
+	}
 }
