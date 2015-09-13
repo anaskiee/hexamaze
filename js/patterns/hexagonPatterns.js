@@ -76,7 +76,7 @@ HexagonPatterns.prototype.preRenderDrawing = function(mainStyle, advancedStyle) 
 	canvas.height = this.height;
 	var ctx = canvas.getContext("2d");
 
-	this.drawHexagonPath(ctx, 0.98);
+	this.drawHexagonPath(ctx, 1);
 
 	if (mainStyle == "space") {
 		// Nothing to do		

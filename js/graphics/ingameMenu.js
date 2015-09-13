@@ -20,6 +20,9 @@ function IngameMenu(context, offContext, pixelMapper) {
 	this.animation = "";
 	this.active = false;
 	this.blockEventsSpread = true;
+
+	this.playAgin = new TextButton("Play\nagain", "new_level", pixelMapper);
+	this.previousElement = null;
 }
 
 IngameMenu.prototype = Object.create(GraphicalElement.prototype);
@@ -45,18 +48,13 @@ IngameMenu.prototype.onDrawingRectSet = function() {
 	this.menuWidth = 0;
 	
 	// Buttons
-	this.buttons = new Set();
-	this.addButtons();
-	this.buttonSelected = null;
+	this.playAgin.setFontHeight(Math.round(this.height/6));
 }
 
 IngameMenu.prototype.reduce = function(date) {
 	this.animation = "reduce";
 	this.initAnimation(date);
-	if (this.buttonSelected) {
-		this.buttonSelected.selected = false;
-		this.buttonSelected = null;
-	}
+	this.playAgin.disable();
 }
 
 IngameMenu.prototype.expand = function(date) {
@@ -104,23 +102,9 @@ IngameMenu.prototype.computeMenuCharacteristics = function(factor) {
 	}
 }
 
-IngameMenu.prototype.addButtons = function() {
-	this.ctx.font = this.height/6 + "px motorwerk";
-	var textWidth = this.ctx.measureText("again").width;
-	var offsetX = this.metrology["expand"].offsetX + this.width/2;
-	var offsetY = this.metrology["expand"].offsetY + this.height/2;
-	var button = {
-		action : "new_level",
-		selected : false,
-		xMin : offsetX - textWidth/2,
-		xMax : offsetX + textWidth/2,
-		yMin : offsetY + (1/6 - 1/13)*this.height,
-		yMax : offsetY + (1/6 + 1/10)*this.height};
-	this.buttons.add(button);
-}
-
 IngameMenu.prototype.drawElement = function(date) {
 	var factor;
+	var drawOffContext = false;
 	if (!this.animationRunning) {
 		factor = 2;
 	} else {
@@ -130,6 +114,9 @@ IngameMenu.prototype.drawElement = function(date) {
 			this.animationRunning = false;
 			if (this.animation == "reduce") {
 				this.active = false;
+			// At the end of expand animation, we draw buttons on offContext once
+			} else if (this.animation == "expand") {
+				drawOffContext = true;
 			}
 		}
 		this.computeMenuCharacteristics(factor);
@@ -151,15 +138,15 @@ IngameMenu.prototype.drawElement = function(date) {
 	this.ctx.font = this.height/6 + "px motorwerk";
 	this.ctx.textAlign = "center";
 	this.ctx.fillText(this.text, 0, -this.height/6);
-	for (let button of this.buttons) {
-		if (button.selected == true) {
-			this.ctx.fillStyle = "#698469";
-		} else {
-			this.ctx.fillStyle = "#000000";
-		}
-		this.ctx.fillText("Play", 0, this.height/6);
-		this.ctx.fillText("again", 0, (1/6 + 1/10)*this.height);
+	
+	// Draw button
+	if (drawOffContext) {
+		this.offCtx.save();
+		this.offCtx.translate(this.posX + this.width/2, this.posY + this.height/2);
+		this.playAgin.offContextDraw(this.offCtx, 0, this.height/6);
+		this.offCtx.restore();
 	}
+	this.playAgin.draw(this.ctx, 0, this.height/6);
 
 	this.ctx.restore();
 }
@@ -186,21 +173,19 @@ IngameMenu.prototype.cleanCanvas = function() {
 //   +--------------+
 
 IngameMenu.prototype.handleCursorMove = function(x, y) {
-	for (let button of this.buttons) {
-		if (button.xMin < x && x < button.xMax && button.yMin < y && y < button.yMax) {
-			this.buttonSelected = button;
-			button.selected = true;
-		} else if (button.selected) {
-			button.selected = false;
-			if (this.buttonSelected == button) {
-				this.buttonSelected = null;
-			}
-		}
+	if (this.previousElement) {
+		this.previousElement.mouseOver = false;
+	}
+	var element = this.pixelMapper.getElement(x, y);
+	if (element) {
+		element.mouseOver = true;
+		this.previousElement = element;
 	}
 }
 
-IngameMenu.prototype.handleClick = function() {
-	if (this.buttonSelected) {
-		return this.buttonSelected.action;
+IngameMenu.prototype.handleClick = function(x, y) {
+	var element = this.pixelMapper.getElement(x, y);
+	if (element) {
+		return element.action;
 	}
 }

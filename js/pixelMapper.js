@@ -7,8 +7,6 @@ function PixelMapper(offContext) {
 	// others to register elements
 	this.currentIndex = 0;
 
-	// object -> color
-	this.objectMap = new Map();
 	// color -> object
 	this.colorMap = new Map();
 }
@@ -20,7 +18,6 @@ PixelMapper.prototype.registerAndGetColor = function(object) {
 	var g = ((idx - b) / 256) % 256;
 	var r = ((idx - 256*g - b) / 256) % 256;
 	var color = "rgb(" + r + "," + g + "," + b + ")";
-	this.objectMap.set(object, color);
 	this.colorMap.set(color, object);
 	return color;
 }
@@ -38,6 +35,5 @@ PixelMapper.prototype.getElement = function(x, y) {
 
 PixelMapper.prototype.unregister = function(object) {
 	var color = this.objectMap.get(object);
-	this.objectMap.delete(object);
 	this.colorMap.delete(color);
 }

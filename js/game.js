@@ -84,6 +84,13 @@ Game.prototype.setMouseEventReceivers = function(event) {
 }
 
 Game.prototype.setKeyboardEventReceivers = function(event) {
+	// Catch esc
+	if (event.keyCode == 27) {
+		event.setReceiver(this);
+		event.setResultReceiver(null);
+		return;
+	}
+
 	if (this.elementsToRender[0] != null) {
 		event.setReceiver(this.developerConsole);
 		event.setResultReceiver(this);
@@ -100,6 +107,9 @@ Game.prototype.handleClick = function(x, y) {
 }
 
 Game.prototype.handleKey = function(keyCode) {
+	if (keyCode == 27) {
+		this.expandMenu();
+	}
 }
 
 Game.prototype.handleWorkerMessage = function(msg) {

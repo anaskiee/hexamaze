@@ -234,13 +234,6 @@ GraphicsEngine.prototype.makeHexagonsClickable = function(mode) {
 		y = hexagon.y;
 		color = this.pixelMapper.registerAndGetColor(hexagon);
 		this.hexagonPatterns.offContextDraw(x, y, this.offCtx, color);
-/*		this.ctx.beginPath();
-		this.ctx.moveTo(10.5, 10.5);
-		this.ctx.lineTo(10.5, 100.5);
-		this.ctx.lineTo(50, 100.5);
-		this.ctx.strokeStyle = "#000000";
-		this.ctx.stroke();*/
-		//this.hexagonPatterns.offContextDraw(x, y, this.ctx, color);
 	}
 }
 
