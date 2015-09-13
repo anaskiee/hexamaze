@@ -1,7 +1,8 @@
 "use strict";
 
-function GraphicalElement(name) {
+function GraphicalElement(name, pixelMapper) {
 	this.name = name;
+	this.pixelMapper = pixelMapper;
 	this.offsetX = 0;
 	this.offsetY = 0;
 	this.maxWidth = 0;

@@ -1,12 +1,11 @@
 "use strict";
 
 function HexagonPatterns(radius) {
+	Pattern.call(this);
 	this.radius = radius;
 	this.width = 2*radius + 4;
 	this.height = 2*Math.sqrt(3)/2 * radius + 6;
 	
-	
-	this.drawings = new Map();
 	this.preRenderDrawing("space", "");
 	this.preRenderDrawing("space", "top");
 	this.preRenderDrawing("space", "topLeft");
@@ -18,6 +17,9 @@ function HexagonPatterns(radius) {
 	this.preRenderDrawing("reachable", "");
 	this.preRenderDrawing("highlight", "");
 }
+
+HexagonPatterns.prototype = Object.create(Pattern.prototype);
+HexagonPatterns.prototype.constructor = HexagonPatterns;
 
 HexagonPatterns.prototype.computeDirectionAngles = function(direction) {
 	let i;
@@ -41,12 +43,13 @@ HexagonPatterns.prototype.computeDirectionAngles = function(direction) {
 	return {"alpha" : alpha, "beta" : beta};
 }
 
-HexagonPatterns.prototype.drawHexagonPath = function(context) {
+HexagonPatterns.prototype.drawHexagonPath = function(context, factor) {
 	context.translate(this.width/2, this.height/2);
 	context.beginPath();
-	context.moveTo(this.radius, 0);
+	context.moveTo(factor*this.radius, 0);
 	for (let theta = Math.PI/3; theta < 2*Math.PI; theta += Math.PI/3) {
-		context.lineTo(this.radius * Math.cos(theta), this.radius * Math.sin(theta));
+		context.lineTo(Math.floor(factor*this.radius * Math.cos(theta) + 0.5), 
+						Math.floor(factor*this.radius * Math.sin(theta)) + 0.5);
 	}
 	context.closePath();
 }
@@ -73,7 +76,7 @@ HexagonPatterns.prototype.preRenderDrawing = function(mainStyle, advancedStyle) 
 	canvas.height = this.height;
 	var ctx = canvas.getContext("2d");
 
-	this.drawHexagonPath(ctx);
+	this.drawHexagonPath(ctx, 0.98);
 
 	if (mainStyle == "space") {
 		// Nothing to do		
@@ -96,6 +99,19 @@ HexagonPatterns.prototype.preRenderDrawing = function(mainStyle, advancedStyle) 
 	} else {
 		this.drawings.set(mainStyle, canvas);
 	}
+}
+
+HexagonPatterns.prototype.offContextDraw = function(x, y, offCtx, color) {
+	var l =[];
+	for (let theta = Math.PI/3; theta < 2*Math.PI; theta += Math.PI/3) {
+		var p = {x: Math.round(x + 0.98*this.radius * Math.cos(theta)), 
+					y: Math.round(y + 0.98*this.radius * Math.sin(theta))};
+		l.push(p);
+	}
+	offCtx.save();
+	offCtx.translate(Math.round(this.width/2), Math.round(this.height/2));
+	this.fillPath(offCtx, l, color);
+	offCtx.restore();
 }
 
 HexagonPatterns.prototype.getPatterns = function(style) {

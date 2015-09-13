@@ -1,13 +1,16 @@
 "use strict";
 
 function ExitPatterns(exitHeight, widthMax, heightMax) {
+	Pattern.call(this);
 	this.height = exitHeight;
 	this.widthMax = widthMax;
 	this.heightMax = heightMax;
 
-	this.drawings = new Map();
 	this.preRenderDrawing("basic");
 }
+
+ExitPatterns.prototype = Object.create(Pattern.prototype);
+ExitPatterns.prototype.constructor = ExitPatterns;
 
 ExitPatterns.prototype.preRenderDrawing = function(style) {
 	// Off screen canvas

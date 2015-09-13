@@ -1,10 +1,12 @@
 "use strict";
 
-function Forge(width, height, graphicsEngine, developerConsole, level, levelCreator) {
+function Forge(width, height, pixelMapper, graphicsEngine, developerConsole, level, 
+				levelCreator) {
 	GameMode.call(this, "Forge");
 	this.width = width;
 	this.height = height;
 
+	this.pixelMapper = pixelMapper;
 	this.graphicsEngine = graphicsEngine;
 	this.developerConsole = developerConsole;
 	this.level = level;
@@ -30,6 +32,7 @@ Forge.prototype.startModule = function() {
 	this.showConsole();
 	this.levelCreator.createEditingLevel(4, 4);
 	this.graphicsEngine.computeGraphicsData();
+	this.graphicsEngine.makeHexagonsClickable();
 	this.addElementToRender("GraphicsEngine");
 }
 
@@ -70,6 +73,8 @@ Forge.prototype.setMessageEventReceivers = function(event) {
 }
 
 Forge.prototype.setMouseEventReceivers = function(event) {
+	event.setReceiver(this.pixelMapper.getElement(event.x, event.y));
+	event.setResultReceiver(this);
 }
 
 Forge.prototype.setKeyboardEventReceivers = function(event) {

@@ -21,3 +21,13 @@ function Hexagon(type)
 	this.x = -1;
 	this.y = -1;
 }
+
+Hexagon.prototype.handleClick = function(x, y) {
+	return "click";
+}
+
+Hexagon.prototype.handleCursorMove = function(x, y) {
+	this.type = "block";
+	console.log("mouse over me !");
+	return "mouse over me !";
+}

@@ -1,9 +1,11 @@
 "use strict";
 
-function GraphicsEngine(context, level, physicsEngine) {
-	GraphicalElement.call(this, GraphicsEngine);
+function GraphicsEngine(context, offContext, pixelMapper, level, physicsEngine) {
+	GraphicalElement.call(this, "GraphicsEngine", pixelMapper);
 
 	this.ctx = context;
+	this.offCtx = offContext;
+
 	this.level = level;
 
 	this.active = true;
@@ -37,8 +39,8 @@ GraphicsEngine.prototype.computeGraphicsData = function() {
 	this.radius = this.computeMapSize(this.width, this.height);
 
 	// Patterns
-	var hexagonPatterns = new HexagonPatterns(this.radius);
-	this.patterns = hexagonPatterns.getPatterns();
+	this.hexagonPatterns = new HexagonPatterns(this.radius);
+	this.patterns = this.hexagonPatterns.getPatterns();
 	var characterHeight = 2/5*this.radius;
 	this.patternWidth = this.patterns.get("block").width;
 	this.patternHeight = this.patterns.get("block").height;
@@ -223,6 +225,24 @@ GraphicsEngine.prototype.computeDirection = function(x, y) {
 //   +--------------+
 //   |    Events    |
 //   +--------------+
+
+GraphicsEngine.prototype.makeHexagonsClickable = function(mode) {
+	var color;
+	var x, y;
+	for (let hexagon of this.level.hexagons) {
+		x = hexagon.x;
+		y = hexagon.y;
+		color = this.pixelMapper.registerAndGetColor(hexagon);
+		this.hexagonPatterns.offContextDraw(x, y, this.offCtx, color);
+/*		this.ctx.beginPath();
+		this.ctx.moveTo(10.5, 10.5);
+		this.ctx.lineTo(10.5, 100.5);
+		this.ctx.lineTo(50, 100.5);
+		this.ctx.strokeStyle = "#000000";
+		this.ctx.stroke();*/
+		//this.hexagonPatterns.offContextDraw(x, y, this.ctx, color);
+	}
+}
 
 GraphicsEngine.prototype.handleCursorMove = function(x, y) {
 	var direction = this.computeDirection(x, y);

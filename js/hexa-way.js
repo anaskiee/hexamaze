@@ -17,12 +17,17 @@ window.addEventListener('DOMContentLoaded', function() {
 		return;
 	}
 
+	var offCanvas = document.createElement("canvas");
+	var offContext = offCanvas.getContext("2d");
+
 	var screenWidth = window.innerWidth;
 	var screenHeight = window.innerHeight;
 	canvas.width = screenWidth;
 	canvas.height = screenHeight;
+	offCanvas.width = screenWidth;
+	offCanvas.height = screenHeight;
 
 	canvas.focus();
 
-	new GameLoader(canvas, context);
+	new GameLoader(canvas, context, offCanvas, offContext);
 });

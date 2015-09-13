@@ -1,9 +1,10 @@
 "use strict";
 
-function IngameMenu(context) {
-	GraphicalElement.call(this, "IngameMenu");
+function IngameMenu(context, offContext, pixelMapper) {
+	GraphicalElement.call(this, "IngameMenu", pixelMapper);
 
 	this.ctx = context;
+	this.offCtx = offContext;
 
 	// Text
 	this.text = "Ingame menu text !";

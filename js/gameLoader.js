@@ -1,6 +1,6 @@
 "use strict";
 
-function GameLoader(canvas, context) {
+function GameLoader(canvas, context, offCanvas, offContext) {
 	// Create all core objects
 	var worker = new Worker("./js/levelGeneratorWorker.js");
 	
@@ -13,16 +13,19 @@ function GameLoader(canvas, context) {
 	var physicsEngine = new PhysicsEngine(level);
 	var levelCreator = new LevelCreator(level);
 	
+	var pixelMapper = new PixelMapper(offContext);
+
 	// Graphical modules
-	var graphicsEngine = new GraphicsEngine(context, level, physicsEngine);
-	var ingameMenu = new IngameMenu(context);
-	var developerConsole = new DeveloperConsole(context);
+	var graphicsEngine = new GraphicsEngine(context, offContext, pixelMapper, level, 
+											physicsEngine);
+	var ingameMenu = new IngameMenu(context, offContext, pixelMapper);
+	var developerConsole = new DeveloperConsole(context, offContext, pixelMapper);
 	
 	// Game modules
 	var game = new Game(width, height, physicsEngine, graphicsEngine, ingameMenu, 
 						developerConsole, worker, level);
-	var forge = new Forge(width, height, graphicsEngine, developerConsole, level, 
-							levelCreator);
+	var forge = new Forge(width, height, pixelMapper,  graphicsEngine, 
+							developerConsole, level, levelCreator);
 
 	var master = new Master(game, forge);
 	var eventHandler = new EventHandler(canvas, master, worker);

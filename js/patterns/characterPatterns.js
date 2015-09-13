@@ -1,13 +1,16 @@
 "use strict";
 
 function CharacterPatterns(characterHeight, widthMax, heightMax) {
+	Pattern.call(this);
 	this.height = characterHeight;
 	this.widthMax = widthMax;
 	this.heightMax = heightMax;
 
-	this.drawings = new Map();
 	this.preRenderDrawing("basic");
 }
+
+CharacterPatterns.prototype = Object.create(Pattern.prototype);
+CharacterPatterns.prototype.constructor = CharacterPatterns;
 
 CharacterPatterns.prototype.preRenderDrawing = function(style) {
 	// Off screen canvas

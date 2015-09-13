@@ -1,12 +1,15 @@
 "use strict";
 
 function PlusMinusPatterns(radius) {
+	Pattern.call(this);
 	this.radius = radius;
 
-	this.drawings = new Map();
 	this.preRenderDrawing("minus");
 	this.preRenderDrawing("plus");
 }
+
+PlusMinusPatterns.prototype = Object.create(Pattern.prototype);
+PlusMinusPatterns.prototype.constructor = PlusMinusPatterns;
 
 PlusMinusPatterns.prototype.preRenderDrawing = function(style) {
 	// Off screen canvas

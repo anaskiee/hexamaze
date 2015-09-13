@@ -1,9 +1,11 @@
 "use strict";
 
-function DeveloperConsole(context) {
-	GraphicalElement.call(this, "DeveloperConsole");
+function DeveloperConsole(context, offContext, pixelMapper) {
+	GraphicalElement.call(this, "DeveloperConsole", pixelMapper);
 
 	this.ctx = context;
+	this.offCtx = offContext;
+
 	this.active = false;
 	this.blockEventsSpread = false;
 

@@ -16,11 +16,12 @@ Master.prototype.setCommandsPrototypeChain = function(commands) {
 }
 
 Master.prototype.draw = function() {
-	requestAnimationFrame(this.draw.bind(this));
 	var date = new Date();
 
 	this.applyEvents();
 	this.module.computeNewFrameAndDraw(date);
+	
+	requestAnimationFrame(this.draw.bind(this));
 }
 
 Master.prototype.start = function() {
