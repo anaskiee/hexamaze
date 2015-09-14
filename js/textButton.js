@@ -33,6 +33,7 @@ TextButton.prototype.draw = function(ctx, x, y) {
 	ctx.textAlign = "center";
 	if (this.mouseOver) {
 		ctx.fillStyle = "#698469";
+		this.mouseOver = false;
 	} else {
 		ctx.fillStyle = "#000000";
 	}
@@ -52,9 +53,17 @@ TextButton.prototype.offContextDraw = function(ctx, x, y) {
 }
 
 TextButton.prototype.disable = function() {
-	if (offContextColor != null) {
+	if (this.offContextColor != null) {
 		this.pixelMapper.unregister(this.offContextColor);
 		this.offContextColor = null;
 		this.mouseOver = false;
 	}
+}
+
+TextButton.prototype.handleCursorMove = function(x, y) {
+	this.mouseOver = true;
+}
+
+TextButton.prototype.handleClick = function(x, y) {
+	return this.action;
 }

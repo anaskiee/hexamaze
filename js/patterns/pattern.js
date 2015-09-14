@@ -15,10 +15,10 @@ Pattern.prototype.fillPath = function(ctx, pointsList, color) {
 	for (var i = 0; i < pointsList.length; i++) {
 		curr = pointsList[i];
 		next = pointsList[(i + 1) % pointsList.length];
-		x0 = curr.x;
-		y0 = curr.y;
-		x1 = next.x;
-		y1 = next.y;
+		x0 = Math.round(curr.x);
+		y0 = Math.round(curr.y);
+		x1 = Math.round(next.x);
+		y1 = Math.round(next.y);
 		
 		// Bresenham's line algorithm
 		dx = Math.abs(x1 - x0);

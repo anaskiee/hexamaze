@@ -33,7 +33,7 @@ PixelMapper.prototype.getElement = function(x, y) {
 	return element;
 }
 
-PixelMapper.prototype.unregister = function(object) {
-	var color = this.objectMap.get(object);
+PixelMapper.prototype.unregister = function(color) {
+	var color = this.colorMap.get(color);
 	this.colorMap.delete(color);
 }

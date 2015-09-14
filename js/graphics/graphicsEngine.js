@@ -20,6 +20,8 @@ function GraphicsEngine(context, offContext, pixelMapper, level, physicsEngine) 
 	// Character position on screen
 	this.charX = -1;
 	this.charY = -1;
+
+	this.mode = "";
 }
 
 GraphicsEngine.prototype = Object.create(GraphicalElement.prototype);
@@ -189,6 +191,31 @@ GraphicsEngine.prototype.drawElement = function(date) {
 	}
 }
 
+GraphicsEngine.prototype.offContextDraw = function() {
+	if (this.mode == "game") {
+		if (this.offContextColor == null) {
+			this.offContextColor = this.pixelMapper.registerAndGetColor(this);
+		}
+		this.offCtx.fillStyle = this.offContextColor;
+		this.offCtx.fillRect(this.offsetX, this.offsetY, 
+								this.maxWidth, this.maxHeight);
+	} else if (this.mode == "forge") {
+		this.offCtx.clearRect(this.offsetX, this.offsetY, 
+								this.maxWidth, this.maxHeight);
+		var color;
+		var x, y;
+		for (let hexagon of this.level.hexagons) {
+			x = hexagon.x;
+			y = hexagon.y;
+			color = this.pixelMapper.registerAndGetColor(hexagon);
+			this.offCtx.save();
+			this.offCtx.translate(Math.round(this.offsetX), Math.round(this.offsetY));
+			this.hexagonPatterns.offContextDraw(x, y, this.offCtx, color);
+			this.offCtx.restore();
+		}
+	}
+}
+
 GraphicsEngine.prototype.updateCharacterCoordinates = function() {
 	var hexagon = this.level.characterHexagon;
 	if (hexagon != null) {
@@ -226,14 +253,13 @@ GraphicsEngine.prototype.computeDirection = function(x, y) {
 //   |    Events    |
 //   +--------------+
 
-GraphicsEngine.prototype.makeHexagonsClickable = function(mode) {
-	var color;
-	var x, y;
-	for (let hexagon of this.level.hexagons) {
-		x = hexagon.x;
-		y = hexagon.y;
-		color = this.pixelMapper.registerAndGetColor(hexagon);
-		this.hexagonPatterns.offContextDraw(x, y, this.offCtx, color);
+GraphicsEngine.prototype.setEventMode = function(mode) {
+	if (mode == "game") {
+		this.mode = "game";
+	} else if (mode == "forge") {
+		this.mode = "forge";
+	} else {
+		console.log("Unknown mode: " + mode);
 	}
 }
 

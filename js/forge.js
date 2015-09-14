@@ -1,7 +1,7 @@
 "use strict";
 
 function Forge(width, height, pixelMapper, graphicsEngine, developerConsole, level, 
-				levelCreator) {
+				levelCreator, forgeGUI) {
 	GameMode.call(this, "Forge");
 	this.width = width;
 	this.height = height;
@@ -11,11 +11,18 @@ function Forge(width, height, pixelMapper, graphicsEngine, developerConsole, lev
 	this.developerConsole = developerConsole;
 	this.level = level;
 	this.levelCreator = levelCreator;
+	this.forgeGUI = forgeGUI;
 	this.commands = null;
 
 	// 0 -> DeveloperConsole
-	// 1 -> GraphicsEngine
-	this.elementsToRender = new Array(2);
+	// 1 -> ForgeGUI
+	// 2 -> GraphicsEngine
+	this.elementsToRender = new Array(3);
+
+	this.forgeGuiWidth = -1;
+	this.forgeGuiHeight = -1;
+
+	this.previousElement = null;
 }
 
 Forge.prototype = Object.create(GameMode.prototype);
@@ -26,14 +33,26 @@ Forge.prototype.constructor = Forge;
 // +---------------------+
 // Manage module start and stop
 Forge.prototype.startModule = function() {
-	this.graphicsEngine.setDrawingRect(0, 0, this.width, this.height);
+	this.forgeGuiWidth = this.width;
+	this.forgeGuiHeight = this.height;
+	this.forgeGUI.setDrawingRect(0, 0, this.width, this.height);
+	this.setGraphicsEngineDrawingRect();
 	this.developerConsole.setDrawingRect(0, 19/20*this.height - 0.5, 
 											this.width, this.height/20);
 	this.showConsole();
 	this.levelCreator.createEditingLevel(4, 4);
 	this.graphicsEngine.computeGraphicsData();
-	this.graphicsEngine.makeHexagonsClickable();
+	this.graphicsEngine.setEventMode("forge");
+	this.addElementToRender("ForgeGUI");
 	this.addElementToRender("GraphicsEngine");
+}
+
+Forge.prototype.setGraphicsEngineDrawingRect = function() {
+	this.graphicsEngine.setDrawingRect(2/8*this.forgeGuiWidth, 1/8*this.forgeGuiHeight, 
+								5/8*this.forgeGuiWidth, 6/8*this.forgeGuiHeight);
+	this.forgeGUI.setRendererRect(2/8*this.forgeGuiWidth, 1/8*this.forgeGuiHeight, 
+								5/8*this.forgeGuiWidth, 6/8*this.forgeGuiHeight);
+	this.graphicsEngine.setEventMode("forge");
 }
 
 Forge.prototype.stopModule = function() {
@@ -72,11 +91,6 @@ Forge.prototype.setCommandsPrototypeChain = function(commands) {
 Forge.prototype.setMessageEventReceivers = function(event) {
 }
 
-Forge.prototype.setMouseEventReceivers = function(event) {
-	event.setReceiver(this.pixelMapper.getElement(event.x, event.y));
-	event.setResultReceiver(this);
-}
-
 Forge.prototype.setKeyboardEventReceivers = function(event) {
 	if (this.elementsToRender[0] != null) {
 		event.setReceiver(this.developerConsole);
@@ -85,12 +99,6 @@ Forge.prototype.setKeyboardEventReceivers = function(event) {
 		event.setReceiver(null);
 		event.setResultReceiver(null);
 	}
-}
-
-Forge.prototype.handleCursorMove = function(x, y) {
-}
-
-Forge.prototype.handleClick = function(x, y) {
 }
 
 Forge.prototype.handleKey = function(keyCode) {
@@ -108,9 +116,17 @@ Forge.prototype.removeElementToRender = function(name) {
 		case "DeveloperConsole":
 			this.elementsToRender[0] = null;
 			break;
-		case "GraphicsEngine":
+		case "ForgeGUI":
 			this.elementsToRender[1] = null;
 			break;
+		case "GraphicsEngine":
+			this.elementsToRender[2] = null;
+			break;
+	}
+	for (var elem of this.elementsToRender) {
+		if (elem != null) {
+			elem.offContextDraw();
+		}
 	}
 }
 
@@ -119,9 +135,17 @@ Forge.prototype.addElementToRender = function(name) {
 		case "DeveloperConsole":
 			this.elementsToRender[0] = this.developerConsole;
 			break;
-		case "GraphicsEngine":
-			this.elementsToRender[1] = this.graphicsEngine;
+		case "ForgeGUI":
+			this.elementsToRender[1] = this.forgeGUI;
 			break;
+		case "GraphicsEngine":
+			this.elementsToRender[2] = this.graphicsEngine;
+			break;
+	}
+	for (var elem of this.elementsToRender) {
+		if (elem != null) {
+			elem.offContextDraw();
+		}
 	}
 }
 
@@ -142,7 +166,9 @@ Forge.prototype.hideConsole = function() {
 }
 
 Forge.prototype.showConsole = function() {
-	this.graphicsEngine.adjustDrawingRect(0, 0, 0, -this.developerConsole.maxHeight);
+	this.forgeGuiHeight -= this.developerConsole.maxHeight;
+	this.forgeGUI.adjustDrawingRect(0, 0, 0, -this.developerConsole.maxHeight);
+	this.setGraphicsEngineDrawingRect();
 	this.addElementToRender("DeveloperConsole");
 	this.developerConsole.show();
 }

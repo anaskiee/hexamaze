@@ -32,6 +32,7 @@ Game.prototype.startModule = function() {
 	this.graphicsEngine.setDrawingRect(0, 0, this.width, this.height);
 	this.developerConsole.setDrawingRect(0, 19/20*this.height - 0.5, 
 											this.width, this.height/20);
+	this.graphicsEngine.setEventMode("game");
 	this.expandMenu();
 	this.showConsole();
 	this.worker.postMessage("compute");
@@ -67,22 +68,6 @@ Game.prototype.setMessageEventReceivers = function(event) {
 	event.setResultReceiver(null);
 }
 
-Game.prototype.setMouseEventReceivers = function(event) {
-	var assigned = false;
-	for (var i = 2; i >= 0; i--) {
-		if (this.elementsToRender[i] != null) {
-			event.setReceiver(this.elementsToRender[i]);
-			event.setResultReceiver(this);
-			assigned = true;
-			break;
-		}
-	}
-	if (!assigned) {
-		event.setReceiver(null);
-		event.setResultReceiver(null);
-	}
-}
-
 Game.prototype.setKeyboardEventReceivers = function(event) {
 	// Catch esc
 	if (event.keyCode == 27) {
@@ -98,12 +83,6 @@ Game.prototype.setKeyboardEventReceivers = function(event) {
 		event.setReceiver(null);
 		event.setResultReceiver(null);
 	}
-}
-
-Game.prototype.handleCursorMove = function(x, y) {
-}
-
-Game.prototype.handleClick = function(x, y) {
 }
 
 Game.prototype.handleKey = function(keyCode) {
@@ -137,6 +116,11 @@ Game.prototype.removeElementToRender = function(name) {
 			this.elementsToRender[2] = null;
 			break;
 	}
+	for (var elem of this.elementsToRender) {
+		if (elem != null) {
+			elem.offContextDraw();
+		}
+	}
 }
 
 Game.prototype.addElementToRender = function(name) {
@@ -150,6 +134,11 @@ Game.prototype.addElementToRender = function(name) {
 		case "IngameMenu":
 			this.elementsToRender[2] = this.ingameMenu;
 			break;
+	}
+	for (var elem of this.elementsToRender) {
+		if (elem != null) {
+			elem.offContextDraw();
+		}
 	}
 }
 

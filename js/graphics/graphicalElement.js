@@ -7,6 +7,8 @@ function GraphicalElement(name, pixelMapper) {
 	this.offsetY = 0;
 	this.maxWidth = 0;
 	this.maxHeight = 0;
+
+	this.offContextColor = null;
 }
 
 GraphicalElement.prototype.setDrawingRect = function(offsetX, offsetY, width, height) {
@@ -36,6 +38,9 @@ GraphicalElement.prototype.draw = function(date) {
 	this.ctx.translate(this.offsetX, this.offsetY);
 	this.drawElement(date);
 	this.ctx.restore();
+}
+
+GraphicalElement.prototype.offContextDraw = function() {
 }
 
 GraphicalElement.prototype.drawElement = function(date) {

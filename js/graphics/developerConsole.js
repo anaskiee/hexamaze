@@ -38,6 +38,11 @@ DeveloperConsole.prototype.drawElement = function(date) {
 	}
 }
 
+DeveloperConsole.prototype.offContextDraw = function() {
+	// We do not want to catch mouse events at the moment
+	this.offCtx.clearRect(this.offsetX, this.offsetY, this.maxWidth, this.maxHeight);
+}
+
 DeveloperConsole.prototype.show = function() {
 	this.active = true;
 	this.focus = true;

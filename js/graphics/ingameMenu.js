@@ -151,6 +151,11 @@ IngameMenu.prototype.drawElement = function(date) {
 	this.ctx.restore();
 }
 
+IngameMenu.prototype.offContextDraw = function() {
+	// We do not want to catch events except buttons, but they are drawn after
+	this.offCtx.clearRect(this.offsetX, this.offsetY, this.maxWidth, this.maxHeight);
+}
+
 IngameMenu.prototype.drawDistortedHexagon = function(ctx, l, h, x, color) {
 	ctx.beginPath();
 	ctx.moveTo(-l/2 - x, 0);
