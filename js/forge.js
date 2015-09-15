@@ -213,9 +213,9 @@ Forge.prototype.removeLastColumn = function() {
 }
 
 Forge.prototype.import = function() {
-	this.removeElementToRender("GraphicsEngine");
 	var level = window.prompt("enter the map previously exported");
 	if (level) {
+		this.removeElementToRender("GraphicsEngine");
 		this.level.clearData();
 		this.level.fill(level);
 		this.levelCreator.clearData();
