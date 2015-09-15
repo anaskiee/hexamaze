@@ -57,3 +57,6 @@ GraphicalElement.prototype.handleKey = function(keyCode) {
 
 GraphicalElement.prototype.handleWorkerMessage = function(keyCode) {
 }
+
+GraphicalElement.prototype.onMouseOverEnd = function() {
+}

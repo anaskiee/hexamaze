@@ -15,17 +15,17 @@ function EventHandler(canvas, master, worker) {
 // Functions to catch events in order to apply them asynchronously
 EventHandler.prototype.handleMouse = function(event) {
 	var evt = new CursorMoveEvent(event.pageX, event.pageY);
-	this.master.pushMouseEvent(evt);
+	this.master.pushMouseMoveEvent(evt);
 }
 
 EventHandler.prototype.handleTouch = function(event, isMouse) {
 	var evt = new CursorMoveEvent(event.touches[0].pageX, event.touches[0].pageY);
-	this.master.pushMouseEvent(evt);
+	this.master.pushMouseMoveEvent(evt);
 }
 
 EventHandler.prototype.handleClick = function(event) {
 	var evt = new ClickEvent(event.pageX, event.pageY);
-	this.master.pushMouseEvent(evt);
+	this.master.pushClickEvent(evt);
 }
 
 EventHandler.prototype.handleKey = function(event) {

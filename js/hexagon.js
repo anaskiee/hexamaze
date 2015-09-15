@@ -28,6 +28,9 @@ Hexagon.prototype.handleClick = function(x, y) {
 
 Hexagon.prototype.handleCursorMove = function(x, y) {
 	this.type = "block";
-	console.log("mouse over me !");
 	return "mouse over me !";
+}
+
+Hexagon.prototype.onMouseOverEnd = function() {
+	this.type = "space";
 }

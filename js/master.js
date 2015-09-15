@@ -9,8 +9,7 @@ function Master(game, forge, pixelMapper) {
 	this.events = [];
 	this.module = forge;
 
-	this.previousElement = null;
-	this.element = null;
+	this.previousMouseMoveElement = null;
 }
 
 Master.prototype.setCommandsPrototypeChain = function(commands) {
@@ -41,13 +40,31 @@ Master.prototype.pushMessageEvent = function(event) {
 
 // Other events are destinated to a graphical elements, but only
 // the module know which one
-Master.prototype.pushMouseEvent = function(event) {
+Master.prototype.pushMouseMoveEvent = function(event) {
+	event.setPreviousElement(this.previousMouseMoveElement);
+	
 	var elem = this.pixelMapper.getElement(event.x, event.y);
 	if (elem) {
 		event.setReceiver(elem);
 		event.setResultReceiver(this.module);
+	}
+
+	// If both are null, nothing will be triggered
+	// Else, at least something will be, and previous must be updated
+	if (this.previousMouseMoveElement != null || elem != null) {
 		this.events.push(event);
-		this.element = elem;
+		this.previousMouseMoveElement = elem;
+	}
+}
+
+Master.prototype.pushClickEvent = function(event) {
+	var elem = this.pixelMapper.getElement(event.x, event.y);
+	if (elem) {
+		event.setReceiver(elem);
+		event.setResultReceiver(this.module);
+		this.previousMouseMoveElement = null;
+		this.events.push(event);
+		this.previousMouseMoveElement = elem;
 	}
 }
 

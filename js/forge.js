@@ -215,12 +215,14 @@ Forge.prototype.removeLastColumn = function() {
 Forge.prototype.import = function() {
 	this.removeElementToRender("GraphicsEngine");
 	var level = window.prompt("enter the map previously exported");
-	this.level.clearData();
-	this.level.fill(level);
-	this.levelCreator.clearData();
-	this.levelCreator.fillEditingStructure();
-	this.graphicsEngine.computeGraphicsData();
-	this.addElementToRender("GraphicsEngine");
+	if (level) {
+		this.level.clearData();
+		this.level.fill(level);
+		this.levelCreator.clearData();
+		this.levelCreator.fillEditingStructure();
+		this.graphicsEngine.computeGraphicsData();
+		this.addElementToRender("GraphicsEngine");
+	}
 }
 
 Forge.prototype.export = function() {
