@@ -8,20 +8,40 @@ function ForgeGUI(context, offContext, pixelMapper) {
 
 	this.import = new TextButton("Import", "import", pixelMapper);
 	this.export = new TextButton("Export", "export", pixelMapper);
-	this.previousElement = null;
+	this.addLineFirst = new TextButton("+", "add_line_first", pixelMapper);
+	this.addLineLast = new TextButton("+", "add_line_last", pixelMapper);
+	this.addColumnFirst = new TextButton("+", "add_column_first", pixelMapper);
+	this.addColumnLast = new TextButton("+", "add_column_last", pixelMapper);
+	this.rmFirstLine = new TextButton("-", "rm_first_line", pixelMapper);
+	this.rmLastLine = new TextButton("-", "rm_last_line", pixelMapper);
+	this.rmFirstColumn = new TextButton("-", "rm_first_column", pixelMapper);
+	this.rmLastColumn = new TextButton("-", "rm_last_column", pixelMapper);
+	this.buttons = new Set();
+	this.buttons.add(this.import);
+	this.buttons.add(this.export);
+	this.buttons.add(this.addLineFirst);
+	this.buttons.add(this.addLineLast);
+	this.buttons.add(this.addColumnFirst);
+	this.buttons.add(this.addColumnLast);
+	this.buttons.add(this.rmFirstLine);
+	this.buttons.add(this.rmLastLine);
+	this.buttons.add(this.rmFirstColumn);
+	this.buttons.add(this.rmLastColumn);
 }
 
 ForgeGUI.prototype = Object.create(GraphicalElement.prototype);
 ForgeGUI.prototype.constructor = ForgeGUI;
 
 ForgeGUI.prototype.onDrawingRectSet = function() {
-	this.import.disable();
-	this.export.disable();
+	for (var textButton of this.buttons) {
+		textButton.disable();
+	}
 	this.width = Math.floor(this.maxWidth);
 	this.height = Math.floor(this.maxHeight);
 
-	this.import.setFontHeight(Math.round(this.height/20));
-	this.export.setFontHeight(Math.round(this.height/20));
+	for (var textButton of this.buttons) {
+		textButton.setFontHeight(Math.round(this.height/20));
+	}
 }
 
 ForgeGUI.prototype.setRendererRect = function(x, y, width, height) {
@@ -55,33 +75,40 @@ ForgeGUI.prototype.drawElement = function(date) {
 	// Buttons
 	this.import.draw(this.ctx, 1/16*this.width, 18/20*this.height);
 	this.export.draw(this.ctx, 1/16*this.width, 19/20*this.height);
+	
+	this.addColumnFirst.draw(this.ctx, 3/16*this.width, 3/8*this.height);
+	this.rmFirstColumn.draw(this.ctx, 3/16*this.width, 5/8*this.height);
+	
+	this.addColumnLast.draw(this.ctx, 15/16*this.width, 3/8*this.height);
+	this.rmLastColumn.draw(this.ctx, 15/16*this.width, 5/8*this.height);
+	
+	this.addLineFirst.draw(this.ctx, 8/16*this.width, 1/16*this.height);
+	this.rmFirstLine.draw(this.ctx, 10/16*this.width, 1/16*this.height);
+	
+	this.addLineLast.draw(this.ctx, 8/16*this.width, 15/16*this.height);
+	this.rmLastLine.draw(this.ctx, 10/16*this.width, 15/16*this.height);
 }
 
 ForgeGUI.prototype.offContextDraw = function() {
 	// We do not want to catch mouse events at the moment
 	this.offCtx.clearRect(this.offsetX, this.offsetY, this.maxWidth, this.maxHeight);
+	
 	this.import.offContextDraw(this.offCtx, 1/16*this.width, 18/20*this.height);
 	this.export.offContextDraw(this.offCtx, 1/16*this.width, 19/20*this.height);
+	
+	this.addColumnFirst.offContextDraw(this.offCtx, 3/16*this.width, 3/8*this.height);
+	this.rmFirstColumn.offContextDraw(this.offCtx, 3/16*this.width, 5/8*this.height);
+	
+	this.addColumnLast.offContextDraw(this.offCtx, 15/16*this.width, 3/8*this.height);
+	this.rmLastColumn.offContextDraw(this.offCtx, 15/16*this.width, 5/8*this.height);
+	
+	this.addLineFirst.offContextDraw(this.offCtx, 8/16*this.width, 1/16*this.height);
+	this.rmFirstLine.offContextDraw(this.offCtx, 10/16*this.width, 1/16*this.height);
+	
+	this.addLineLast.offContextDraw(this.offCtx, 8/16*this.width, 15/16*this.height);
+	this.rmLastLine.offContextDraw(this.offCtx, 10/16*this.width, 15/16*this.height);
 }
 
 //   +--------------+
 //   |    Events    |
 //   +--------------+
-
-ForgeGUI.prototype.handleCursorMove = function(x, y) {
-	if (this.previousElement) {
-		this.previousElement.mouseOver = false;
-	}
-	var element = this.pixelMapper.getElement(x, y);
-	if (element) {
-		element.mouseOver = true;
-		this.previousElement = element;
-	}
-}
-
-ForgeGUI.prototype.handleClick = function(x, y) {
-	var element = this.pixelMapper.getElement(x, y);
-	if (element) {
-		return element.action;
-	}
-}

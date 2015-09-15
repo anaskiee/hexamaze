@@ -62,9 +62,7 @@ Master.prototype.pushClickEvent = function(event) {
 	if (elem) {
 		event.setReceiver(elem);
 		event.setResultReceiver(this.module);
-		this.previousMouseMoveElement = null;
 		this.events.push(event);
-		this.previousMouseMoveElement = elem;
 	}
 }
 
