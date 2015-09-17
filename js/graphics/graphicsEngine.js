@@ -211,8 +211,8 @@ GraphicsEngine.prototype.offContextDraw = function() {
 GraphicsEngine.prototype.updateCharacterCoordinates = function() {
 	var hexagon = this.level.characterHexagon;
 	if (hexagon != null) {
-		this.charX = hexagon.x + this.patternWidth/2;
-		this.charY = hexagon.y + this.patternHeight/2; 
+		this.charX = hexagon.x;
+		this.charY = hexagon.y; 
 	} else {
 		this.charX = -1;
 		this.charY = -1;

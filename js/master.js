@@ -7,7 +7,13 @@ function Master(game, forge, pixelMapper) {
 
 	this.commands = null;
 	this.events = [];
-	this.module = forge;
+
+	var urlSplitted = document.URL.split("?");
+	if (urlSplitted.length > 1) {
+		this.module = this[urlSplitted[1].split("=")[1]];
+	} else {
+		this.module = game;
+	}
 
 	this.previousMouseMoveElement = null;
 }
