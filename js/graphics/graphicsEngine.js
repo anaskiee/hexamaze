@@ -121,21 +121,16 @@ GraphicsEngine.prototype.computeMapSize = function(width, height) {
 	}
 
 	// Compute hexagon radius by maximizing their size on screen
-	var maxWidthRadius = width / (3/2*(maxX - minX + 1) + 1/2);
-	var maxHeightRadius = height / (Math.sqrt(3)*(maxY - minY + 1));
-	var radius = Math.floor(Math.min(maxHeightRadius, maxWidthRadius));
+	var maxWidthRadius = Math.floor(width / (3/2*(maxX - minX + 1) + 1/2));
+	var maxHeightRadius = Math.floor(height / (Math.sqrt(3)*(maxY - minY + 1)));
+	var radius = Math.min(maxHeightRadius, maxWidthRadius);
 
 	// Compute real dimensions in order to center everything
+	// 1/2 for the last part on the right
 	var usedWidth = radius * (3/2 * (maxX - minX + 1) + 1/2);
+	var usedHeight = radius * (Math.sqrt(3) * (maxY - minY + 1));
 	offsetX = (width - usedWidth) / 2;
-	// Vertical offset is only computed when there is actually space vertically
-	// Else, hexagon's vertical margin are enough
-	if (radius == maxWidthRadius) {
-		var usedHeight = radius * (Math.sqrt(3) * (maxY - minY + 1) + 2-Math.sqrt(3));
-		offsetY = (height - usedHeight) / 2;
-	} else {
-		offsetY = 0;
-	}
+	offsetY = (height - usedHeight) / 2;
 
 	for (var [key, value] of marks) {
 		value[0] -= minX;
