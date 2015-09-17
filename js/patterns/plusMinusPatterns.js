@@ -3,6 +3,8 @@
 function PlusMinusPatterns(radius) {
 	Pattern.call(this);
 	this.radius = radius;
+	this.width = Math.ceil(2*radius + 2);
+	this.height = Math.ceil(2*radius + 2);
 
 	this.preRenderDrawing("minus");
 	this.preRenderDrawing("plus");
@@ -14,13 +16,13 @@ PlusMinusPatterns.prototype.constructor = PlusMinusPatterns;
 PlusMinusPatterns.prototype.preRenderDrawing = function(style) {
 	// Off screen canvas
 	var canvas = document.createElement("canvas");
-	canvas.width = 2*this.radius;
-	canvas.height = 2*this.radius;
+	canvas.width = this.width;
+	canvas.height = this.height;
 	var ctx = canvas.getContext("2d");
 
 	// Draw octagon
 	var otherRadius = 91/100*this.radius;
-	ctx.translate(this.radius, this.radius);
+	ctx.translate(this.width/2, this.height/2);
 		ctx.beginPath();
 		for (let i = 0; i <= 8; i++) {
 			let theta = -Math.PI/2 + i/8 * 2*Math.PI;
@@ -75,8 +77,4 @@ PlusMinusPatterns.prototype.preRenderDrawing = function(style) {
 	}
 
 	this.drawings.set(style, canvas);
-}
-
-PlusMinusPatterns.prototype.get = function(style) {
-	return this.drawings.get(style);
 }

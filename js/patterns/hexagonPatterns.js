@@ -3,8 +3,8 @@
 function HexagonPatterns(radius) {
 	Pattern.call(this);
 	this.radius = radius;
-	this.width = 2*radius + 4;
-	this.height = 2*Math.sqrt(3)/2 * radius + 6;
+	this.width = Math.ceil(2*radius + 4);
+	this.height = Math.ceil(2*Math.sqrt(3)/2 * radius + 6);
 	
 	this.preRenderDrawing("space", "");
 	this.preRenderDrawing("space", "top");
@@ -108,12 +108,5 @@ HexagonPatterns.prototype.offContextDraw = function(x, y, offCtx, color) {
 					y: Math.round(y + 0.98*this.radius * Math.sin(theta))};
 		l.push(p);
 	}
-	offCtx.save();
-	offCtx.translate(Math.round(this.width/2), Math.round(this.height/2));
 	this.fillPath(offCtx, l, color);
-	offCtx.restore();
-}
-
-HexagonPatterns.prototype.getPatterns = function(style) {
-	return this.drawings;
 }

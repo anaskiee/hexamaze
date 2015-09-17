@@ -42,6 +42,14 @@ ForgeGUI.prototype.onDrawingRectSet = function() {
 	for (var textButton of this.buttons) {
 		textButton.setFontHeight(Math.round(this.height/20));
 	}
+
+	var radius = this.height/16;
+	this.hexagonPatterns = new HexagonPatterns(radius);
+	var characterHeight = 2/5*radius;
+	this.characterPatterns = new CharacterPatterns(characterHeight);
+	var exitHeight = 3/5*radius;
+	this.exitPatterns = new ExitPatterns(exitHeight);
+	this.plusMinusPatterns = new PlusMinusPatterns(radius);
 }
 
 ForgeGUI.prototype.setRendererRect = function(x, y, width, height) {
@@ -72,10 +80,17 @@ ForgeGUI.prototype.drawElement = function(date) {
 	// Left interface
 	this.ctx.strokeRect(0.5, 0.5, this.width/8, this.height);
 
-	// Buttons
+	// Buttons on the left
 	this.import.draw(this.ctx, 1/16*this.width, 18/20*this.height);
 	this.export.draw(this.ctx, 1/16*this.width, 19/20*this.height);
+
+	this.hexagonPatterns.draw(this.ctx, "space", 1/16*this.width, 3/32*this.height);
+	this.hexagonPatterns.draw(this.ctx, "block", 1/16*this.width, 8/32*this.height);
+	this.hexagonPatterns.draw(this.ctx, "reachable", 1/16*this.width, 13/32*this.height);
+	this.characterPatterns.draw(this.ctx, "basic", 1/16*this.width, 18/32*this.height);
+	this.exitPatterns.draw(this.ctx, "basic", 1/16*this.width, 23/32*this.height);
 	
+	// Buttons to edit map size
 	this.addColumnFirst.draw(this.ctx, 3/16*this.width, 3/8*this.height);
 	this.rmFirstColumn.draw(this.ctx, 3/16*this.width, 5/8*this.height);
 	

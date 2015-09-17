@@ -42,14 +42,11 @@ GraphicsEngine.prototype.computeGraphicsData = function() {
 
 	// Patterns
 	this.hexagonPatterns = new HexagonPatterns(this.radius);
-	this.patterns = this.hexagonPatterns.getPatterns();
 	var characterHeight = 2/5*this.radius;
-	this.patternWidth = this.patterns.get("block").width;
-	this.patternHeight = this.patterns.get("block").height;
-	this.characterPatterns = new CharacterPatterns(characterHeight, this.patternWidth, this.patternHeight);
+	this.characterPatterns = new CharacterPatterns(characterHeight);
 	var exitHeight = 3/5*this.radius;
-	this.exitPatterns = new ExitPatterns(exitHeight, this.patternWidth, this.patternHeight);
-	this.plusMinuePatterns = new PlusMinusPatterns(this.radius);
+	this.exitPatterns = new ExitPatterns(exitHeight);
+	this.plusMinusPatterns = new PlusMinusPatterns(this.radius);
 	
 	this.updateCharacterCoordinates();
 }
@@ -146,8 +143,8 @@ GraphicsEngine.prototype.computeMapSize = function(width, height) {
 	}
 
 	for (var [hex, offset] of marks) {
-		hex.x = offset[0] * 3/2 * radius + offsetX;
-		hex.y = offset[1] * Math.sqrt(3) * radius + offsetY;
+		hex.x = radius + offset[0] * 3/2 * radius + offsetX;
+		hex.y = Math.sqrt(3)/2*radius + offset[1] * Math.sqrt(3) * radius + offsetY;
 	}
 
 	return radius;
@@ -167,11 +164,11 @@ GraphicsEngine.prototype.drawElement = function(date) {
 		style = hexagon.type;
 		
 		if (hexagon.isPreselected) {
-			this.ctx.drawImage(this.patterns.get("highlight"), posX, posY);
+			this.hexagonPatterns.draw(this.ctx, "highlight", posX, posY);
 		} else if (hexagon.isReachable) {
-			this.ctx.drawImage(this.patterns.get("reachable"), posX, posY);
+			this.hexagonPatterns.draw(this.ctx, "reachable", posX, posY);
 		} else {
-			this.ctx.drawImage(this.patterns.get(style), posX, posY);
+			this.hexagonPatterns.draw(this.ctx, style, posX, posY);
 		}
 	}
 
@@ -179,15 +176,15 @@ GraphicsEngine.prototype.drawElement = function(date) {
 	if (this.level.characterHexagon != null) {
 		posX = this.level.characterHexagon.x;
 		posY = this.level.characterHexagon.y;
-		this.ctx.drawImage(this.characterPatterns.get("basic"), posX, posY);
-		this.ctx.drawImage(this.patterns.get("space-" + this.direction), posX, posY);
+		this.characterPatterns.draw(this.ctx, "basic", posX, posY);
+		this.hexagonPatterns.draw(this.ctx, "space-" + this.direction, posX, posY);
 	}
 
 	// Draw exit
 	if (this.level.exitHexagon != null) {
 		posX = this.level.exitHexagon.x;
 		posY = this.level.exitHexagon.y;
-		this.ctx.drawImage(this.exitPatterns.get("basic"), posX, posY);
+		this.exitPatterns.draw(this.ctx, "basic", posX, posY);
 	}
 }
 

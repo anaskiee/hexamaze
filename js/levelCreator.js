@@ -404,6 +404,8 @@ LevelCreator.prototype.removeFirstColumn = function() {
 		this.hexagons[i].splice(0, 1);
 	}
 	this.nbColumns--;
+	this.firstColumnOnTop = !this.firstColumnOnTop;
+	this.level.firstColumnOnTop = this.firstColumnOnTop;
 	this.setLinks();
 }
 

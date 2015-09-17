@@ -4,6 +4,13 @@ function Pattern() {
 	this.drawings = new Map();
 }
 
+Pattern.prototype.draw = function(ctx, style, x, y) {
+	ctx.save();
+	ctx.translate(-this.width/2, -this.height/2);
+	ctx.drawImage(this.drawings.get(style), x, y);
+	ctx.restore();
+}
+
 // [{x: x0, y: y0}, {x: x1, y:y1}]
 Pattern.prototype.fillPath = function(ctx, pointsList, color) {
 	var curr, next;

@@ -1,10 +1,10 @@
 "use strict";
 
-function ExitPatterns(exitHeight, widthMax, heightMax) {
+function ExitPatterns(size) {
 	Pattern.call(this);
-	this.height = exitHeight;
-	this.widthMax = widthMax;
-	this.heightMax = heightMax;
+	this.size = size;
+	this.width = Math.ceil(2*size + 2);
+	this.height = Math.ceil(2*size + 2);
 
 	this.preRenderDrawing("basic");
 }
@@ -15,20 +15,16 @@ ExitPatterns.prototype.constructor = ExitPatterns;
 ExitPatterns.prototype.preRenderDrawing = function(style) {
 	// Off screen canvas
 	var canvas = document.createElement("canvas");
-	canvas.width = this.widthMax;
-	canvas.height = this.heightMax;
+	canvas.width = this.width;
+	canvas.height = this.height;
 	var ctx = canvas.getContext("2d");
 
-	ctx.translate(this.widthMax/2, this.heightMax/2);
+	ctx.translate(this.width/2, this.height/2);
 	ctx.beginPath();
-	ctx.arc(0, 0, this.height, 0, 2*Math.PI);
+	ctx.arc(0, 0, this.size, 0, 2*Math.PI);
 	ctx.closePath();
 	ctx.strokeStyle = "#00AAAA";
 	ctx.stroke();
 
 	this.drawings.set(style, canvas);
-}
-
-ExitPatterns.prototype.get = function(style) {
-	return this.drawings.get(style);
 }
