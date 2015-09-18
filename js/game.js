@@ -154,7 +154,7 @@ Game.prototype.checkStateTransition = function() {
 // |   Top level functions   |
 // +-------------------------+
 
-Game.prototype.computeNewMap = function(commandLine) {
+Game.prototype.computeNewMap = function(cmdSender, commandLine) {
 	this.removeElementToRender("GraphicsEngine");
 	this.addElementToRender("IngameMenu");
 	this.ingameMenu.expand(new Date());
@@ -182,7 +182,7 @@ Game.prototype.loadMap = function(map) {
 Game.prototype.expandMenu = function() {
 	this.addElementToRender("IngameMenu");
 	this.ingameMenu.expand(new Date());
-}
+}	
 
 Game.prototype.reduceMenu = function() {
 	this.ingameMenu.reduce(new Date());

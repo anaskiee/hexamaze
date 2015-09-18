@@ -252,8 +252,9 @@ Forge.prototype.onVoidHexagonSelect = function() {
 	this.styleSelected = "highlight";
 }
 
-Forge.prototype.onHexagonClick = function(hexagon) {
+// The sender of the command is an hexagon
+Forge.prototype.onHexagonClick = function(cmdSender) {
 	if (this.styleSelected != null) {
-		hexagon.type = this.styleSelected;
+		cmdSender.type = this.styleSelected;
 	}
 }
