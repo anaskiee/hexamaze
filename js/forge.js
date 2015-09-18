@@ -22,7 +22,7 @@ function Forge(width, height, pixelMapper, graphicsEngine, developerConsole, lev
 	this.forgeGuiWidth = -1;
 	this.forgeGuiHeight = -1;
 
-	this.previousElement = null;
+	this.styleSelected = null;
 }
 
 Forge.prototype = Object.create(GameMode.prototype);
@@ -82,6 +82,10 @@ Forge.prototype.setCommandsPrototypeChain = function(commands) {
 	this.commands.rm_last_column = this.removeLastColumn.bind(this);
 	this.commands.import = this.import.bind(this);
 	this.commands.export = this.export.bind(this);
+	this.commands.select_empty_hexagon = this.onEmptyHexagonSelected.bind(this);
+	this.commands.select_full_hexagon = this.onFullHexagonSelected.bind(this);
+	this.commands.select_void_hexagon = this.onVoidHexagonSelect.bind(this);
+	this.commands.click_on_hexagon = this.onHexagonClick.bind(this);
 }
 
 // +----------------------+
@@ -229,6 +233,27 @@ Forge.prototype.export = function() {
 	if (this.level.isLevelFinished()) {
 		alert(this.level.toString());
 	} else {
-		alert("export impossible, level is not complete ");
+		alert("export impossible, level is not complete");
+	}
+}
+
+Forge.prototype.onEmptyHexagonSelected = function() {
+	console.log("style selected : space");
+	this.styleSelected = "space";
+}
+
+Forge.prototype.onFullHexagonSelected = function() {
+	console.log("style selected : block");
+	this.styleSelected = "block";
+}
+
+Forge.prototype.onVoidHexagonSelect = function() {
+	console.log("style selected : void");
+	this.styleSelected = "highlight";
+}
+
+Forge.prototype.onHexagonClick = function(hexagon) {
+	if (this.styleSelected != null) {
+		hexagon.type = this.styleSelected;
 	}
 }

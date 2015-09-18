@@ -12,6 +12,9 @@ function PixelMapper(offContext) {
 }
 
 PixelMapper.prototype.registerAndGetColor = function(object) {
+	if (!object) {
+		console.log("warning : registering but no object in argument");
+	}
 	this.currentIndex++;
 	var idx = this.currentIndex;
 	var b = idx % 256;

@@ -18,7 +18,6 @@ CursorMoveEvent.prototype.execute = function() {
 	if (this.receiver != null) {
 		var result = this.receiver.handleCursorMove(this.x, this.y);
 
-
 		if (result) {
 			this.handleResult(result);
 		}

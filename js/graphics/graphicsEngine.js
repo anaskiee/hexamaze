@@ -202,7 +202,7 @@ GraphicsEngine.prototype.offContextDraw = function() {
 			color = this.pixelMapper.registerAndGetColor(hexagon);
 			this.offCtx.save();
 			this.offCtx.translate(Math.round(this.offsetX), Math.round(this.offsetY));
-			this.hexagonPatterns.offContextDraw(x, y, this.offCtx, color);
+			this.hexagonPatterns.offContextDraw(this.offCtx, x, y, color);
 			this.offCtx.restore();
 		}
 	}

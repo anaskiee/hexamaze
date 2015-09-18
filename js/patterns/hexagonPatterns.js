@@ -101,7 +101,7 @@ HexagonPatterns.prototype.preRenderDrawing = function(mainStyle, advancedStyle) 
 	}
 }
 
-HexagonPatterns.prototype.offContextDraw = function(x, y, offCtx, color) {
+HexagonPatterns.prototype.offContextDraw = function(offCtx, x, y, color) {
 	var l =[];
 	for (let theta = Math.PI/3; theta < 2*Math.PI; theta += Math.PI/3) {
 		var p = {x: Math.round(x + 0.98*this.radius * Math.cos(theta)), 

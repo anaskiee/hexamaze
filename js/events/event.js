@@ -18,7 +18,7 @@ Event.prototype.execute = function() {
 
 Event.prototype.handleResult = function(result) {
 	if (this.resultReceiver != null) {
-		this.resultReceiver.handleEventResult(result);
+		this.resultReceiver.handleEventResult(this.receiver, result);
 	} else {
 		console.log("no handler for this event result : " + result);
 	}

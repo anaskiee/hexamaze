@@ -23,14 +23,11 @@ function Hexagon(type)
 }
 
 Hexagon.prototype.handleClick = function(x, y) {
-	return "click";
+	return "click_on_hexagon";
 }
 
 Hexagon.prototype.handleCursorMove = function(x, y) {
-	this.type = "block";
-	return "mouse over me !";
 }
 
 Hexagon.prototype.onMouseOverEnd = function() {
-	this.type = "space";
 }
