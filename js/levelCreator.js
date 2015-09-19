@@ -30,7 +30,6 @@ LevelCreator.prototype.createBasicLevel = function(nbLines, nbColumns) {
 			}
 		}
 	}
-
 }
 
 LevelCreator.prototype.createEmptyLevel = function(nbLines, nbColumns) {
@@ -420,4 +419,16 @@ LevelCreator.prototype.removeLastColumn = function() {
 	}
 	this.nbColumns--;
 	this.setLinks();
+}
+
+LevelCreator.prototype.setHexagonStyle = function(hexagon, style) {
+	hexagon.type = style;
+}
+
+LevelCreator.prototype.setCharacterHexagon = function(hexagon) {
+	this.level.characterHexagon = hexagon;
+}
+
+LevelCreator.prototype.setExitHexagon = function(hexagon) {
+	this.level.exitHexagon = hexagon;
 }

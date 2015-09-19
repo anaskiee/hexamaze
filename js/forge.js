@@ -22,7 +22,7 @@ function Forge(width, height, pixelMapper, graphicsEngine, developerConsole, lev
 	this.forgeGuiWidth = -1;
 	this.forgeGuiHeight = -1;
 
-	this.styleSelected = null;
+	this.selection = null;
 }
 
 Forge.prototype = Object.create(GameMode.prototype);
@@ -85,6 +85,8 @@ Forge.prototype.setCommandsPrototypeChain = function(commands) {
 	this.commands.select_empty_hexagon = this.onEmptyHexagonSelected.bind(this);
 	this.commands.select_full_hexagon = this.onFullHexagonSelected.bind(this);
 	this.commands.select_void_hexagon = this.onVoidHexagonSelect.bind(this);
+	this.commands.select_character = this.onCharacterSelect.bind(this);
+	this.commands.select_exit = this.onExitSelect.bind(this);
 	this.commands.click_on_hexagon = this.onHexagonClick.bind(this);
 }
 
@@ -239,22 +241,36 @@ Forge.prototype.export = function() {
 
 Forge.prototype.onEmptyHexagonSelected = function() {
 	console.log("style selected : space");
-	this.styleSelected = "space";
+	this.selection = "space";
 }
 
 Forge.prototype.onFullHexagonSelected = function() {
 	console.log("style selected : block");
-	this.styleSelected = "block";
+	this.selection = "block";
 }
 
 Forge.prototype.onVoidHexagonSelect = function() {
 	console.log("style selected : void");
-	this.styleSelected = "highlight";
+	this.selection = "highlight";
+}
+
+Forge.prototype.onCharacterSelect = function() {
+	console.log("character selected");
+	this.selection = "character";
+}
+
+Forge.prototype.onExitSelect = function() {
+	console.log("exit selected");
+	this.selection = "exit";
 }
 
 // The sender of the command is an hexagon
 Forge.prototype.onHexagonClick = function(cmdSender) {
-	if (this.styleSelected != null) {
-		cmdSender.type = this.styleSelected;
+	if (this.selection == "exit") {
+		this.levelCreator.setExitHexagon(cmdSender);
+	} else if (this.selection == "character") {
+		this.levelCreator.setCharacterHexagon(cmdSender);
+	} else if (this.selection != null) {
+		this.levelCreator.setHexagonStyle(cmdSender, this.selection);
 	}
 }
