@@ -16,6 +16,7 @@ function HexagonPatterns(radius) {
 	this.preRenderDrawing("block", "");
 	this.preRenderDrawing("reachable", "");
 	this.preRenderDrawing("highlight", "");
+	this.preRenderDrawing("void", "");
 }
 
 HexagonPatterns.prototype = Object.create(Pattern.prototype);
@@ -78,9 +79,7 @@ HexagonPatterns.prototype.preRenderDrawing = function(mainStyle, advancedStyle) 
 
 	this.drawHexagonPath(ctx, 1);
 
-	if (mainStyle == "space") {
-		// Nothing to do		
-	} else if (mainStyle == "block") {
+	if (mainStyle == "block") {
 		ctx.fillStyle = "#666666";
 		ctx.fill();
 	} else if (mainStyle == "reachable") {
@@ -90,7 +89,12 @@ HexagonPatterns.prototype.preRenderDrawing = function(mainStyle, advancedStyle) 
 		ctx.fillStyle = "rgba(200, 200, 200, 0.3)";
 		ctx.fill();
 	}
-	ctx.strokeStyle = "#AAAAAA";
+
+	if (mainStyle == "void") {
+		ctx.strokeStyle = "rgba(100, 100, 100, 0.3)";
+	} else {
+		ctx.strokeStyle = "#AAAAAA";
+	}
 	ctx.stroke();
 
 	if (advancedStyle) {

@@ -251,7 +251,7 @@ Forge.prototype.onFullHexagonSelected = function() {
 
 Forge.prototype.onVoidHexagonSelect = function() {
 	console.log("style selected : void");
-	this.selection = "highlight";
+	this.selection = "void";
 }
 
 Forge.prototype.onCharacterSelect = function() {

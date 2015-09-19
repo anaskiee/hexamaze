@@ -52,7 +52,7 @@ ForgeGUI.prototype.onDrawingRectSet = function() {
 
 	this.emptyHexagon.setPatternAndStyle(this.hexagonPatterns, "space");
 	this.fullHexagon.setPatternAndStyle(this.hexagonPatterns, "block");
-	this.voidHexagon.setPatternAndStyle(this.hexagonPatterns, "highlight");
+	this.voidHexagon.setPatternAndStyle(this.hexagonPatterns, "void");
 	this.character.setPatternAndStyle(this.characterPatterns, "basic");
 	this.exit.setPatternAndStyle(this.exitPatterns, "basic");
 
