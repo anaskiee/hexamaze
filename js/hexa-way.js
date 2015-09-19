@@ -29,5 +29,16 @@ window.addEventListener('DOMContentLoaded', function() {
 
 	canvas.focus();
 
-	new GameLoader(canvas, context, offCanvas, offContext);
+	var url = document.URL;
+	var parameters = url.split("?")[1].split("&");
+	var parsedParameters = {};
+	for (var parameter of parameters) {
+		parsedParameters[parameter.split("=")[0]] = parameter.split("=")[1];
+	}
+
+	if (parsedParameters.debug == "true") {
+		new GameLoader(canvas, offContext, context, parsedParameters);
+	} else {
+		new GameLoader(canvas, context, offContext, parsedParameters);
+	}
 });

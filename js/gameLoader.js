@@ -1,6 +1,6 @@
 "use strict";
 
-function GameLoader(canvas, context, offCanvas, offContext) {
+function GameLoader(canvas, context, offContext, parameters) {
 	// Create all core objects
 	var worker = new Worker("./js/levelGeneratorWorker.js");
 	
@@ -28,7 +28,7 @@ function GameLoader(canvas, context, offCanvas, offContext) {
 	var forge = new Forge(width, height, pixelMapper,  graphicsEngine, 
 							developerConsole, level, levelCreator, forgeGUI);
 
-	var master = new Master(game, forge, pixelMapper);
+	var master = new Master(game, forge, pixelMapper, parameters);
 	var eventHandler = new EventHandler(canvas, master, worker);
 
 	// Initialize all commands

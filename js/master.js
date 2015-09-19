@@ -1,6 +1,6 @@
 "use strict";
 
-function Master(game, forge, pixelMapper) {
+function Master(game, forge, pixelMapper, parameters) {
 	this.game = game;
 	this.forge = forge;
 	this.pixelMapper = pixelMapper;
@@ -8,9 +8,8 @@ function Master(game, forge, pixelMapper) {
 	this.commands = null;
 	this.events = [];
 
-	var urlSplitted = document.URL.split("?");
-	if (urlSplitted.length > 1) {
-		this.module = this[urlSplitted[1].split("=")[1]];
+	if (parameters.mode) {
+		this.module = this[parameters.mode];
 	} else {
 		this.module = game;
 	}
