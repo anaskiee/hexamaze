@@ -297,7 +297,9 @@ LevelCreator.prototype.fillEditingStructure = function() {
 	}
 
 	// Place hexagons in array
-	for (var [hex, pos] of marks) {
+	for (var entry of marks.entries()) {
+		var hex = entry[0];
+		var pos = entry[1];
 		this.hexagons[pos[0]][pos[1]] = hex;
 	}
 

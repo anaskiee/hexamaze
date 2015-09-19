@@ -30,7 +30,10 @@ window.addEventListener('DOMContentLoaded', function() {
 	canvas.focus();
 
 	var url = document.URL;
-	var parameters = url.split("?")[1].split("&");
+	var parameters = url.split("?");
+	if (parameters.length > 1) {
+		parameters = parameters[1].split("&");
+	}
 	var parsedParameters = {};
 	for (var parameter of parameters) {
 		parsedParameters[parameter.split("=")[0]] = parameter.split("=")[1];

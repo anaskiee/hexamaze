@@ -63,7 +63,7 @@ Forge.prototype.computeNewFrameAndDraw = function(date) {
 	this.checkStateTransition();
 
 	// Render
-	for (let element of this.elementsToRender) {
+	for (var element of this.elementsToRender) {
 		if (element) {
 			element.draw(date);
 		}
@@ -156,7 +156,7 @@ Forge.prototype.addElementToRender = function(name) {
 }
 
 Forge.prototype.checkStateTransition = function() {
-	for (let element of this.elementsToRender) {
+	for (var element of this.elementsToRender) {
 		if (element && element.active == 0) {
 			this.removeElementToRender(element.name);
 		}

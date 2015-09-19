@@ -46,7 +46,7 @@ Game.prototype.computeNewFrameAndDraw = function(date) {
 	this.checkStateTransition();
 
 	// Render
-	for (let element of this.elementsToRender) {
+	for (var element of this.elementsToRender) {
 		if (element) {
 			element.draw(date);
 		}
@@ -143,7 +143,7 @@ Game.prototype.addElementToRender = function(name) {
 }
 
 Game.prototype.checkStateTransition = function() {
-	for (let element of this.elementsToRender) {
+	for (var element of this.elementsToRender) {
 		if (element && element.active == 0) {
 			this.removeElementToRender(element.name);
 		}

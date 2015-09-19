@@ -132,12 +132,14 @@ GraphicsEngine.prototype.computeMapSize = function(width, height) {
 	offsetX = (width - usedWidth) / 2;
 	offsetY = (height - usedHeight) / 2;
 
-	for (var [key, value] of marks) {
+	for (var value of marks.values()) {
 		value[0] -= minX;
 		value[1] -= minY;
 	}
 
-	for (var [hex, offset] of marks) {
+	for (var entry of marks.entries()) {
+		var hex = entry[0];
+		var offset = entry[1];
 		hex.x = radius + offset[0] * 3/2 * radius + offsetX;
 		hex.y = Math.sqrt(3)/2*radius + offset[1] * Math.sqrt(3) * radius + offsetY;
 	}
@@ -153,7 +155,7 @@ GraphicsEngine.prototype.drawElement = function(date) {
 	var posX, posY, style;
 
 	// Draw all basic hexagons
-	for (let hexagon of this.level.hexagons) {
+	for (var hexagon of this.level.hexagons) {
 		posX = hexagon.x;
 		posY = hexagon.y;
 		style = hexagon.type;
@@ -196,7 +198,7 @@ GraphicsEngine.prototype.offContextDraw = function() {
 								this.maxWidth, this.maxHeight);
 		var color;
 		var x, y;
-		for (let hexagon of this.level.hexagons) {
+		for (var hexagon of this.level.hexagons) {
 			x = hexagon.x;
 			y = hexagon.y;
 			color = this.pixelMapper.registerAndGetColor(hexagon);
@@ -225,7 +227,7 @@ GraphicsEngine.prototype.computeDirection = function(x, y) {
 		theta += Math.PI;
 	}
 
-	let side = (theta / (Math.PI/3) + 6) % 6 ;
+	var side = (theta / (Math.PI/3) + 6) % 6 ;
 	if (side < 1) {
 		return "botRight";
 	} else if (side < 2) {

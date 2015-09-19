@@ -2,7 +2,7 @@
 
 function GameLoader(canvas, context, offContext, parameters) {
 	// Create all core objects
-	var worker = new Worker("./js/levelGeneratorWorker.js");
+	var worker = new Worker("js/levelGeneratorWorker.js");
 	
 	// Basic structures
 	var level = new Level();

@@ -7,7 +7,7 @@ function PhysicsEngine(level) {
 
 PhysicsEngine.prototype.computeReachableHexagons = function() {
 	var directions = ["top", "topRight", "topLeft", "bot", "botRight", "botLeft"];
-	for (let direction of directions) {
+	for (var direction of directions) {
 		var currHexagon = this.level.characterHexagon;
 		var nextHexagon = currHexagon[direction];
 		while (nextHexagon != null && nextHexagon.type != "block" && currHexagon != this.level.exitHexagon) {
@@ -47,19 +47,19 @@ PhysicsEngine.prototype.applyMove = function(direction) {
 }
 
 PhysicsEngine.prototype.cleanMap = function() {
-	for (let hexagon of this.level.hexagons) {
+	for (var hexagon of this.level.hexagons) {
 		hexagon.isPreselected = false;
 	}
 }
 
 PhysicsEngine.prototype.cleanHighlight = function() {
-	for (let hexagon of this.level.hexagons) {
+	for (var hexagon of this.level.hexagons) {
 		hexagon.isReachable = false;
 	}
 }
 
 PhysicsEngine.prototype.cleanPreselectedHexagons = function() {
-	for (let hexagon of this.level.hexagons) {
+	for (var hexagon of this.level.hexagons) {
 		hexagon.isPreselected = false;
 	}
 }

@@ -22,7 +22,7 @@ HexagonPatterns.prototype = Object.create(Pattern.prototype);
 HexagonPatterns.prototype.constructor = HexagonPatterns;
 
 HexagonPatterns.prototype.computeDirectionAngles = function(direction) {
-	let i;
+	var i;
 	if (direction == "botRight") {
 		i = 0;
 	} else if (direction == "bot") {
@@ -37,8 +37,8 @@ HexagonPatterns.prototype.computeDirectionAngles = function(direction) {
 		i = 5
 	}
 
-	let alpha = i * Math.PI/3;
-	let beta = (i+1) * Math.PI/3;
+	var alpha = i * Math.PI/3;
+	var beta = (i+1) * Math.PI/3;
 
 	return {"alpha" : alpha, "beta" : beta};
 }
@@ -47,7 +47,7 @@ HexagonPatterns.prototype.drawHexagonPath = function(context, factor) {
 	context.translate(this.width/2, this.height/2);
 	context.beginPath();
 	context.moveTo(factor*this.radius, 0);
-	for (let theta = Math.PI/3; theta < 2*Math.PI; theta += Math.PI/3) {
+	for (var theta = Math.PI/3; theta < 2*Math.PI; theta += Math.PI/3) {
 		context.lineTo(Math.floor(factor*this.radius * Math.cos(theta) + 0.5), 
 						Math.floor(factor*this.radius * Math.sin(theta)) + 0.5);
 	}
@@ -55,9 +55,9 @@ HexagonPatterns.prototype.drawHexagonPath = function(context, factor) {
 }
 
 HexagonPatterns.prototype.drawDirectionIndicator = function(context, advancedStyle) {
-	let angles = this.computeDirectionAngles(advancedStyle);
-	let alpha = angles["alpha"];
-	let beta = angles["beta"];
+	var angles = this.computeDirectionAngles(advancedStyle);
+	var alpha = angles["alpha"];
+	var beta = angles["beta"];
 
 	context.beginPath();
 	context.moveTo(0.9*this.radius * Math.cos(alpha), 0.9*this.radius * Math.sin(alpha));
@@ -103,7 +103,7 @@ HexagonPatterns.prototype.preRenderDrawing = function(mainStyle, advancedStyle) 
 
 HexagonPatterns.prototype.offContextDraw = function(offCtx, x, y, color) {
 	var l =[];
-	for (let theta = Math.PI/3; theta < 2*Math.PI; theta += Math.PI/3) {
+	for (var theta = Math.PI/3; theta < 2*Math.PI; theta += Math.PI/3) {
 		var p = {x: Math.round(x + 0.98*this.radius * Math.cos(theta)), 
 					y: Math.round(y + 0.98*this.radius * Math.sin(theta))};
 		l.push(p);
