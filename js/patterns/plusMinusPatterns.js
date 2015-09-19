@@ -78,3 +78,14 @@ PlusMinusPatterns.prototype.preRenderDrawing = function(style) {
 
 	this.drawings.set(style, canvas);
 }
+
+PlusMinusPatterns.prototype.offContextDraw = function(ctx, x, y, color) {
+	var points = [];
+	for (var i = 0; i <= 8; i++) {
+		var theta = -Math.PI/2 + i/8 * 2*Math.PI;
+		var p = {x: Math.round(x + this.radius*Math.cos(theta)), 
+					y: Math.round(y + this.radius*Math.sin(theta))};
+		points.push(p);
+	}
+	this.fillPath(ctx, points, color);
+}

@@ -8,31 +8,26 @@ function ForgeGUI(context, offContext, pixelMapper) {
 
 	this.import = new TextButton("Import", "import", pixelMapper);
 	this.export = new TextButton("Export", "export", pixelMapper);
-	this.addLineFirst = new TextButton("+", "add_line_first", pixelMapper);
-	this.addLineLast = new TextButton("+", "add_line_last", pixelMapper);
-	this.addColumnFirst = new TextButton("+", "add_column_first", pixelMapper);
-	this.addColumnLast = new TextButton("+", "add_column_last", pixelMapper);
-	this.rmFirstLine = new TextButton("-", "rm_first_line", pixelMapper);
-	this.rmLastLine = new TextButton("-", "rm_last_line", pixelMapper);
-	this.rmFirstColumn = new TextButton("-", "rm_first_column", pixelMapper);
-	this.rmLastColumn = new TextButton("-", "rm_last_column", pixelMapper);
 	this.buttons = new Set();
 	this.buttons.add(this.import);
 	this.buttons.add(this.export);
-	this.buttons.add(this.addLineFirst);
-	this.buttons.add(this.addLineLast);
-	this.buttons.add(this.addColumnFirst);
-	this.buttons.add(this.addColumnLast);
-	this.buttons.add(this.rmFirstLine);
-	this.buttons.add(this.rmLastLine);
-	this.buttons.add(this.rmFirstColumn);
-	this.buttons.add(this.rmLastColumn);
 
+	// Buttons on the left
 	this.emptyHexagon = new PatternButton("select_empty_hexagon", pixelMapper);
 	this.fullHexagon = new PatternButton("select_full_hexagon", pixelMapper);
 	this.voidHexagon = new PatternButton("select_void_hexagon", pixelMapper);
 	this.character = new PatternButton("select_character", pixelMapper);
 	this.exit = new PatternButton("select_exit", pixelMapper);
+
+	// Buttons to edit level size
+	this.addLineFirst = new PatternButton("add_line_first", pixelMapper);
+	this.addLineLast = new PatternButton("add_line_last", pixelMapper);
+	this.addColumnFirst = new PatternButton("add_column_first", pixelMapper);
+	this.addColumnLast = new PatternButton("add_column_last", pixelMapper);
+	this.rmFirstLine = new PatternButton("rm_first_line", pixelMapper);
+	this.rmLastLine = new PatternButton("rm_last_line", pixelMapper);
+	this.rmFirstColumn = new PatternButton("rm_first_column", pixelMapper);
+	this.rmLastColumn = new PatternButton("rm_last_column", pixelMapper);
 }
 
 ForgeGUI.prototype = Object.create(GraphicalElement.prototype);
@@ -51,17 +46,24 @@ ForgeGUI.prototype.onDrawingRectSet = function() {
 
 	var radius = this.height/16;
 	this.hexagonPatterns = new HexagonPatterns(radius);
-	var characterHeight = 2/5*radius;
-	this.characterPatterns = new CharacterPatterns(characterHeight);
-	var exitHeight = 3/5*radius;
-	this.exitPatterns = new ExitPatterns(exitHeight);
-	this.plusMinusPatterns = new PlusMinusPatterns(radius);
+	this.characterPatterns = new CharacterPatterns(2/5 * radius);
+	this.exitPatterns = new ExitPatterns(3/5 * radius);
+	this.plusMinusPatterns = new PlusMinusPatterns(3/5*radius);
 
 	this.emptyHexagon.setPatternAndStyle(this.hexagonPatterns, "space");
 	this.fullHexagon.setPatternAndStyle(this.hexagonPatterns, "block");
 	this.voidHexagon.setPatternAndStyle(this.hexagonPatterns, "highlight");
 	this.character.setPatternAndStyle(this.characterPatterns, "basic");
 	this.exit.setPatternAndStyle(this.exitPatterns, "basic");
+
+	this.addLineFirst.setPatternAndStyle(this.plusMinusPatterns, "plus");
+	this.addLineLast.setPatternAndStyle(this.plusMinusPatterns, "plus");
+	this.addColumnFirst.setPatternAndStyle(this.plusMinusPatterns, "plus");
+	this.addColumnLast.setPatternAndStyle(this.plusMinusPatterns, "plus");
+	this.rmFirstLine.setPatternAndStyle(this.plusMinusPatterns, "minus");
+	this.rmLastLine.setPatternAndStyle(this.plusMinusPatterns, "minus");
+	this.rmFirstColumn.setPatternAndStyle(this.plusMinusPatterns, "minus");
+	this.rmLastColumn.setPatternAndStyle(this.plusMinusPatterns, "minus");
 }
 
 ForgeGUI.prototype.setRendererRect = function(x, y, width, height) {
