@@ -6,17 +6,17 @@ function HexagonPatterns(radius) {
 	this.width = Math.ceil(2*radius + 4);
 	this.height = Math.ceil(2*Math.sqrt(3)/2 * radius + 6);
 	
-	this.preRenderDrawing("space", "");
-	this.preRenderDrawing("space", "top");
-	this.preRenderDrawing("space", "topLeft");
-	this.preRenderDrawing("space", "topRight");
-	this.preRenderDrawing("space", "bot");
-	this.preRenderDrawing("space", "botLeft");
-	this.preRenderDrawing("space", "botRight");
-	this.preRenderDrawing("block", "");
-	this.preRenderDrawing("reachable", "");
-	this.preRenderDrawing("highlight", "");
-	this.preRenderDrawing("void", "");
+	this.preRenderDrawing("space");
+	this.preRenderDrawing("top");
+	this.preRenderDrawing("topLeft");
+	this.preRenderDrawing("topRight");
+	this.preRenderDrawing("bot");
+	this.preRenderDrawing("botLeft");
+	this.preRenderDrawing("botRight");
+	this.preRenderDrawing("block");
+	this.preRenderDrawing("reachable");
+	this.preRenderDrawing("highlight");
+	this.preRenderDrawing("void");
 }
 
 HexagonPatterns.prototype = Object.create(Pattern.prototype);
@@ -44,15 +44,32 @@ HexagonPatterns.prototype.computeDirectionAngles = function(direction) {
 	return {"alpha" : alpha, "beta" : beta};
 }
 
-HexagonPatterns.prototype.drawHexagonPath = function(context, factor) {
-	context.translate(this.width/2, this.height/2);
+HexagonPatterns.prototype.drawHexagonPath = function(context) {
 	context.beginPath();
-	context.moveTo(factor*this.radius, 0);
+	context.moveTo(this.radius, 0);
 	for (var theta = Math.PI/3; theta < 2*Math.PI; theta += Math.PI/3) {
-		context.lineTo(Math.floor(factor*this.radius * Math.cos(theta) + 0.5), 
-						Math.floor(factor*this.radius * Math.sin(theta)) + 0.5);
+		context.lineTo(Math.floor(this.radius * Math.cos(theta) + 0.5), 
+						Math.floor(this.radius * Math.sin(theta)) + 0.5);
 	}
 	context.closePath();
+}
+
+HexagonPatterns.prototype.drawThickHexagon = function(context, factorInt, factorExt) {
+	context.beginPath();
+	context.moveTo(factorExt*this.radius, 0);
+	for (var i = 0; i <= 6; i++) {
+		var theta = Math.PI/3 + i/6 * 2*Math.PI;
+		context.lineTo(factorExt * this.radius*Math.cos(theta), 
+					factorExt * this.radius*Math.sin(theta));
+	}
+	for (var i = 6; i >= 0; i--) {
+		var theta = Math.PI/3 + i/6 * 2*Math.PI;
+		context.lineTo(factorInt * this.radius*Math.cos(theta), 
+					factorInt * this.radius*Math.sin(theta));
+	}
+	context.closePath();
+	context.fillStyle = "#00AAAA";
+	context.fill();
 }
 
 HexagonPatterns.prototype.drawDirectionIndicator = function(context, advancedStyle) {
@@ -70,39 +87,55 @@ HexagonPatterns.prototype.drawDirectionIndicator = function(context, advancedSty
 	context.fill();
 }
 
-HexagonPatterns.prototype.preRenderDrawing = function(mainStyle, advancedStyle) {
+HexagonPatterns.prototype.preRenderDrawing = function(style) {
 	// Off screen canvas
 	var canvas = document.createElement("canvas");
 	canvas.width = this.width;
 	canvas.height = this.height;
 	var ctx = canvas.getContext("2d");
 
-	this.drawHexagonPath(ctx, 1);
+	ctx.translate(this.width/2, this.height/2);
 
-	if (mainStyle == "block") {
-		ctx.fillStyle = "#666666";
-		ctx.fill();
-	} else if (mainStyle == "reachable") {
-		ctx.fillStyle = "rgba(120, 120, 120, 0.5)";
-		ctx.fill();
-	} else if (mainStyle == "highlight") {
-		ctx.fillStyle = "rgba(200, 200, 200, 0.3)";
-		ctx.fill();
+	switch (style) {
+		case "space":
+			this.drawHexagonPath(ctx);
+			ctx.strokeStyle = "#AAAAAA";
+			ctx.stroke();
+			break;
+		
+		case "block":
+			this.drawHexagonPath(ctx);
+			ctx.fillStyle = "#666666";
+			ctx.fill();
+			ctx.strokeStyle = "#AAAAAA";
+			ctx.stroke();
+			break;
+		
+		case "highlight":
+			this.drawHexagonPath(ctx);
+			ctx.fillStyle = "rgba(200, 200, 200, 0.3)";
+			ctx.fill();
+			ctx.strokeStyle = "#AAAAAA";
+			ctx.stroke();
+			break;
+
+		case "void":
+			this.drawHexagonPath(ctx);
+			ctx.strokeStyle = "rgba(100, 100, 100, 0.3)";
+			ctx.stroke();
+			break;
+
+		case "top":
+		case "bot":
+		case "topLeft":
+		case "topRight":
+		case "botLeft":
+		case "botRight":
+			this.drawDirectionIndicator(ctx, style);
+			break;
 	}
 
-	if (mainStyle == "void") {
-		ctx.strokeStyle = "rgba(100, 100, 100, 0.3)";
-	} else {
-		ctx.strokeStyle = "#AAAAAA";
-	}
-	ctx.stroke();
-
-	if (advancedStyle) {
-		this.drawDirectionIndicator(ctx, advancedStyle);
-		this.drawings.set(mainStyle + "-" + advancedStyle, canvas);
-	} else {
-		this.drawings.set(mainStyle, canvas);
-	}
+	this.drawings.set(style, canvas);
 }
 
 HexagonPatterns.prototype.offContextDraw = function(offCtx, x, y, color) {

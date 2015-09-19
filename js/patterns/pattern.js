@@ -5,10 +5,18 @@ function Pattern() {
 }
 
 Pattern.prototype.draw = function(ctx, style, x, y) {
-	ctx.save();
-	ctx.translate(-this.width/2, -this.height/2);
-	ctx.drawImage(this.drawings.get(style), x, y);
-	ctx.restore();
+	if (style == "selected") {
+		ctx.save();
+		ctx.translate(x - this.width/2 - 5, y - this.height/2 - 5);
+		ctx.strokeStyle = "#AAAAAA";
+		ctx.strokeRect(0.5, 0.5, this.width-1 + 10, this.height-1 + 10);
+		ctx.restore();
+	} else {
+		ctx.save();
+		ctx.translate(-this.width/2, -this.height/2);
+		ctx.drawImage(this.drawings.get(style), x, y);
+		ctx.restore();
+	}
 }
 
 // Method to draw path without anti-aliasing

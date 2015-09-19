@@ -23,22 +23,22 @@ PlusMinusPatterns.prototype.preRenderDrawing = function(style) {
 	// Draw octagon
 	var otherRadius = 91/100*this.radius;
 	ctx.translate(this.width/2, this.height/2);
-		ctx.beginPath();
-		for (var i = 0; i <= 8; i++) {
-			var theta = -Math.PI/2 + i/8 * 2*Math.PI;
-			if (i == 0) {
-				ctx.moveTo(this.radius*Math.cos(theta), this.radius*Math.sin(theta));
-			} else {
-				ctx.lineTo(this.radius*Math.cos(theta), this.radius*Math.sin(theta));
-			}
+	ctx.beginPath();
+	for (var i = 0; i <= 8; i++) {
+		var theta = -Math.PI/2 + i/8 * 2*Math.PI;
+		if (i == 0) {
+			ctx.moveTo(this.radius*Math.cos(theta), this.radius*Math.sin(theta));
+		} else {
+			ctx.lineTo(this.radius*Math.cos(theta), this.radius*Math.sin(theta));
 		}
-		for (var i = 8; i >= 0; i--) {
-			var theta = -Math.PI/2 + i/8 * 2*Math.PI;
-			ctx.lineTo(otherRadius*Math.cos(theta), otherRadius*Math.sin(theta));
-		}
-		ctx.closePath();
-		ctx.fillStyle = "#00AAAA";
-		ctx.fill();
+	}
+	for (var i = 8; i >= 0; i--) {
+		var theta = -Math.PI/2 + i/8 * 2*Math.PI;
+		ctx.lineTo(otherRadius*Math.cos(theta), otherRadius*Math.sin(theta));
+	}
+	ctx.closePath();
+	ctx.fillStyle = "#00AAAA";
+	ctx.fill();
 
 	var thickness = Math.floor(1/5/2 * this.radius);
 	var size = Math.floor(3/5 * this.radius);

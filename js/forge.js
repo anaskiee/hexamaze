@@ -23,6 +23,7 @@ function Forge(width, height, pixelMapper, graphicsEngine, developerConsole, lev
 	this.forgeGuiHeight = -1;
 
 	this.selection = null;
+	this.buttonSelected = null;
 }
 
 Forge.prototype = Object.create(GameMode.prototype);
@@ -239,29 +240,49 @@ Forge.prototype.export = function() {
 	}
 }
 
-Forge.prototype.onEmptyHexagonSelected = function() {
+Forge.prototype.onEmptyHexagonSelected = function(cmdSender) {
+	if (this.buttonSelected != null) {
+		this.buttonSelected.onFocusOver();
+	}
 	console.log("style selected : space");
 	this.selection = "space";
+	this.buttonSelected = cmdSender;
 }
 
-Forge.prototype.onFullHexagonSelected = function() {
+Forge.prototype.onFullHexagonSelected = function(cmdSender) {
+	if (this.buttonSelected != null) {
+		this.buttonSelected.onFocusOver();
+	}
 	console.log("style selected : block");
 	this.selection = "block";
+	this.buttonSelected = cmdSender;
 }
 
-Forge.prototype.onVoidHexagonSelect = function() {
+Forge.prototype.onVoidHexagonSelect = function(cmdSender) {
+	if (this.buttonSelected != null) {
+		this.buttonSelected.onFocusOver();
+	}
 	console.log("style selected : void");
 	this.selection = "void";
+	this.buttonSelected = cmdSender;
 }
 
-Forge.prototype.onCharacterSelect = function() {
+Forge.prototype.onCharacterSelect = function(cmdSender) {
+	if (this.buttonSelected != null) {
+		this.buttonSelected.onFocusOver();
+	}
 	console.log("character selected");
 	this.selection = "character";
+	this.buttonSelected = cmdSender;
 }
 
-Forge.prototype.onExitSelect = function() {
+Forge.prototype.onExitSelect = function(cmdSender) {
+	if (this.buttonSelected != null) {
+		this.buttonSelected.onFocusOver();
+	}
 	console.log("exit selected");
 	this.selection = "exit";
+	this.buttonSelected = cmdSender;
 }
 
 // The sender of the command is an hexagon

@@ -15,7 +15,7 @@ function GraphicsEngine(context, offContext, pixelMapper, level, physicsEngine) 
 	this.physicsEngine = physicsEngine;
 
 	// Direction given by eventHandler
-	this.direction = "top";
+	this.direction = "";
 
 	// Character position on screen
 	this.charX = -1;
@@ -174,7 +174,9 @@ GraphicsEngine.prototype.drawElement = function(date) {
 		posX = this.level.characterHexagon.x;
 		posY = this.level.characterHexagon.y;
 		this.characterPatterns.draw(this.ctx, "basic", posX, posY);
-		this.hexagonPatterns.draw(this.ctx, "space-" + this.direction, posX, posY);
+		if (this.direction) {
+			this.hexagonPatterns.draw(this.ctx, this.direction, posX, posY);
+		}
 	}
 
 	// Draw exit

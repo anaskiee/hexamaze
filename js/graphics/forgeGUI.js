@@ -18,6 +18,11 @@ function ForgeGUI(context, offContext, pixelMapper) {
 	this.voidHexagon = new PatternButton("select_void_hexagon", pixelMapper);
 	this.character = new PatternButton("select_character", pixelMapper);
 	this.exit = new PatternButton("select_exit", pixelMapper);
+	this.emptyHexagon.enableFocusRendering();
+	this.fullHexagon.enableFocusRendering();
+	this.voidHexagon.enableFocusRendering();
+	this.character.enableFocusRendering();
+	this.exit.enableFocusRendering();
 
 	// Buttons to edit level size
 	this.addLineFirst = new PatternButton("add_line_first", pixelMapper);
