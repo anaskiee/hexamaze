@@ -127,8 +127,8 @@ ForgeGUI.prototype.offContextDraw = function() {
 	this.emptyHexagon.offContextDraw(this.offCtx, 1/16*this.width, 3/32*this.height);
 	this.fullHexagon.offContextDraw(this.offCtx, 1/16*this.width, 8/32*this.height);
 	this.voidHexagon.offContextDraw(this.offCtx, 1/16*this.width, 13/32*this.height);
-	//this.character.offContextDraw(this.offCtx, 1/16*this.width, 18/32*this.height);
-	//Wthis.exit.offContextDraw(this.offCtx, 1/16*this.width, 23/32*this.height);
+	this.character.offContextDraw(this.offCtx, 1/16*this.width, 18/32*this.height);
+	this.exit.offContextDraw(this.offCtx, 1/16*this.width, 23/32*this.height);
 
 	// Buttons to edit map
 	this.addColumnFirst.offContextDraw(this.offCtx, 3/16*this.width, 3/8*this.height);
@@ -143,7 +143,3 @@ ForgeGUI.prototype.offContextDraw = function() {
 	this.addLineLast.offContextDraw(this.offCtx, 8/16*this.width, 15/16*this.height);
 	this.rmLastLine.offContextDraw(this.offCtx, 10/16*this.width, 15/16*this.height);
 }
-
-//   +--------------+
-//   |    Events    |
-//   +--------------+

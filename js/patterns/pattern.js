@@ -11,7 +11,7 @@ Pattern.prototype.draw = function(ctx, style, x, y) {
 	ctx.restore();
 }
 
-// [{x: x0, y: y0}, {x: x1, y:y1}]
+// Method to draw path without anti-aliasing
 Pattern.prototype.fillPath = function(ctx, pointsList, color) {
 	var curr, next;
 	var x0, y0, x1, y1;
@@ -53,4 +53,52 @@ Pattern.prototype.fillPath = function(ctx, pointsList, color) {
 	ctx.closePath()
 	ctx.fillStyle = color;
 	ctx.fill();
+}
+
+// Method to draw disk without anti-aliasing
+Pattern.prototype.fillDisk = function(ctx, x0, y0, radius, color) {
+	var octants = new Array(8);
+	for (var i = 0; i < 8; i++) {
+		octants[i] = [];
+	}
+
+	// Midpoint circle algorithm
+	var x = radius;
+	var y = 0;
+	var decisionOver2 = 1 - x;
+	while (y <= x) {
+		y++;
+		this.addPoints(octants, x0, y0, x, y);
+		if (decisionOver2 <= 0) {
+			decisionOver2 += 2*y + 1;
+		} else {
+			x--;
+			this.addPoints(octants, x0, y0, x, y);
+			decisionOver2 += 2*(y - x) + 1;
+		}
+	}
+
+	var pointsList = octants[0].concat(octants[1], octants[2], octants[3], octants[4],
+										octants[5], octants[6], octants[7]);
+	var point;
+	ctx.beginPath();
+	ctx.moveTo(pointsList[0].x, pointsList[0].y);
+	for (var i = 1; i < pointsList.length; i++) {
+		point = pointsList[i];
+		ctx.lineTo(point.x, point.y);
+	}
+	ctx.closePath();
+	ctx.fillStyle = color;
+	ctx.fill();
+}
+
+Pattern.prototype.addPoints = function(octants, x0, y0, x, y) {
+	octants[0].push({x: x0 + x, y: y0 + y});
+	octants[1].unshift({x: x0 + y, y: y0 + x});
+	octants[2].push({x: x0 - y, y: y0 + x});
+	octants[3].unshift({x: x0 - x, y: y0 + y});
+	octants[4].push({x: x0 - x, y: y0 - y});
+	octants[5].unshift({x: x0 - y, y: y0 - x});
+	octants[6].push({x: x0 + y, y: y0 - x});
+	octants[7].unshift({x: x0 + x, y: y0 - y});
 }
