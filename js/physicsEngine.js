@@ -10,7 +10,8 @@ PhysicsEngine.prototype.computeReachableHexagons = function() {
 	for (var direction of directions) {
 		var currHexagon = this.level.characterHexagon;
 		var nextHexagon = currHexagon[direction];
-		while (nextHexagon != null && nextHexagon.type != "block" && currHexagon != this.level.exitHexagon) {
+		while (nextHexagon != null && nextHexagon.type == "space" 
+				&& currHexagon != this.level.exitHexagon) {
 			nextHexagon.isReachable = true;
 			currHexagon = nextHexagon;
 			nextHexagon = nextHexagon[direction];
@@ -21,7 +22,8 @@ PhysicsEngine.prototype.computeReachableHexagons = function() {
 PhysicsEngine.prototype.computeHexagonsTowardsDirection = function(direction) {
 	var currHexagon = this.level.characterHexagon;
 	var nextHexagon = currHexagon[direction];
-	while (nextHexagon != null && nextHexagon.type != "block" && currHexagon != this.level.exitHexagon) {
+	while (nextHexagon != null && nextHexagon.type == "space" 
+			&& currHexagon != this.level.exitHexagon) {
 		nextHexagon.isPreselected = true;
 		currHexagon = nextHexagon;
 		nextHexagon = nextHexagon[direction];
@@ -33,7 +35,8 @@ PhysicsEngine.prototype.applyMove = function(direction) {
 
 	var currHexagon = this.level.characterHexagon;
 	var nextHexagon = currHexagon[direction];
-	while (nextHexagon != null && nextHexagon.type != "block" && currHexagon != this.level.exitHexagon) {
+	while (nextHexagon != null && nextHexagon.type == "space" 
+			&& currHexagon != this.level.exitHexagon) {
 		currHexagon = nextHexagon;
 		nextHexagon = nextHexagon[direction];
 	}

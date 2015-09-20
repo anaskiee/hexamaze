@@ -165,7 +165,10 @@ GraphicsEngine.prototype.drawElement = function(date) {
 		} else if (hexagon.isReachable) {
 			this.hexagonPatterns.draw(this.ctx, "reachable", posX, posY);
 		} else {
-			this.hexagonPatterns.draw(this.ctx, style, posX, posY);
+			// voids are not drawn in game mode
+			if (!(style == "void" && this.mode == "game")) {
+				this.hexagonPatterns.draw(this.ctx, style, posX, posY);
+			}
 		}
 	}
 
