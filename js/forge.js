@@ -251,10 +251,12 @@ Forge.prototype.import = function() {
 }
 
 Forge.prototype.export = function() {
-	if (this.level.isLevelFinished()) {
-		alert(this.level.toString());
-	} else {
+	if (!this.level.isLevelFinished()) {
 		alert("export impossible, level is not complete");
+	} else if (this.mode == "test") {
+		alert("export not allowed while testing");
+	} else {
+		alert(this.level.toString());
 	}
 }
 

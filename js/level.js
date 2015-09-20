@@ -33,9 +33,9 @@ Level.prototype.removeHexagon = function(hex) {
 }
 
 Level.prototype.isLevelFinished = function() {
-	if (this.characterHexagon == null)
+	if (this.characterHexagon == null || this.characterHexagon.type == "void")
 		return false;
-	if (this.exitHexagon == null)
+	if (this.exitHexagon == null || this.exitHexagon.type == "void")
 		return false;
 	if (this.hexagons.length == 0)
 		return false;
