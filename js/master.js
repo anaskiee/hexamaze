@@ -1,8 +1,9 @@
 "use strict";
 
-function Master(game, forge, pixelMapper, parameters) {
+function Master(game, forge, home, pixelMapper, parameters) {
 	this.game = game;
 	this.forge = forge;
+	this.home = home;
 	this.pixelMapper = pixelMapper;
 
 	this.commands = null;
@@ -11,7 +12,7 @@ function Master(game, forge, pixelMapper, parameters) {
 	if (parameters.mode) {
 		this.module = this[parameters.mode];
 	} else {
-		this.module = game;
+		this.module = home;
 	}
 
 	this.previousMouseMoveElement = null;
@@ -19,8 +20,13 @@ function Master(game, forge, pixelMapper, parameters) {
 
 Master.prototype.setCommandsPrototypeChain = function(commands) {
 	this.commands = Object.create(commands);
+	this.commands.goto_game = this.goToGame.bind(this);
+	this.commands.goto_forge = this.goToForge.bind(this);
+	this.commands.goto_home = this.goToHome.bind(this);
+
 	this.game.setCommandsPrototypeChain(this.commands);
 	this.forge.setCommandsPrototypeChain(this.commands);
+	this.home.setCommandsPrototypeChain(this.commands);
 }
 
 Master.prototype.draw = function() {
@@ -82,4 +88,20 @@ Master.prototype.applyEvents = function() {
 		event = this.events.shift();
 		event.execute();
 	}
+}
+
+// Top level functions
+Master.prototype.goToForge = function() {
+	this.forge.startModule();
+	this.module = this.forge;
+}
+
+Master.prototype.goToGame = function() {
+	this.game.startModule();
+	this.module = this.game;
+}
+
+Master.prototype.goToHome = function() {
+	this.home.startModule();
+	this.module = this.home;
 }

@@ -21,14 +21,16 @@ function GameLoader(canvas, context, offContext, parameters) {
 	var ingameMenu = new IngameMenu(context, offContext, pixelMapper);
 	var developerConsole = new DeveloperConsole(context, offContext, pixelMapper);
 	var forgeGUI = new ForgeGUI(context, offContext, pixelMapper);
+	var mainMenu = new MainMenu(context, offContext, pixelMapper);
 	
 	// Game modules
 	var game = new Game(width, height, physicsEngine, graphicsEngine, ingameMenu, 
 						developerConsole, worker, level);
 	var forge = new Forge(width, height, pixelMapper,  graphicsEngine, 
 							developerConsole, level, levelCreator, forgeGUI);
+	var home = new Home(width, height, pixelMapper, developerConsole, mainMenu);
 
-	var master = new Master(game, forge, pixelMapper, parameters);
+	var master = new Master(game, forge, home, pixelMapper, parameters);
 	var eventHandler = new EventHandler(canvas, master, worker);
 
 	// Initialize all commands
