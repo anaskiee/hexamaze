@@ -57,20 +57,12 @@ Level.prototype.toString = function() {
 	// Define hexagons indexes because references will be lost during stringification
 	var indexes = new Map();
 	for (var hex of this.hexagons) {
-		// Void hexagons are ignored for export
-		if (hex.type == "void") {
-			continue;
-		}
 		indexes.set(hex, idx);
 		idx++;
 	}
 
 	var first = true;
 	for (var hex of this.hexagons) {
-		if (hex.type == "void") {
-			continue;
-		}
-
 		hexa = {
 			index : indexes.get(hex),
 			type : hex.type,

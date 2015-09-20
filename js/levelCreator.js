@@ -303,19 +303,6 @@ LevelCreator.prototype.fillEditingStructure = function() {
 		var pos = entry[1];
 		this.hexagons[pos[0]][pos[1]] = hex;
 	}
-
-	// Add void hexagons in edit mode
-	for (var i = 0; i < this.nbLines; i++) {
-		for (var j = 0; j < this.nbColumns; j++) {
-			// Export with void style
-			if (this.hexagons[i][j] == null) {
-				this.hexagons[i][j] = this.level.addHexagon("void");
-			}
-		}
-	}
-
-	// Init links for void hexagons
-	this.setLinks();
 }
 
 LevelCreator.prototype.getBotAndTopLineIndex = function(i, j) {
