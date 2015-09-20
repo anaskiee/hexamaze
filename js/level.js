@@ -57,12 +57,20 @@ Level.prototype.toString = function() {
 	// Define hexagons indexes because references will be lost during stringification
 	var indexes = new Map();
 	for (var hex of this.hexagons) {
+		// Void hexagons are ignored for export
+		if (hex.type == "void") {
+			continue;
+		}
 		indexes.set(hex, idx);
 		idx++;
 	}
 
 	var first = true;
 	for (var hex of this.hexagons) {
+		if (hex.type == "void") {
+			continue;
+		}
+
 		hexa = {
 			index : indexes.get(hex),
 			type : hex.type,
@@ -76,10 +84,6 @@ Level.prototype.toString = function() {
 			botRight : indexes.get(hex.botRight)
 		};
 
-		// Save character and exit hexagon
-		idxCharacter = indexes.get(this.characterHexagon);
-		idxExit = indexes.get(this.exitHexagon);
-
 		if (first) {
 			first = false;
 		} else {
@@ -87,6 +91,10 @@ Level.prototype.toString = function() {
 		}
 		hexagons += JSON.stringify(hexa);
 	}
+	
+	// Save character and exit hexagon
+	idxCharacter = indexes.get(this.characterHexagon);
+	idxExit = indexes.get(this.exitHexagon);
 
 	return this.firstColumnOnTop + ";" + idxCharacter + ";" + idxExit + ";" + hexagons;
 }
