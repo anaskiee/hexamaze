@@ -24,6 +24,8 @@ function Forge(width, height, pixelMapper, graphicsEngine, developerConsole, lev
 
 	this.selection = null;
 	this.buttonSelected = null;
+	// Two modes availabe : test and edit
+	this.mode = "edit";
 }
 
 Forge.prototype = Object.create(GameMode.prototype);
@@ -36,6 +38,7 @@ Forge.prototype.constructor = Forge;
 Forge.prototype.startModule = function() {
 	this.forgeGuiWidth = this.width;
 	this.forgeGuiHeight = this.height;
+	this.graphicsEngine.setEventMode("forge");
 	this.forgeGUI.setDrawingRect(0, 0, this.width, this.height);
 	this.setGraphicsEngineDrawingRect();
 	this.developerConsole.setDrawingRect(0, 19/20*this.height - 0.5, 
@@ -43,7 +46,6 @@ Forge.prototype.startModule = function() {
 	this.showConsole();
 	this.levelCreator.createEditingLevel(4, 4);
 	this.graphicsEngine.computeGraphicsData();
-	this.graphicsEngine.setEventMode("forge");
 	this.addElementToRender("ForgeGUI");
 	this.addElementToRender("GraphicsEngine");
 }
@@ -53,7 +55,6 @@ Forge.prototype.setGraphicsEngineDrawingRect = function() {
 								5/8*this.forgeGuiWidth, 6/8*this.forgeGuiHeight);
 	this.forgeGUI.setRendererRect(2/8*this.forgeGuiWidth, 1/8*this.forgeGuiHeight, 
 								5/8*this.forgeGuiWidth, 6/8*this.forgeGuiHeight);
-	this.graphicsEngine.setEventMode("forge");
 }
 
 Forge.prototype.stopModule = function() {
@@ -81,6 +82,7 @@ Forge.prototype.setCommandsPrototypeChain = function(commands) {
 	this.commands.rm_last_line = this.removeLastLine.bind(this);
 	this.commands.rm_first_column = this.removeFirstColumn.bind(this);
 	this.commands.rm_last_column = this.removeLastColumn.bind(this);
+	this.commands.test_it = this.onTestItClick.bind(this);
 	this.commands.import = this.import.bind(this);
 	this.commands.export = this.export.bind(this);
 	this.commands.select_empty_hexagon = this.onEmptyHexagonSelected.bind(this);
@@ -217,6 +219,22 @@ Forge.prototype.removeFirstColumn = function() {
 
 Forge.prototype.removeLastColumn = function() {
 	this.editLevel(this.levelCreator.removeLastColumn.bind(this.levelCreator));
+}
+
+Forge.prototype.onTestItClick = function(cmdSender) {
+	if (this.mode == "edit") {
+		this.mode = "test";
+		this.graphicsEngine.setEventMode("game");
+		cmdSender.setText("Back to edit");
+		this.levelCreator.save();
+	} else {
+		this.mode = "edit";
+		this.graphicsEngine.setEventMode("forge");
+		cmdSender.setText("Test it");
+		this.levelCreator.restore();
+	}
+	this.forgeGUI.offContextDraw();
+	this.graphicsEngine.offContextDraw();
 }
 
 Forge.prototype.import = function() {

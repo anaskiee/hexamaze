@@ -215,8 +215,8 @@ GraphicsEngine.prototype.offContextDraw = function() {
 GraphicsEngine.prototype.updateCharacterCoordinates = function() {
 	var hexagon = this.level.characterHexagon;
 	if (hexagon != null) {
-		this.charX = hexagon.x;
-		this.charY = hexagon.y; 
+		this.charX = this.offsetX + hexagon.x;
+		this.charY = this.offsetY + hexagon.y; 
 	} else {
 		this.charX = -1;
 		this.charY = -1;
@@ -252,8 +252,11 @@ GraphicsEngine.prototype.computeDirection = function(x, y) {
 GraphicsEngine.prototype.setEventMode = function(mode) {
 	if (mode == "game") {
 		this.mode = "game";
+		this.updateCharacterCoordinates();
 	} else if (mode == "forge") {
 		this.mode = "forge";
+		this.direction = null;
+		this.physicsEngine.cleanPreselectedHexagons();
 	} else {
 		console.log("Unknown mode: " + mode);
 	}

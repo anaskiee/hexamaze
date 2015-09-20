@@ -6,11 +6,13 @@ function ForgeGUI(context, offContext, pixelMapper) {
 	this.ctx = context;
 	this.offCtx = offContext;
 
+	this.testIt = new TextButton("Test it", "test_it", pixelMapper);
 	this.import = new TextButton("Import", "import", pixelMapper);
 	this.export = new TextButton("Export", "export", pixelMapper);
 	this.buttons = new Set();
 	this.buttons.add(this.import);
 	this.buttons.add(this.export);
+	this.buttons.add(this.testIt);
 
 	// Buttons on the left
 	this.emptyHexagon = new PatternButton("select_empty_hexagon", pixelMapper);
@@ -100,6 +102,7 @@ ForgeGUI.prototype.drawElement = function(date) {
 	this.ctx.strokeRect(0.5, 0.5, this.width/8, this.height);
 
 	// Buttons on the left
+	this.testIt.draw(this.ctx, 1/16*this.width, 17/20*this.height);
 	this.import.draw(this.ctx, 1/16*this.width, 18/20*this.height);
 	this.export.draw(this.ctx, 1/16*this.width, 19/20*this.height);
 
@@ -128,6 +131,7 @@ ForgeGUI.prototype.offContextDraw = function() {
 	this.offCtx.clearRect(this.offsetX, this.offsetY, this.maxWidth, this.maxHeight);
 	
 	// Buttons on the left
+	this.testIt.offContextDraw(this.offCtx, 1/16*this.width, 17/20*this.height);
 	this.import.offContextDraw(this.offCtx, 1/16*this.width, 18/20*this.height);
 	this.export.offContextDraw(this.offCtx, 1/16*this.width, 19/20*this.height);
 	

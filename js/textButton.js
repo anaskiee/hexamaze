@@ -14,9 +14,20 @@ function TextButton(text, action, pixelMapper) {
 	this.height = -1;
 }
 
+TextButton.prototype.setText = function(text) {
+	this.textLines = text.split("\n");
+	this.computeButtonSize();
+}
+
 TextButton.prototype.setFontHeight = function(fontHeight) {
 	this.fontHeight = fontHeight;
+	this.computeButtonSize();
+}
 
+TextButton.prototype.computeButtonSize = function() {
+	if (this.fontHeight == -1) {
+		console.log("warning: button font size not set");
+	}
 	var canvas = document.createElement("canvas");
 	var ctx = canvas.getContext("2d");
 	ctx.font = this.fontHeight + "px motorwerk";
