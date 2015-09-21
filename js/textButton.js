@@ -36,7 +36,8 @@ TextButton.prototype.computeButtonSize = function() {
 		this.width = Math.max(this.width, ctx.measureText(line).width);
 	}
 	this.width = Math.ceil(this.width) + 10;
-	this.height = this.textLines.length * (Math.ceil(1/2*this.fontHeight) + 3);
+	this.lineHeight = Math.ceil(1/2*this.fontHeight) + 2;
+	this.height = this.textLines.length * this.lineHeight;
 }
 
 TextButton.prototype.draw = function(ctx, x, y) {
@@ -47,9 +48,11 @@ TextButton.prototype.draw = function(ctx, x, y) {
 	} else {
 		ctx.fillStyle = "#000000";
 	}
-	for (var i = 0; i < this.textLines.length; i++) {
-		ctx.fillText(this.textLines[i], x, 
-				y + Math.round(1/4*this.fontHeight) + (i * (1/2*this.fontHeight + 3)));
+	var nbLines = this.textLines.length;
+	var mid = nbLines/2;
+	for (var i = 0; i < nbLines; i++) {
+		var offsetY = y + (i+1 - mid) * this.lineHeight;
+		ctx.fillText(this.textLines[i], x, Math.round(offsetY));
 	}
 }
 
@@ -58,7 +61,7 @@ TextButton.prototype.offContextDraw = function(ctx, x, y) {
 		this.offContextColor = this.pixelMapper.registerAndGetColor(this);
 	}
 	ctx.fillStyle = this.offContextColor;
-	ctx.fillRect(Math.round(x - this.width/2), Math.round(y - 1/4*this.fontHeight),
+	ctx.fillRect(Math.round(x - this.width/2), Math.round(y - this.height/2),
 					this.width, this.height);
 }
 

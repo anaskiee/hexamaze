@@ -4,7 +4,7 @@ function MainMenu(context, offContext, pixelMapper) {
 	GraphicalElement.call(this, "MainMenu", pixelMapper);
 
 	this.ctx = context;
-	this.offContext = offContext;
+	this.offCtx = offContext;
 	this.pixelMapper = pixelMapper;
 
 	this.text = "Hexamaze"
@@ -40,6 +40,8 @@ MainMenu.prototype.drawElement = function(date) {
 }
 
 MainMenu.prototype.offContextDraw = function() {
-	this.forge.offContextDraw(this.offContext, 1/3*this.width, 2/3*this.height);
-	this.game.offContextDraw(this.offContext, 2/3*this.width, 2/3*this.height);
+	this.offCtx.clearRect(this.offsetX, this.offsetY, this.maxWidth, this.maxHeight);
+
+	this.forge.offContextDraw(this.offCtx, 1/3*this.width, 2/3*this.height);
+	this.game.offContextDraw(this.offCtx, 2/3*this.width, 2/3*this.height);
 }
