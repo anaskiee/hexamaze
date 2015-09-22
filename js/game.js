@@ -27,7 +27,7 @@ Game.prototype.constructor = Game;
 // |   Basic functions   |
 // +---------------------+
 // Manage module start and stop
-Game.prototype.startModule = function() {
+Game.prototype.startModule = function(level) {
 	this.ingameMenu.setDrawingRect(0, 0, this.width, this.height);
 	this.graphicsEngine.setDrawingRect(0, 0, this.width, this.height);
 	this.developerConsole.setDrawingRect(0, 19/20*this.height - 0.5, 
@@ -35,7 +35,16 @@ Game.prototype.startModule = function() {
 	this.graphicsEngine.setEventMode("game");
 	this.expandMenu();
 	this.showConsole();
-	this.worker.postMessage("compute");
+	
+	// Load this one
+	if (level) {
+		this.loadMap(level);
+		this.mapComputed();
+
+	// Call the worker to generate one
+	} else {
+		this.worker.postMessage("compute");
+	}
 }
 
 Game.prototype.stopModule = function() {

@@ -23,6 +23,7 @@ Master.prototype.setCommandsPrototypeChain = function(commands) {
 	this.commands.goto_game = this.goToGame.bind(this);
 	this.commands.goto_forge = this.goToForge.bind(this);
 	this.commands.goto_home = this.goToHome.bind(this);
+	this.commands.level_1 = this.level1.bind(this);
 
 	this.game.setCommandsPrototypeChain(this.commands);
 	this.forge.setCommandsPrototypeChain(this.commands);
@@ -91,6 +92,11 @@ Master.prototype.applyEvents = function() {
 }
 
 // Top level functions
+Master.prototype.goToHome = function() {
+	this.home.startModule();
+	this.module = this.home;
+}
+
 Master.prototype.goToForge = function() {
 	this.forge.startModule();
 	this.module = this.forge;
@@ -101,7 +107,7 @@ Master.prototype.goToGame = function() {
 	this.module = this.game;
 }
 
-Master.prototype.goToHome = function() {
-	this.home.startModule();
-	this.module = this.home;
+Master.prototype.level1 = function() {
+	this.game.startModule(level_1());
+	this.module = this.game;
 }
