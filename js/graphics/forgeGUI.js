@@ -96,10 +96,10 @@ ForgeGUI.prototype.drawElement = function(date) {
 
 	// Around graphicsEngine
 	this.ctx.strokeStyle = "#000000";
-	this.ctx.strokeRect(this.rX, this.rY, this.rWidth, this.rHeight);
+	this.ctx.strokeRect(this.rX-0.5, this.rY-0.5, this.rWidth+1, this.rHeight+1);
 
 	// Left interface
-	this.ctx.strokeRect(0.5, 0.5, this.width/8, this.height);
+	this.ctx.strokeRect(Math.round(this.width/8)+0.5, 0.5, 0, this.height);
 
 	// Buttons on the left
 	this.testIt.draw(this.ctx, 1/16*this.width, 17/20*this.height);

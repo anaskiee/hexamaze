@@ -41,8 +41,9 @@ Forge.prototype.startModule = function() {
 	this.graphicsEngine.setEventMode("forge");
 	this.forgeGUI.setDrawingRect(0, 0, this.width, this.height);
 	this.setGraphicsEngineDrawingRect();
-	this.developerConsole.setDrawingRect(0, 19/20*this.height - 0.5, 
-											this.width, this.height/20);
+	var devConsHeight = Math.round(this.height/20);
+	this.developerConsole.setDrawingRect(0, this.height - devConsHeight, 
+											this.width, devConsHeight);
 	this.showConsole();
 	this.levelCreator.createEditingLevel(4, 4);
 	this.graphicsEngine.computeGraphicsData();
@@ -51,10 +52,12 @@ Forge.prototype.startModule = function() {
 }
 
 Forge.prototype.setGraphicsEngineDrawingRect = function() {
-	this.graphicsEngine.setDrawingRect(2/8*this.forgeGuiWidth, 1/8*this.forgeGuiHeight, 
-								5/8*this.forgeGuiWidth, 6/8*this.forgeGuiHeight);
-	this.forgeGUI.setRendererRect(2/8*this.forgeGuiWidth, 1/8*this.forgeGuiHeight, 
-								5/8*this.forgeGuiWidth, 6/8*this.forgeGuiHeight);
+	var x = Math.round(2/8*this.forgeGuiWidth);
+	var y = Math.round(1/8*this.forgeGuiHeight);
+	var width = Math.round(5/8*this.forgeGuiWidth);
+	var height = Math.round(6/8*this.forgeGuiHeight);
+	this.graphicsEngine.setDrawingRect(x, y, width, height);
+	this.forgeGUI.setRendererRect(x, y, width, height);
 }
 
 Forge.prototype.stopModule = function() {

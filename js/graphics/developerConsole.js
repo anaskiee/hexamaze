@@ -27,7 +27,7 @@ DeveloperConsole.prototype.drawElement = function(date) {
 	this.ctx.fillRect(0, 0, this.width, this.height);
 
 	this.ctx.strokeStyle = "#000000";
-	this.ctx.strokeRect(0, 0, this.width, this.height);
+	this.ctx.strokeRect(0.5, 0.5, this.width-1, this.height-1);
 
 	this.ctx.font = 4/5*this.height + "px Consolas";
 	this.ctx.fillStyle = "#EEEEEE";

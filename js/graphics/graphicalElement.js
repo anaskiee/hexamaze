@@ -16,7 +16,7 @@ GraphicalElement.prototype.setDrawingRect = function(offsetX, offsetY, width, he
 	this.offsetY = offsetY;
 	this.maxWidth = width;
 	this.maxHeight = height;
-
+	this.checkProperties();
 	this.onDrawingRectSet();
 }
 
@@ -28,6 +28,17 @@ GraphicalElement.prototype.adjustDrawingRect = function(offsetX, offsetY,
 	this.maxHeight += height;
 
 	this.onDrawingRectSet();
+}
+
+GraphicalElement.prototype.checkProperties = function() {
+	if (this.offsetX != Math.floor(this.offsetX))
+		console.log("warning: " + this.name + " invalid offsetX " + this.offsetX);
+	if (this.offsetY != Math.floor(this.offsetY))
+		console.log("warning: " + this.name + " invalid offsetY " + this.offsetY);
+	if (this.maxWidth != Math.floor(this.maxWidth))
+		console.log("warning: " + this.name + " invalid width " + this.maxWidth);
+	if (this.maxHeight != Math.floor(this.maxHeight))
+		console.log("warning: " + this.name + " invalid height " + this.maxHeight);
 }
 
 GraphicalElement.prototype.onDrawingRectSet = function() {

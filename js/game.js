@@ -30,8 +30,9 @@ Game.prototype.constructor = Game;
 Game.prototype.startModule = function(level) {
 	this.ingameMenu.setDrawingRect(0, 0, this.width, this.height);
 	this.graphicsEngine.setDrawingRect(0, 0, this.width, this.height);
-	this.developerConsole.setDrawingRect(0, 19/20*this.height - 0.5, 
-											this.width, this.height/20);
+	var devConsHeight = Math.round(this.height/20);
+	this.developerConsole.setDrawingRect(0, this.height - devConsHeight, 
+											this.width, devConsHeight);
 	this.graphicsEngine.setEventMode("game");
 	this.expandMenu();
 	this.showConsole();

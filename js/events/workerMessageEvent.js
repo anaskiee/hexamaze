@@ -4,7 +4,6 @@ function WorkerMessageEvent(msg) {
 	Event.call(this);
 	this.msg = msg;
 	this.receiver = null;
-	console.log(msg);
 }
 
 WorkerMessageEvent.prototype = Object.create(Event.prototype);
