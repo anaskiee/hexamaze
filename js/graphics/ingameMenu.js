@@ -7,7 +7,8 @@ function IngameMenu(context, offContext, pixelMapper) {
 	this.offCtx = offContext;
 
 	// Text
-	this.text = "Ingame menu text !";
+	//this.text = "Ingame menu text !";
+	this.text = new Text("");
 
 	// For animations
 	this.initialOffsetX = -1;
@@ -49,6 +50,7 @@ IngameMenu.prototype.onDrawingRectSet = function() {
 	
 	// Buttons
 	this.playAgin.setFontHeight(Math.round(this.height/8));
+	this.text.setFontHeight(Math.round(this.height/10));
 }
 
 IngameMenu.prototype.reduce = function(date) {
@@ -63,7 +65,7 @@ IngameMenu.prototype.expand = function(date) {
 }
 
 IngameMenu.prototype.setText = function(text) {
-	this.text = text;
+	this.text.setText(text);
 }
 
 IngameMenu.prototype.initAnimation = function(date) {
@@ -134,11 +136,7 @@ IngameMenu.prototype.drawElement = function(date) {
 	this.ctx.clip();
 
 	// Draw text
-	this.ctx.fillStyle = "#000000";
-	this.ctx.font = this.height/8 + "px chunkfive";
-	this.ctx.textAlign = "center";
-	this.ctx.textBaseline = "middle";
-	this.ctx.fillText(this.text, 0, -this.height/6);
+	this.text.draw(this.ctx, 0, -this.height/6);
 	
 	// Draw button
 	if (drawOffContext) {
