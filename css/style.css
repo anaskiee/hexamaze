@@ -21,3 +21,27 @@ canvas {
 	display: block;
 	outline: 0;
 }
+
+/* Developer console*/
+@font-face {
+    font-family: 'ubuntu-condensed';
+    src: url('Ubuntu-C.ttf');
+}
+
+/* Title */
+@font-face {
+    font-family: 'distant-galaxy';
+    src: url('DISTGRG_.ttf');
+}
+
+/* ingame menu text */
+@font-face {
+    font-family: 'chunkfive';
+    src: url('Chunkfive.otf');
+}
+
+/* Text buttons */
+@font-face {
+    font-family: 'molot';
+    src: url('Molot.otf');
+}

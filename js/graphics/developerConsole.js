@@ -29,12 +29,13 @@ DeveloperConsole.prototype.drawElement = function(date) {
 	this.ctx.strokeStyle = "#000000";
 	this.ctx.strokeRect(0.5, 0.5, this.width-1, this.height-1);
 
-	this.ctx.font = 4/5*this.height + "px Consolas";
+	this.ctx.font = 4/5*this.height + "px ubuntu-condensed";
+	this.ctx.textBaseline = "middle";
 	this.ctx.fillStyle = "#EEEEEE";
 	if (date % 1000 > 500) {
-		this.ctx.fillText(this.text + "|", 0, this.maxHeight - 1/4 * this.height)
+		this.ctx.fillText(this.text + "|", 3, this.height/2);
 	} else {
-		this.ctx.fillText(this.text, 0, this.maxHeight - 1/4 * this.height)
+		this.ctx.fillText(this.text, 3, this.height/2);
 	}
 }
 

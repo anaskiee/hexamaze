@@ -48,7 +48,7 @@ IngameMenu.prototype.onDrawingRectSet = function() {
 	this.menuWidth = 0;
 	
 	// Buttons
-	this.playAgin.setFontHeight(Math.round(this.height/6));
+	this.playAgin.setFontHeight(Math.round(this.height/8));
 }
 
 IngameMenu.prototype.reduce = function(date) {
@@ -135,8 +135,9 @@ IngameMenu.prototype.drawElement = function(date) {
 
 	// Draw text
 	this.ctx.fillStyle = "#000000";
-	this.ctx.font = this.height/6 + "px motorwerk";
+	this.ctx.font = this.height/8 + "px chunkfive";
 	this.ctx.textAlign = "center";
+	this.ctx.textBaseline = "middle";
 	this.ctx.fillText(this.text, 0, -this.height/6);
 	
 	// Draw button

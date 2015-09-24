@@ -6,9 +6,9 @@ function ForgeGUI(context, offContext, pixelMapper) {
 	this.ctx = context;
 	this.offCtx = offContext;
 
-	this.testIt = new TextButton("Test it", "test_it", pixelMapper);
-	this.import = new TextButton("Import", "import", pixelMapper);
-	this.export = new TextButton("Export", "export", pixelMapper);
+	this.testIt = new TextButton("test it", "test_it", pixelMapper);
+	this.import = new TextButton("import", "import", pixelMapper);
+	this.export = new TextButton("export", "export", pixelMapper);
 	this.buttons = new Set();
 	this.buttons.add(this.import);
 	this.buttons.add(this.export);

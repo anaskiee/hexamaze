@@ -30,28 +30,28 @@ TextButton.prototype.computeButtonSize = function() {
 	}
 	var canvas = document.createElement("canvas");
 	var ctx = canvas.getContext("2d");
-	ctx.font = this.fontHeight + "px motorwerk";
+	ctx.font = this.fontHeight + "px molot";
 	this.width = -1;
 	for (var line of this.textLines) {
 		this.width = Math.max(this.width, ctx.measureText(line).width);
 	}
-	this.width = Math.ceil(this.width) + 10;
-	this.lineHeight = Math.ceil(1/2*this.fontHeight) + 2;
+	this.width = Math.ceil(this.width);
+	this.lineHeight = Math.ceil(2/3*this.fontHeight) + 4;
 	this.height = this.textLines.length * this.lineHeight;
 }
 
 TextButton.prototype.draw = function(ctx, x, y) {
-	ctx.font = this.fontHeight + "px motorwerk";
+	ctx.font = this.fontHeight + "px molot";
 	ctx.textAlign = "center";
+	ctx.textBaseline = "middle";
 	if (this.mouseOver) {
 		ctx.fillStyle = "#698469";
 	} else {
 		ctx.fillStyle = "#000000";
 	}
 	var nbLines = this.textLines.length;
-	var mid = nbLines/2;
 	for (var i = 0; i < nbLines; i++) {
-		var offsetY = y + (i+1 - mid) * this.lineHeight;
+		var offsetY = y + (i - (nbLines-1)/2) * this.lineHeight;
 		ctx.fillText(this.textLines[i], x, Math.round(offsetY));
 	}
 }

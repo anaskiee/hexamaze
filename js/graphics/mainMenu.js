@@ -25,13 +25,14 @@ MainMenu.prototype.onDrawingRectSet = function() {
 }
 
 MainMenu.prototype.drawElement = function(date) {
-	this.ctx.fillStyle = "#555555";
+	this.ctx.fillStyle = "#777777";
 	this.ctx.fillRect(0, 0, this.width, this.height);
 
 	// Draw title
 	this.ctx.fillStyle = "#000000";
-	this.ctx.font = this.height/6 + "px motorwerk";
+	this.ctx.font = this.height/5 + "px distant-galaxy";
 	this.ctx.textAlign = "center";
+	this.ctx.textBaseline = "middle";
 	this.ctx.fillText(this.text, 1/2*this.width, 1/3*this.height);
 
 	// Draw buttons

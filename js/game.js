@@ -209,7 +209,7 @@ Game.prototype.displayComputing = function() {
 }
 
 Game.prototype.updateComputingMenu = function(nbTries) {
-	this.ingameMenu.setText("Computing... (" + nbTries + ")");
+	this.ingameMenu.setText("Too easy map rejected: " + nbTries);
 }
 
 Game.prototype.hideConsole = function() {
