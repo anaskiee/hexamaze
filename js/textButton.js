@@ -45,7 +45,7 @@ TextButton.prototype.draw = function(ctx, x, y) {
 	ctx.textAlign = "center";
 	ctx.textBaseline = "middle";
 	if (this.mouseOver) {
-		ctx.fillStyle = "#698469";
+		ctx.fillStyle = "#222222";
 	} else {
 		ctx.fillStyle = "#000000";
 	}
