@@ -6,7 +6,7 @@ function LevelSolver(level) {
 }
 
 LevelSolver.prototype.getMin = function() {
-	this.solution = this.solve();
+	this.solve();
 
 	if (this.solution == "undefined") {
 		return 9000;
@@ -16,9 +16,8 @@ LevelSolver.prototype.getMin = function() {
 }
 
 LevelSolver.prototype.highlightSolution = function() {
-	if (this.solution == null) {
-		this.solution = this.solve();
-	}
+	this.solve();
+	
 	if (this.solution == "undefined") {
 		// no solution
 		return;
@@ -28,10 +27,11 @@ LevelSolver.prototype.highlightSolution = function() {
 	var currHexagon = exitHexagon;
 	var nextHexagon, direction;
 	while (currHexagon != this.level.characterHexagon) {
-		nextHexagon = this.solution.get(currHexagon).prevHexagon;
+		nextHexagon = this.solution.get(currHexagon)
+		nextHexagon = nextHexagon.prevHexagon;
 		direction = this.solution.get(currHexagon).direction;
 		while (currHexagon != nextHexagon) {
-			currHexagon.isReachable = true;
+			currHexagon.isPreselected = true;
 			currHexagon = currHexagon[direction];
 		}
 	} 
@@ -39,24 +39,26 @@ LevelSolver.prototype.highlightSolution = function() {
 
 LevelSolver.prototype.solve = function() {
 	var characterHexagon = this.level.characterHexagon;
-	if (characterHexagon == null) {
-		console.log("ici");
+	var exitHexagon = this.level.exitHexagon;
+	if (characterHexagon == null || exitHexagon == null) {
+		return "undefined";
 	}
 
 	var directions = ["top", "topLeft", "topRight", "bot", "botRight", "botLeft"];
 	var toExplore = [characterHexagon];
-	var solution = new Map();
-	solution.set(characterHexagon, {prevHexagon : null, depth : 0, direction : ""});
+	this.solution = new Map();
+	this.solution.set(characterHexagon, {prevHexagon : null, depth : 0, direction : ""});
 	while (toExplore.length > 0) {
 		var hexagon = toExplore.shift();
-		var depth = solution.get(hexagon).depth;
+		var depth = this.solution.get(hexagon).depth;
 		for (var direction of directions) {
 			var oppositeDirection = directions[(directions.indexOf(direction) + 3) % 6];
 			var nextHexagon = this.computeNextHexagon(hexagon, direction);
-			if (!solution.has(nextHexagon)) {
-				solution.set(nextHexagon, {prevHexagon : hexagon, depth : depth + 1, direction : oppositeDirection});
+			if (!this.solution.has(nextHexagon)) {
+				this.solution.set(nextHexagon, {prevHexagon : hexagon, depth : depth + 1, 
+											direction : oppositeDirection});
 				if (nextHexagon == this.level.exitHexagon) {
-					return solution;
+					return this.solution;
 				}
 				toExplore.push(nextHexagon);
 			}
@@ -68,10 +70,16 @@ LevelSolver.prototype.solve = function() {
 LevelSolver.prototype.computeNextHexagon = function(hexagon, direction) {
 	var currHexagon = hexagon;
 	var nextHexagon = currHexagon[direction];
-	while (nextHexagon != null && nextHexagon.type != "block" && currHexagon != this.level.exitHexagon) {
+	while (nextHexagon != null && nextHexagon.type == "space" && currHexagon != this.level.exitHexagon) {
 		currHexagon = nextHexagon;
 		nextHexagon = nextHexagon[direction];
 	}
 
 	return currHexagon;
-} 
+}
+
+LevelSolver.prototype.cleanMap = function() {
+	for (var hexagon of this.level.hexagons) {
+		hexagon.isPreselected = false;
+	}
+}

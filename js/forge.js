@@ -1,7 +1,7 @@
 "use strict";
 
 function Forge(width, height, pixelMapper, graphicsEngine, developerConsole, level, 
-				levelCreator, forgeGUI) {
+				levelCreator, forgeGUI, levelSolver) {
 	var elemList = [developerConsole, forgeGUI, graphicsEngine];
 	GameMode.call(this, "Forge", width, height, elemList);
 
@@ -11,6 +11,7 @@ function Forge(width, height, pixelMapper, graphicsEngine, developerConsole, lev
 	this.level = level;
 	this.levelCreator = levelCreator;
 	this.forgeGUI = forgeGUI;
+	this.levelSolver = levelSolver;
 
 	this.forgeGuiWidth = -1;
 	this.forgeGuiHeight = -1;
@@ -42,6 +43,8 @@ Forge.prototype.startModule = function() {
 	this.graphicsEngine.computeGraphicsData();
 	this.addElementToRender("ForgeGUI");
 	this.addElementToRender("GraphicsEngine");
+
+	this.ComputeAndDisplaySolution();
 }
 
 Forge.prototype.setGraphicsEngineDrawingRect = function() {
@@ -121,6 +124,8 @@ Forge.prototype.editLevel = function(operation) {
 	operation();
 	this.graphicsEngine.computeGraphicsData();
 	this.addElementToRender("GraphicsEngine");
+
+	this.ComputeAndDisplaySolution();
 }
 
 Forge.prototype.addLineFirst = function() {
@@ -248,4 +253,11 @@ Forge.prototype.onHexagonClick = function(cmdSender) {
 	} else if (this.selection != null) {
 		this.levelCreator.setHexagonStyle(cmdSender, this.selection);
 	}
+	this.ComputeAndDisplaySolution();
+}
+
+Forge.prototype.ComputeAndDisplaySolution = function() {
+	this.levelSolver.cleanMap();
+	this.levelSolver.solve();
+	this.levelSolver.highlightSolution();
 }

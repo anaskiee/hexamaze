@@ -14,7 +14,6 @@ function Hexagon(type)
 	this.botLeft 	= null;
 	this.botRight 	= null;
 
-	this.isReachable = false;
 	this.isPreselected = false;
 
 	// To avoid ton of calculation for each frame

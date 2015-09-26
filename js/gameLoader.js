@@ -12,6 +12,7 @@ function GameLoader(canvas, context, offContext, parameters) {
 
 	var physicsEngine = new PhysicsEngine(level);
 	var levelCreator = new LevelCreator(level);
+	var levelSolver = new LevelSolver(level);
 	
 	var pixelMapper = new PixelMapper(offContext);
 
@@ -27,7 +28,7 @@ function GameLoader(canvas, context, offContext, parameters) {
 	var game = new Game(width, height, physicsEngine, graphicsEngine, ingameMenu, 
 						developerConsole, worker, level);
 	var forge = new Forge(width, height, pixelMapper,  graphicsEngine, 
-							developerConsole, level, levelCreator, forgeGUI);
+						developerConsole, level, levelCreator, forgeGUI, levelSolver);
 	var home = new Home(width, height, pixelMapper, developerConsole, mainMenu);
 
 	var master = new Master(game, forge, home, pixelMapper, parameters);
