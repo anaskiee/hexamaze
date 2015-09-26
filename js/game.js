@@ -2,9 +2,8 @@
 
 function Game(width, height, physicsEngine, graphicsEngine, ingameMenu, 
 				developerConsole, worker, level) {
-	GameMode.call(this, "Game");
-	this.width = width;
-	this.height = height;
+	var elemList = [developerConsole, graphicsEngine, ingameMenu];
+	GameMode.call(this, "Game", width, height, elemList);
 
 	this.physicsEngine = physicsEngine;
 	this.graphicsEngine = graphicsEngine;
@@ -12,12 +11,6 @@ function Game(width, height, physicsEngine, graphicsEngine, ingameMenu,
 	this.developerConsole = developerConsole;
 	this.worker = worker;
 	this.level = level;
-	this.commands = null;
-
-	// 0 -> DeveloperConsole
-	// 1 -> GraphicsEngine
-	// 2 -> IngameMenu
-	this.elementsToRender = new Array(3);
 }
 
 Game.prototype = Object.create(GameMode.prototype);
@@ -49,18 +42,6 @@ Game.prototype.startModule = function(level) {
 }
 
 Game.prototype.stopModule = function() {
-}
-
-Game.prototype.computeNewFrameAndDraw = function(date) {
-	// Check if some elements doesn't need to be processed
-	this.checkStateTransition();
-
-	// Render
-	for (var element of this.elementsToRender) {
-		if (element) {
-			element.draw(date);
-		}
-	}
 }
 
 Game.prototype.setCommandsPrototypeChain = function(commands) {
@@ -107,56 +88,6 @@ Game.prototype.handleWorkerMessage = function(msg) {
 		this.mapComputed();
 	} else {
 		this.updateComputingMenu(msg);
-	}
-}
-
-// +----------------------+
-// |   States managment   |
-// +----------------------+
-
-Game.prototype.removeElementToRender = function(name) {
-	switch (name) {
-		case "DeveloperConsole":
-			this.elementsToRender[0] = null;
-			break;
-		case "GraphicsEngine":
-			this.elementsToRender[1] = null;
-			break;
-		case "IngameMenu":
-			this.elementsToRender[2] = null;
-			break;
-	}
-	for (var elem of this.elementsToRender) {
-		if (elem != null) {
-			elem.offContextDraw();
-		}
-	}
-}
-
-Game.prototype.addElementToRender = function(name) {
-	switch (name) {
-		case "DeveloperConsole":
-			this.elementsToRender[0] = this.developerConsole;
-			break;
-		case "GraphicsEngine":
-			this.elementsToRender[1] = this.graphicsEngine;
-			break;
-		case "IngameMenu":
-			this.elementsToRender[2] = this.ingameMenu;
-			break;
-	}
-	for (var elem of this.elementsToRender) {
-		if (elem != null) {
-			elem.offContextDraw();
-		}
-	}
-}
-
-Game.prototype.checkStateTransition = function() {
-	for (var element of this.elementsToRender) {
-		if (element && element.active == 0) {
-			this.removeElementToRender(element.name);
-		}
 	}
 }
 

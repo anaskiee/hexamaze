@@ -158,8 +158,8 @@ LevelCreator.prototype.randomize = function(blockPercent) {
 }
 
 LevelCreator.prototype.getRandomHexagon = function() {
-	var x = Math.floor(Math.random() * (this.nbColumns - 2)) + 1;
-	var y = Math.floor(Math.random() * (this.nbLines - 2)) + 1;
+	var x = Math.floor(Math.random() * this.nbColumns);
+	var y = Math.floor(Math.random() * this.nbLines);
 	return this.hexagons[y][x];
 }
 

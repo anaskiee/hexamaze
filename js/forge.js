@@ -2,9 +2,8 @@
 
 function Forge(width, height, pixelMapper, graphicsEngine, developerConsole, level, 
 				levelCreator, forgeGUI) {
-	GameMode.call(this, "Forge");
-	this.width = width;
-	this.height = height;
+	var elemList = [developerConsole, forgeGUI, graphicsEngine];
+	GameMode.call(this, "Forge", width, height, elemList);
 
 	this.pixelMapper = pixelMapper;
 	this.graphicsEngine = graphicsEngine;
@@ -12,12 +11,6 @@ function Forge(width, height, pixelMapper, graphicsEngine, developerConsole, lev
 	this.level = level;
 	this.levelCreator = levelCreator;
 	this.forgeGUI = forgeGUI;
-	this.commands = null;
-
-	// 0 -> DeveloperConsole
-	// 1 -> ForgeGUI
-	// 2 -> GraphicsEngine
-	this.elementsToRender = new Array(3);
 
 	this.forgeGuiWidth = -1;
 	this.forgeGuiHeight = -1;
@@ -63,18 +56,6 @@ Forge.prototype.setGraphicsEngineDrawingRect = function() {
 Forge.prototype.stopModule = function() {
 }
 
-Forge.prototype.computeNewFrameAndDraw = function(date) {
-	// Check if some elements doesn't need to be processed
-	this.checkStateTransition();
-
-	// Render
-	for (var element of this.elementsToRender) {
-		if (element) {
-			element.draw(date);
-		}
-	}
-}
-
 Forge.prototype.setCommandsPrototypeChain = function(commands) {
 	this.commands = Object.create(commands);
 	this.commands.add_line_first = this.addLineFirst.bind(this);
@@ -117,56 +98,6 @@ Forge.prototype.handleKey = function(keyCode) {
 }
 
 Forge.prototype.handleWorkerMessage = function(msg) {
-}
-
-// +----------------------+
-// |   States managment   |
-// +----------------------+
-
-Forge.prototype.removeElementToRender = function(name) {
-	switch (name) {
-		case "DeveloperConsole":
-			this.elementsToRender[0] = null;
-			break;
-		case "ForgeGUI":
-			this.elementsToRender[1] = null;
-			break;
-		case "GraphicsEngine":
-			this.elementsToRender[2] = null;
-			break;
-	}
-	for (var elem of this.elementsToRender) {
-		if (elem != null) {
-			elem.offContextDraw();
-		}
-	}
-}
-
-Forge.prototype.addElementToRender = function(name) {
-	switch (name) {
-		case "DeveloperConsole":
-			this.elementsToRender[0] = this.developerConsole;
-			break;
-		case "ForgeGUI":
-			this.elementsToRender[1] = this.forgeGUI;
-			break;
-		case "GraphicsEngine":
-			this.elementsToRender[2] = this.graphicsEngine;
-			break;
-	}
-	for (var elem of this.elementsToRender) {
-		if (elem != null) {
-			elem.offContextDraw();
-		}
-	}
-}
-
-Forge.prototype.checkStateTransition = function() {
-	for (var element of this.elementsToRender) {
-		if (element && element.active == 0) {
-			this.removeElementToRender(element.name);
-		}
-	}
 }
 
 // +-------------------------+
@@ -228,7 +159,7 @@ Forge.prototype.onTestItClick = function(cmdSender) {
 	if (this.mode == "edit") {
 		this.mode = "test";
 		this.graphicsEngine.setEventMode("game");
-		cmdSender.setText("Back to edit");
+		cmdSender.setText("Edit");
 		this.levelCreator.save();
 	} else {
 		this.mode = "edit";
