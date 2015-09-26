@@ -186,6 +186,7 @@ Forge.prototype.import = function() {
 		this.levelCreator.fillEditingStructure();
 		this.graphicsEngine.computeGraphicsData();
 		this.addElementToRender("GraphicsEngine");
+		this.ComputeAndDisplaySolution();
 	}
 }
 
