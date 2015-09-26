@@ -20,6 +20,7 @@ function Hexagon(type)
 	// To avoid ton of calculation for each frame
 	this.x = -1;
 	this.y = -1;
+	this.offContextColor = null;
 }
 
 Hexagon.prototype.handleClick = function(x, y) {

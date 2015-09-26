@@ -12,6 +12,9 @@ function Home(width, height, pixelMapper, developerConsole, mainMenu) {
 Home.prototype = Object.create(GameMode.prototype);
 Home.prototype.constructor = Home;
 
+// +---------------------+
+// |   Basic functions   |
+// +---------------------+
 Home.prototype.startModule = function() {
 	this.mainMenu.setDrawingRect(0, 0, this.width, this.height);
 	var devConsHeight = Math.round(this.height/20);
@@ -28,6 +31,10 @@ Home.prototype.setCommandsPrototypeChain = function(commands) {
 	this.commands = Object.create(commands);
 }
 
+
+// +----------------------+
+// |   Events managment   |
+// +----------------------+
 Home.prototype.setKeyboardEventReceivers = function(event) {
 	if (this.elementsToRender[0] != null) {
 		event.setReceiver(this.developerConsole);

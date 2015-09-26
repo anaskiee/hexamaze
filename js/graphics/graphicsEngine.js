@@ -206,10 +206,13 @@ GraphicsEngine.prototype.offContextDraw = function() {
 		for (var hexagon of this.level.hexagons) {
 			x = hexagon.x;
 			y = hexagon.y;
-			color = this.pixelMapper.registerAndGetColor(hexagon);
+			if (hexagon.offContextColor == null) {
+				hexagon.offContextColor = this.pixelMapper.registerAndGetColor(hexagon);
+			}
 			this.offCtx.save();
 			this.offCtx.translate(Math.round(this.offsetX), Math.round(this.offsetY));
-			this.hexagonPatterns.offContextDraw(this.offCtx, x, y, color);
+			this.hexagonPatterns.offContextDraw(this.offCtx, x, y, 
+												hexagon.offContextColor);
 			this.offCtx.restore();
 		}
 	}
