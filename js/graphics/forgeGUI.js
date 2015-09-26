@@ -14,6 +14,8 @@ function ForgeGUI(context, offContext, pixelMapper) {
 	this.buttons.add(this.export);
 	this.buttons.add(this.testIt);
 
+	this.shortestPaths = new Text("");
+
 	// Buttons on the left
 	this.emptyHexagon = new PatternButton("select_empty_hexagon", pixelMapper);
 	this.fullHexagon = new PatternButton("select_full_hexagon", pixelMapper);
@@ -50,6 +52,7 @@ ForgeGUI.prototype.onDrawingRectSet = function() {
 	for (var textButton of this.buttons) {
 		textButton.setFontHeight(Math.round(this.height/20));
 	}
+	this.shortestPaths.setFontHeight(Math.round(this.height/30));
 
 	var radius = this.height/16;
 	this.hexagonPatterns = new HexagonPatterns(radius);
@@ -106,6 +109,9 @@ ForgeGUI.prototype.drawElement = function(date) {
 	this.import.draw(this.ctx, 1/16*this.width, 18/20*this.height);
 	this.export.draw(this.ctx, 1/16*this.width, 19/20*this.height);
 
+	// Level indicator
+	this.shortestPaths.draw(this.ctx, 4/16*this.width, 19/20*this.height);
+
 	this.emptyHexagon.draw(this.ctx, 1/16*this.width, 3/32*this.height);
 	this.fullHexagon.draw(this.ctx, 1/16*this.width, 8/32*this.height);
 	this.voidHexagon.draw(this.ctx, 1/16*this.width, 13/32*this.height);
@@ -153,4 +159,8 @@ ForgeGUI.prototype.offContextDraw = function() {
 	
 	this.addLineLast.offContextDraw(this.offCtx, 8/16*this.width, 15/16*this.height);
 	this.rmLastLine.offContextDraw(this.offCtx, 10/16*this.width, 15/16*this.height);
+}
+
+ForgeGUI.prototype.setIndicatorText = function(text) {
+	this.shortestPaths.setText(text);
 }

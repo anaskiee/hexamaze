@@ -16,8 +16,6 @@ LevelSolver.prototype.getMin = function() {
 }
 
 LevelSolver.prototype.highlightSolution = function() {
-	this.solve();
-	
 	if (this.solution == "undefined") {
 		// no solution
 		return;
@@ -64,7 +62,59 @@ LevelSolver.prototype.solve = function() {
 			}
 		}
 	}
-	return "undefined";
+	this.solution = "undefined";
+}
+
+LevelSolver.prototype.computeShortestPaths = function() {
+	var characterHexagon = this.level.characterHexagon;
+	var exitHexagon = this.level.exitHexagon;
+	if (characterHexagon == null || exitHexagon == null) {
+		return "undefined";
+	}
+	if (characterHexagon == exitHexagon) {
+		return {length: 0, nb: 1};
+	}
+
+	var directions = ["top", "topLeft", "topRight", "bot", "botRight", "botLeft"];
+	var toExplore = [characterHexagon];
+	this.depths = new Map();
+	var shortestPathNumber = 0;
+	var minDepth = -1;
+	this.depths.set(characterHexagon, 0);
+	
+	while (toExplore.length > 0) {
+		var hexagon = toExplore.shift();
+		var depth = this.depths.get(hexagon);
+		
+		// All shortest paths found
+		if (shortestPathNumber > 0 && depth > minDepth + 1) {
+			continue;
+		}
+
+		for (var direction of directions) {
+			var nextHexagon = this.computeNextHexagon(hexagon, direction);
+
+			// We push the hexagons already seen at the same depth
+			// nb : some computations are not necessary, we could just store a weight
+			if (!this.depths.has(nextHexagon) 
+				|| this.depths.get(nextHexagon) == depth + 1) {
+				this.depths.set(nextHexagon, depth + 1);
+				if (nextHexagon == exitHexagon) {
+					if (shortestPathNumber == 0) {
+						minDepth = depth + 1;
+					}
+					shortestPathNumber++;
+				}
+				toExplore.push(nextHexagon);
+			}
+		}
+	}
+
+	if (shortestPathNumber > 0) {
+		return {length: minDepth, nb: shortestPathNumber};
+	} else {
+		return "undefined";
+	}
 }
 
 LevelSolver.prototype.computeNextHexagon = function(hexagon, direction) {

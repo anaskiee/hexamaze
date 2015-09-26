@@ -257,7 +257,8 @@ Forge.prototype.onHexagonClick = function(cmdSender) {
 }
 
 Forge.prototype.ComputeAndDisplaySolution = function() {
-	this.levelSolver.cleanMap();
-	this.levelSolver.solve();
-	this.levelSolver.highlightSolution();
+	var shortestPaths = this.levelSolver.computeShortestPaths();
+	var text = "Shortest path length: " + shortestPaths.length + "\n";
+	text += "Number of way:" + shortestPaths.nb;
+	this.forgeGUI.setIndicatorText(text);
 }
