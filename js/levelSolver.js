@@ -113,7 +113,7 @@ LevelSolver.prototype.computeShortestPaths = function() {
 	if (shortestPathNumber > 0) {
 		return {length: minDepth, nb: shortestPathNumber};
 	} else {
-		return "undefined";
+		return {length: "undefined", nb: "undefined"};
 	}
 }
 
