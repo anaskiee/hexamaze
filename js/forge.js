@@ -177,7 +177,11 @@ Forge.prototype.onTestItClick = function(cmdSender) {
 }
 
 Forge.prototype.import = function() {
-	var level = window.prompt("enter the map previously exported");
+	var levelB64 =  window.prompt("enter the map previously exported");
+	var level = LZString.decompressFromEncodedURIComponent(levelB64);
+	if (!level) {
+		level = levelB64;
+	}
 	if (level) {
 		this.removeElementToRender("GraphicsEngine");
 		this.level.clearData();
@@ -197,14 +201,18 @@ Forge.prototype.export = function() {
 		alert("export not allowed while testing");
 	} else {
 		var levelString = this.level.toString();
-		if (levelString.length > 10000) {
+		var levelB64 = LZString.compressToEncodedURIComponent(levelString);
+		// Alert can contain 10 000 characters but
+		// display is not correct for lines with more than 3000 characters
+		if (levelB64.length > 3000) {
 			var text = "your level is too big to be exported in this pop-up,";
 			text += "but you can find it in the console instead ;)";
-			text += " (if you don't see it, click export again)";
+			text += " (if you don't see it, click export again)\n";
+			text += "/!\\ Check that the string does not finish with [...]"
 			alert(text);
-			console.log(levelString);
+			console.log(levelB64);
 		} else {
-			alert(levelString);
+			alert(levelB64 + "\r\n");
 		}
 	}
 }
