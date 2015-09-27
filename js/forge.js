@@ -196,7 +196,16 @@ Forge.prototype.export = function() {
 	} else if (this.mode == "test") {
 		alert("export not allowed while testing");
 	} else {
-		alert(this.level.toString());
+		var levelString = this.level.toString();
+		if (levelString.length > 10000) {
+			var text = "your level is too big to be exported in this pop-up,";
+			text += "but you can find it in the console instead ;)";
+			text += " (if you don't see it, click export again)";
+			alert(text);
+			console.log(levelString);
+		} else {
+			alert(levelString);
+		}
 	}
 }
 
@@ -260,6 +269,6 @@ Forge.prototype.onHexagonClick = function(cmdSender) {
 Forge.prototype.ComputeAndDisplaySolution = function() {
 	var shortestPaths = this.levelSolver.computeShortestPaths();
 	var text = "Shortest path length: " + shortestPaths.length + "\n";
-	text += "Number of way:" + shortestPaths.nb;
+	text += "Number of way: " + shortestPaths.nb;
 	this.forgeGUI.setIndicatorText(text);
 }
