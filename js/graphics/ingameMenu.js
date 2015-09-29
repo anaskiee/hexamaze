@@ -22,7 +22,7 @@ function IngameMenu(context, offContext, pixelMapper) {
 	this.active = false;
 	this.blockEventsSpread = true;
 
-	this.playAgin = new TextButton("Play\nagain", "new_level", pixelMapper);
+	this.playAgin = new TextButton("Back to home", "goto_home", pixelMapper);
 	this.previousElement = null;
 }
 

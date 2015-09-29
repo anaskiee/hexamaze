@@ -32,7 +32,7 @@ Game.prototype.startModule = function(level) {
 	
 	// Load this one
 	if (level) {
-		this.loadMap(level);
+		this.loadMap(this.decompressLevel(level));
 		this.mapComputed();
 
 	// Call the worker to generate one

@@ -75,3 +75,11 @@ GameMode.prototype.eventsContextDraw = function() {
 		}
 	}
 }
+
+GameMode.prototype.decompressLevel = function(level) {
+	var res = LZString.decompressFromEncodedURIComponent(level);
+	if (!res) {
+		res = level;
+	}
+	return res;
+}
