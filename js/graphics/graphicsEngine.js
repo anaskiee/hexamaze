@@ -230,24 +230,24 @@ GraphicsEngine.prototype.updateCharacterCoordinates = function() {
 }
 
 GraphicsEngine.prototype.computeDirection = function(x, y) {
-	var theta = Math.atan((y - this.charY) / (x - this.charX));
-	if (x - this.charX < 0) {
-		theta += Math.PI;
-	}
-
-	var side = (theta / (Math.PI/3) + 6) % 6 ;
-	if (side < 1) {
-		return "botRight";
-	} else if (side < 2) {
-		return "bot";
-	} else if (side < 3) {
-		return "botLeft";
-	} else if (side < 4) {
-		return "topLeft";
-	} else if (side < 5) {
-		return "top";
+	var X = x - this.charX;
+	var Y = y - this.charY;
+	if (Y < 0) {
+		if (Y*Y > 3*X*X) {
+			return "top";
+		} else if (X > 0) {
+			return "topRight";
+		} else {
+			return "topLeft";
+		}
 	} else {
-		return "topRight";
+		if (Y*Y > 3*X*X) {
+			return "bot";
+		} else if (X > 0) {
+			return "botRight";
+		} else {
+			return "botLeft";
+		}
 	}
 }
 
