@@ -57,9 +57,9 @@ DeveloperConsole.prototype.hide = function() {
 DeveloperConsole.prototype.handleKey = function(code) {
 	if (32 <= code && code <= 124) {
 		this.text += String.fromCharCode(code);
-	} else if (code === 8) {
+	} else if (code == 8) {
 		this.text = this.text.slice(0, -1);
-	} else if (code === 13) {
+	} else if (code == 13) {
 		var copy = this.text;
 		this.text = "";
 		return copy;

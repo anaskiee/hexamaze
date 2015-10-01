@@ -1,6 +1,6 @@
 "use strict";
 
-window.addEventListener('DOMContentLoaded', function() {
+window.addEventListener('load', function() {
 
 	screen.mozlockOrientation = "landscape-secondary";
 

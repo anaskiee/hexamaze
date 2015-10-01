@@ -8,6 +8,7 @@ function GraphicalElement(name, pixelMapper) {
 	this.maxWidth = 0;
 	this.maxHeight = 0;
 
+	this.animationRunning = false;
 	this.offContextColor = null;
 }
 

@@ -33,8 +33,11 @@ Master.prototype.setCommandsPrototypeChain = function(commands) {
 Master.prototype.draw = function() {
 	var date = new Date();
 
+	var eventNb = this.events.length;
 	this.applyEvents();
-	this.module.computeNewFrameAndDraw(date);
+	if (eventNb > 0 || this.module.isAnimationRunning()) {
+		this.module.computeNewFrameAndDraw(date);
+	}
 	
 	requestAnimationFrame(this.draw.bind(this));
 }
@@ -63,7 +66,7 @@ Master.prototype.pushMouseMoveEvent = function(event) {
 
 	// If both are null, nothing will be triggered
 	// Else, at least something will be, and previous must be updated
-	if (this.previousMouseMoveElement != null || elem != null) {
+	if (this.previousMouseMoveElement || elem) {
 		this.events.push(event);
 		this.previousMouseMoveElement = elem;
 	}

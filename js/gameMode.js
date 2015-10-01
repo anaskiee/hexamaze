@@ -83,3 +83,12 @@ GameMode.prototype.decompressLevel = function(level) {
 	}
 	return res;
 }
+
+GameMode.prototype.isAnimationRunning = function() {
+	for (var elem of this.elementsToRender) {
+		if (elem && elem.animationRunning) {
+			return true;
+		}
+	}
+	return false;
+}

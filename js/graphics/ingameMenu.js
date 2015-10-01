@@ -16,7 +16,6 @@ function IngameMenu(context, offContext, pixelMapper) {
 	this.initialWidth = -1;
 
 	this.beginning = -1;
-	this.animationRunning = false;
 	this.animationDuration = 300;
 	this.animation = "";
 	this.active = false;

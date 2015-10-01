@@ -10,6 +10,9 @@ function EventHandler(canvas, master, worker) {
 	canvas.addEventListener("click", this.handleClick.bind(this), false);
 	
 	worker.addEventListener("message", this.handleMessage.bind(this), false);
+
+	// Send fake event to trigger first draw
+	this.handleKey({charCode: 0, keyCode: 0});
 }
 
 // Functions to catch events in order to apply them asynchronously
