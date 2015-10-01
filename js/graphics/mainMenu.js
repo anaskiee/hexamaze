@@ -14,6 +14,7 @@ function MainMenu(context, offContext, pixelMapper) {
 	this.levels = new Text("levels");
 	this.warmup = new TextButton("Warm-up", "level warmup", pixelMapper);
 	this.spaceship = new TextButton("Spaceship", "level spaceship", pixelMapper);
+	this.highway = new TextButton("Highway", "level highway", pixelMapper);
 	this.hopeless = new TextButton("Hopeless", "level hopeless", pixelMapper);
 
 	this.texts = new Map();
@@ -25,7 +26,8 @@ function MainMenu(context, offContext, pixelMapper) {
 	
 	this.buttons.set(this.warmup, {x: 7/8, y: 19/30});
 	this.buttons.set(this.spaceship, {x: 7/8, y: 21/30});
-	this.buttons.set(this.hopeless, {x: 7/8, y: 23/30});
+	this.buttons.set(this.highway, {x: 7/8, y: 23/30});
+	this.buttons.set(this.hopeless, {x: 7/8, y: 25/30});
 
 }
 
@@ -41,6 +43,7 @@ MainMenu.prototype.onDrawingRectSet = function() {
 	this.levels.setFontHeight(Math.round(this.height/15));
 	this.warmup.setFontHeight(Math.round(this.height/15));
 	this.spaceship.setFontHeight(Math.round(this.height/15));
+	this.highway.setFontHeight(Math.round(this.height/15));
 	this.hopeless.setFontHeight(Math.round(this.height/15));
 }
 
