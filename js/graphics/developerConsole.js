@@ -12,6 +12,7 @@ function DeveloperConsole(context, offContext, pixelMapper) {
 	this.focus = false;
 
 	this.text = "";
+	this.animationRunning = true;
 }
 
 DeveloperConsole.prototype = Object.create(GraphicalElement.prototype);
