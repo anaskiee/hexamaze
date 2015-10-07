@@ -31,7 +31,7 @@ Master.prototype.setCommandsPrototypeChain = function(commands) {
 }
 
 Master.prototype.draw = function() {
-	var date = new Date();
+	var date = Date.now();
 
 	var eventNb = this.events.length;
 	this.applyEvents();

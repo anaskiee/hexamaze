@@ -49,15 +49,15 @@ GameMode.prototype.addElementToRender = function(name) {
 // +-----------------+
 
 GameMode.prototype.computeNewFrameAndDraw = function(date) {
-	// Check if some elements doesn't need to be processed
-	this.checkStateTransition();
-
 	// Render
 	for (var element of this.elementsToRender) {
 		if (element) {
 			element.draw(date);
 		}
 	}
+
+	// Check if some elements doesn't need to be processed
+	this.checkStateTransition();
 }
 
 GameMode.prototype.checkStateTransition = function() {
