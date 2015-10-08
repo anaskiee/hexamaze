@@ -21,7 +21,6 @@ Home.prototype.startModule = function() {
 	this.developerConsole.setDrawingRect(0, this.height - devConsHeight, 
 											this.width, devConsHeight);
 	this.addElementToRender("MainMenu");
-	this.showConsole();
 }
 
 Home.prototype.stopModule = function() {
@@ -36,12 +35,18 @@ Home.prototype.setCommandsPrototypeChain = function(commands) {
 // |   Events managment   |
 // +----------------------+
 Home.prototype.setKeyboardEventReceivers = function(event) {
-	if (this.elementsToRender[0] != null) {
+	var consoleVisible = this.elementsToRender[0] != null;
+	if (consoleVisible) {
 		event.setReceiver(this.developerConsole);
 		event.setResultReceiver(this);
 	} else {
-		event.setReceiver(null);
-		event.setResultReceiver(null);
+		event.setReceiver(this);
+	}
+}
+
+Home.prototype.handleKey = function(keyCode) {
+	if (keyCode == 13) {
+		this.showConsole();
 	}
 }
 
@@ -53,4 +58,10 @@ Home.prototype.showConsole = function() {
 	this.mainMenu.adjustDrawingRect(0, 0, 0, -this.developerConsole.maxHeight);
 	this.addElementToRender("DeveloperConsole");
 	this.developerConsole.show();
+}
+
+Home.prototype.hideConsole = function() {
+	this.mainMenu.adjustDrawingRect(0, 0, 0, this.developerConsole.maxHeight);
+	this.removeElementToRender("DeveloperConsole");
+	this.developerConsole.hide();
 }

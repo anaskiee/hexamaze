@@ -12,7 +12,8 @@ KeyEvent.prototype.execute = function() {
 	if (this.receiver != null) {
 		var result = this.receiver.handleKey(this.keyCode);
 
-		if (result) {
+		// Nothing returned
+		if (result != undefined) {
 			this.handleResult(result);
 		}
 	}

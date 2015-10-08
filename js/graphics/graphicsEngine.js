@@ -31,7 +31,7 @@ GraphicsEngine.prototype.onDrawingRectSet = function() {
 	this.width = this.maxWidth;
 	this.height = this.maxHeight;
 
-	if (this.level.hexagons.length > 0) {
+	if (this.level.hexagons.size > 0) {
 		this.computeGraphicsData();
 	}
 }

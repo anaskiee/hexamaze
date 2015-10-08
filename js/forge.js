@@ -38,7 +38,6 @@ Forge.prototype.startModule = function() {
 	var devConsHeight = Math.round(this.height/20);
 	this.developerConsole.setDrawingRect(0, this.height - devConsHeight, 
 											this.width, devConsHeight);
-	this.showConsole();
 	this.levelCreator.createEditingLevel(4, 4);
 	this.graphicsEngine.computeGraphicsData();
 	this.addElementToRender("ForgeGUI");
@@ -88,19 +87,19 @@ Forge.prototype.setMessageEventReceivers = function(event) {
 }
 
 Forge.prototype.setKeyboardEventReceivers = function(event) {
-	if (this.elementsToRender[0] != null) {
+	var consoleVisible = this.elementsToRender[0] != null;
+	if (consoleVisible) {
 		event.setReceiver(this.developerConsole);
 		event.setResultReceiver(this);
 	} else {
-		event.setReceiver(null);
-		event.setResultReceiver(null);
+		event.setReceiver(this);
 	}
 }
 
 Forge.prototype.handleKey = function(keyCode) {
-}
-
-Forge.prototype.handleWorkerMessage = function(msg) {
+	if (keyCode == 13) {
+		this.showConsole();
+	}
 }
 
 // +-------------------------+
@@ -117,6 +116,14 @@ Forge.prototype.showConsole = function() {
 	this.setGraphicsEngineDrawingRect();
 	this.addElementToRender("DeveloperConsole");
 	this.developerConsole.show();
+}
+
+Forge.prototype.hideConsole = function() {
+	this.forgeGuiHeight += this.developerConsole.maxHeight;
+	this.forgeGUI.adjustDrawingRect(0, 0, 0, this.developerConsole.maxHeight);
+	this.setGraphicsEngineDrawingRect();
+	this.removeElementToRender("DeveloperConsole");
+	this.developerConsole.hide();
 }
 
 Forge.prototype.editLevel = function(operation) {

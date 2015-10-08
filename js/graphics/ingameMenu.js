@@ -14,6 +14,9 @@ function IngameMenu(context, offContext, pixelMapper) {
 	this.initialOffsetX = -1;
 	this.initialOffsetY = -1;
 	this.initialWidth = -1;
+	this.posX = -1;
+	this.posY = -1;
+	this.menuWidth = -1;
 
 	this.beginning = -1;
 	this.animationDuration = 300;
@@ -43,10 +46,12 @@ IngameMenu.prototype.onDrawingRectSet = function() {
 		width : 0.7*this.width};
 
 	// Menu characteristics
-	this.posX = this.maxWidth/4;
-	this.posY = -0.97*this.height;
-	this.menuWidth = 0;
-	
+	if (this.posX == -1) {
+		this.posX = this.maxWidth/4;
+		this.posY = -this.height;
+		this.menuWidth = 0;
+	}
+
 	// Buttons
 	this.playAgin.setFontHeight(Math.round(this.height/8));
 	this.text.setFontHeight(Math.round(this.height/10));

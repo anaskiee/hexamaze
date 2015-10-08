@@ -12,6 +12,10 @@ function GameMode(name, width, height, elementsList) {
 }
 
 GameMode.prototype.handleEventResult = function(eventReceiver, res) {
+	if (eventReceiver.name == "DeveloperConsole") {
+		this.hideConsole();
+	}
+	
 	var mainCommand = res.split(" ")[0];
 	if (this.commands[mainCommand]) {
 		this.commands[mainCommand](eventReceiver, res);

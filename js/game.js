@@ -28,7 +28,6 @@ Game.prototype.startModule = function(level) {
 											this.width, devConsHeight);
 	this.graphicsEngine.setEventMode("game");
 	this.expandMenu();
-	this.showConsole();
 	
 	// Load this one
 	if (level) {
@@ -67,18 +66,20 @@ Game.prototype.setKeyboardEventReceivers = function(event) {
 		return;
 	}
 
-	if (this.elementsToRender[0] != null) {
+	var consoleVisible = this.elementsToRender[0] != null;
+	if (consoleVisible) {
 		event.setReceiver(this.developerConsole);
 		event.setResultReceiver(this);
 	} else {
-		event.setReceiver(null);
-		event.setResultReceiver(null);
+		event.setReceiver(this);
 	}
 }
 
 Game.prototype.handleKey = function(keyCode) {
 	if (keyCode == 27) {
 		this.expandMenu();
+	} else if (keyCode == 13) {
+		this.showConsole();
 	}
 }
 
@@ -146,13 +147,16 @@ Game.prototype.updateComputingMenu = function(nbTries) {
 	this.ingameMenu.setText(text);
 }
 
-Game.prototype.hideConsole = function() {
-	this.developerConsole.hide();
-}
-
 Game.prototype.showConsole = function() {
 	this.graphicsEngine.adjustDrawingRect(0, 0, 0, -this.developerConsole.maxHeight);
 	this.ingameMenu.adjustDrawingRect(0, 0, 0, -this.developerConsole.maxHeight);
 	this.addElementToRender("DeveloperConsole");
 	this.developerConsole.show();
+}
+
+Game.prototype.hideConsole = function() {
+	this.graphicsEngine.adjustDrawingRect(0, 0, 0, this.developerConsole.maxHeight);
+	this.ingameMenu.adjustDrawingRect(0, 0, 0, this.developerConsole.maxHeight);
+	this.removeElementToRender("DeveloperConsole");
+	this.developerConsole.hide();
 }
