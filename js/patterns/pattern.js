@@ -34,6 +34,10 @@ Pattern.prototype.fillPath = function(ctx, pointsList, color) {
 		y0 = Math.round(curr.y);
 		x1 = Math.round(next.x);
 		y1 = Math.round(next.y);
+		if (isNaN(x0) || isNaN(y0) || isNaN(x1) || isNaN(y1)) {
+			console.log("Invalid path");
+			return;
+		}
 		
 		// Bresenham's line algorithm
 		dx = Math.abs(x1 - x0);

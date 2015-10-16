@@ -46,7 +46,6 @@ GraphicsEngine.prototype.computeGraphicsData = function() {
 	this.characterPatterns = new CharacterPatterns(characterHeight);
 	var exitHeight = 3/5*this.radius;
 	this.exitPatterns = new ExitPatterns(exitHeight);
-	this.plusMinusPatterns = new PlusMinusPatterns(this.radius);
 	
 	this.updateCharacterCoordinates();
 }
@@ -64,7 +63,6 @@ GraphicsEngine.prototype.computeMapSize = function(width, height) {
 	var hexagons = [];
 	var marks = new Map();
 	var hexagon = this.level.getAnHexagon();
-
 	if (!hexagon) {
 		console.log("empty level WTF !!");
 		return;
@@ -109,15 +107,23 @@ GraphicsEngine.prototype.computeMapSize = function(width, height) {
 	}
 
 	// Compute max dimensions
-	var minX = 0
-	var maxX = 0
-	var minY = 0
-	var maxY = 0;
-	for (var relPos of marks.values()) {
-		minX = Math.min(minX, relPos[0]);
-		maxX = Math.max(maxX, relPos[0]);
-		minY = Math.min(minY, relPos[1]);
-		maxY = Math.max(maxY, relPos[1]);
+	var minX, maxX, minY, maxY;
+	for (var mark of marks.entries()) {
+		var hex = mark[0];
+		var relPos = mark[1];
+		// In game mode, we do not want to draw void hexagons
+		// But in edit one, we do
+		if (this.mode == "game" && hex.type != "void" || this.mode == "forge") {
+			if (minX === undefined) {
+				minX = maxX = relPos[0];
+				minY = maxY = relPos[1];
+			} else {
+				minX = Math.min(minX, relPos[0]);
+				maxX = Math.max(maxX, relPos[0]);
+				minY = Math.min(minY, relPos[1]);
+				maxY = Math.max(maxY, relPos[1]);
+			}
+		}
 	}
 
 	// Compute hexagon radius by maximizing their size on screen
@@ -173,7 +179,7 @@ GraphicsEngine.prototype.drawElement = function(date) {
 	}
 
 	// Draw character and direction preselected
-	if (this.level.characterHexagon != null) {
+	if (this.level.characterHexagon !== null) {
 		posX = this.level.characterHexagon.x;
 		posY = this.level.characterHexagon.y;
 		this.characterPatterns.draw(this.ctx, "basic", posX, posY);
@@ -183,7 +189,7 @@ GraphicsEngine.prototype.drawElement = function(date) {
 	}
 
 	// Draw exit
-	if (this.level.exitHexagon != null) {
+	if (this.level.exitHexagon !== null) {
 		posX = this.level.exitHexagon.x;
 		posY = this.level.exitHexagon.y;
 		this.exitPatterns.draw(this.ctx, "basic", posX, posY);
@@ -192,7 +198,7 @@ GraphicsEngine.prototype.drawElement = function(date) {
 
 GraphicsEngine.prototype.offContextDraw = function() {
 	if (this.mode == "game") {
-		if (this.offContextColor == null) {
+		if (this.offContextColor === null) {
 			this.offContextColor = this.pixelMapper.registerAndGetColor(this);
 		}
 		this.offCtx.fillStyle = this.offContextColor;
@@ -201,12 +207,11 @@ GraphicsEngine.prototype.offContextDraw = function() {
 	} else if (this.mode == "forge") {
 		this.offCtx.clearRect(this.offsetX, this.offsetY, 
 								this.maxWidth, this.maxHeight);
-		var color;
 		var x, y;
 		for (var hexagon of this.level.hexagons) {
 			x = hexagon.x;
 			y = hexagon.y;
-			if (hexagon.offContextColor == null) {
+			if (hexagon.offContextColor === null) {
 				hexagon.offContextColor = this.pixelMapper.registerAndGetColor(hexagon);
 			}
 			this.offCtx.save();
@@ -220,7 +225,7 @@ GraphicsEngine.prototype.offContextDraw = function() {
 
 GraphicsEngine.prototype.updateCharacterCoordinates = function() {
 	var hexagon = this.level.characterHexagon;
-	if (hexagon != null) {
+	if (hexagon !== null) {
 		this.charX = this.offsetX + hexagon.x;
 		this.charY = this.offsetY + hexagon.y; 
 	} else {
@@ -266,6 +271,7 @@ GraphicsEngine.prototype.setEventMode = function(mode) {
 	} else {
 		console.log("Unknown mode: " + mode);
 	}
+	this.computeGraphicsData();
 }
 
 GraphicsEngine.prototype.handleCursorMove = function(x, y) {
