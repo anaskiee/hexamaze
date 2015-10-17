@@ -34,7 +34,7 @@ GraphicsEngine.prototype.onDrawingRectSet = function() {
 	if (this.level.hexagons.size > 0) {
 		this.computeGraphicsData();
 	}
-}
+};
 
 GraphicsEngine.prototype.computeGraphicsData = function() {
 	// Pre computation of each hexagons position for the drawing
@@ -48,7 +48,7 @@ GraphicsEngine.prototype.computeGraphicsData = function() {
 	this.exitPatterns = new ExitPatterns(exitHeight);
 	
 	this.updateCharacterCoordinates();
-}
+};
 
 /*GraphicsEngine.prototype.computeHexagonSize = function(screenWidth, screenHeight) {
 	var a = 2 / Math.sqrt(3) / (2*this.nbLines + 1) * screenHeight;
@@ -113,7 +113,7 @@ GraphicsEngine.prototype.computeMapSize = function(width, height) {
 		var relPos = mark[1];
 		// In game mode, we do not want to draw void hexagons
 		// But in edit one, we do
-		if (this.mode == "game" && hex.type != "void" || this.mode == "forge") {
+		if (this.mode === "game" && hex.type !== "void" || this.mode === "forge") {
 			if (minX === undefined) {
 				minX = maxX = relPos[0];
 				minY = maxY = relPos[1];
@@ -151,7 +151,7 @@ GraphicsEngine.prototype.computeMapSize = function(width, height) {
 	}
 
 	return radius;
-}
+};
 
 GraphicsEngine.prototype.drawElement = function(date) {
 	// Clean screen
@@ -172,7 +172,7 @@ GraphicsEngine.prototype.drawElement = function(date) {
 			this.hexagonPatterns.draw(this.ctx, "reachable", posX, posY);
 		} else {
 			// voids are not drawn in game mode
-			if (!(style == "void" && this.mode == "game")) {
+			if (!(style === "void" && this.mode === "game")) {
 				this.hexagonPatterns.draw(this.ctx, style, posX, posY);
 			}
 		}
@@ -194,17 +194,17 @@ GraphicsEngine.prototype.drawElement = function(date) {
 		posY = this.level.exitHexagon.y;
 		this.exitPatterns.draw(this.ctx, "basic", posX, posY);
 	}
-}
+};
 
 GraphicsEngine.prototype.offContextDraw = function() {
-	if (this.mode == "game") {
+	if (this.mode === "game") {
 		if (this.offContextColor === null) {
 			this.offContextColor = this.pixelMapper.registerAndGetColor(this);
 		}
 		this.offCtx.fillStyle = this.offContextColor;
 		this.offCtx.fillRect(this.offsetX, this.offsetY, 
 								this.maxWidth, this.maxHeight);
-	} else if (this.mode == "forge") {
+	} else if (this.mode === "forge") {
 		this.offCtx.clearRect(this.offsetX, this.offsetY, 
 								this.maxWidth, this.maxHeight);
 		var x, y;
@@ -221,7 +221,7 @@ GraphicsEngine.prototype.offContextDraw = function() {
 			this.offCtx.restore();
 		}
 	}
-}
+};
 
 GraphicsEngine.prototype.updateCharacterCoordinates = function() {
 	var hexagon = this.level.characterHexagon;
@@ -232,7 +232,7 @@ GraphicsEngine.prototype.updateCharacterCoordinates = function() {
 		this.charX = -1;
 		this.charY = -1;
 	}
-}
+};
 
 GraphicsEngine.prototype.computeDirection = function(x, y) {
 	var X = x - this.charX;
@@ -254,17 +254,17 @@ GraphicsEngine.prototype.computeDirection = function(x, y) {
 			return "botLeft";
 		}
 	}
-}
+};
 
 //   +--------------+
 //   |    Events    |
 //   +--------------+
 
 GraphicsEngine.prototype.setEventMode = function(mode) {
-	if (mode == "game") {
+	if (mode === "game") {
 		this.mode = "game";
 		this.updateCharacterCoordinates();
-	} else if (mode == "forge") {
+	} else if (mode === "forge") {
 		this.mode = "forge";
 		this.direction = null;
 		this.physicsEngine.cleanPreselectedHexagons();
@@ -272,19 +272,19 @@ GraphicsEngine.prototype.setEventMode = function(mode) {
 		console.log("Unknown mode: " + mode);
 	}
 	this.computeGraphicsData();
-}
+};
 
 GraphicsEngine.prototype.handleCursorMove = function(x, y) {
 	var direction = this.computeDirection(x, y);
-	if (direction != this.direction) {
+	if (direction !== this.direction) {
 		this.direction = direction;
 		this.physicsEngine.cleanPreselectedHexagons();
 		this.physicsEngine.computeHexagonsTowardsDirection(this.direction);
 	}
-}
+};
 
 GraphicsEngine.prototype.handleClick = function() {
 	var action = this.physicsEngine.applyMove(this.direction);
 	this.updateCharacterCoordinates();
 	return action;
-}
+};

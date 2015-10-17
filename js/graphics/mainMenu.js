@@ -7,7 +7,7 @@ function MainMenu(context, offContext, pixelMapper) {
 	this.offCtx = offContext;
 	this.pixelMapper = pixelMapper;
 
-	this.text = "Hexamaze"
+	this.text = "Hexamaze";
 
 	this.forge = new TextButton("Forge", "goto_forge", pixelMapper);
 	this.game = new TextButton("Play on\nrandom level", "goto_game", pixelMapper);
@@ -45,7 +45,7 @@ MainMenu.prototype.onDrawingRectSet = function() {
 	this.spaceship.setFontHeight(Math.round(this.height/15));
 	this.highway.setFontHeight(Math.round(this.height/15));
 	this.hopeless.setFontHeight(Math.round(this.height/15));
-}
+};
 
 MainMenu.prototype.drawElement = function(date) {
 	this.ctx.fillStyle = "#777777";
@@ -69,7 +69,7 @@ MainMenu.prototype.drawElement = function(date) {
 		var coor = text[1];
 		obj.draw(this.ctx, coor.x*this.width, coor.y*this.height);
 	}
-}
+};
 
 MainMenu.prototype.offContextDraw = function() {
 	this.offCtx.clearRect(this.offsetX, this.offsetY, this.maxWidth, this.maxHeight);
@@ -79,4 +79,4 @@ MainMenu.prototype.offContextDraw = function() {
 		var coor = text[1];
 		obj.offContextDraw(this.offCtx, coor.x*this.width, coor.y*this.height);
 	}
-}
+};

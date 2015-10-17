@@ -27,8 +27,8 @@ CharacterPatterns.prototype.preRenderDrawing = function(style) {
 	ctx.fill();
 
 	this.drawings.set(style, canvas);
-}
+};
 
 CharacterPatterns.prototype.offContextDraw = function(ctx, x, y, color) {
 	this.fillDisk(ctx, Math.round(x), Math.round(y), Math.round(this.size), color);
-}
+};

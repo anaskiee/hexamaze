@@ -8,15 +8,15 @@ function LevelSolver(level) {
 LevelSolver.prototype.getMin = function() {
 	this.solve();
 
-	if (this.solution == "undefined") {
+	if (this.solution === "undefined") {
 		return 9000;
 	}
 	var exitHexagon = this.level.exitHexagon;
 	return this.solution.get(exitHexagon).depth;
-}
+};
 
 LevelSolver.prototype.highlightSolution = function() {
-	if (this.solution == "undefined") {
+	if (this.solution === "undefined") {
 		// no solution
 		return;
 	}
@@ -24,21 +24,21 @@ LevelSolver.prototype.highlightSolution = function() {
 
 	var currHexagon = exitHexagon;
 	var nextHexagon, direction;
-	while (currHexagon != this.level.characterHexagon) {
-		nextHexagon = this.solution.get(currHexagon)
+	while (currHexagon !== this.level.characterHexagon) {
+		nextHexagon = this.solution.get(currHexagon);
 		nextHexagon = nextHexagon.prevHexagon;
 		direction = this.solution.get(currHexagon).direction;
-		while (currHexagon != nextHexagon) {
+		while (currHexagon !== nextHexagon) {
 			currHexagon.isPreselected = true;
 			currHexagon = currHexagon[direction];
 		}
 	} 
-}
+};
 
 LevelSolver.prototype.solve = function() {
 	var characterHexagon = this.level.characterHexagon;
 	var exitHexagon = this.level.exitHexagon;
-	if (characterHexagon == null || exitHexagon == null) {
+	if (characterHexagon === null || exitHexagon === null) {
 		return "undefined";
 	}
 
@@ -55,7 +55,7 @@ LevelSolver.prototype.solve = function() {
 			if (!this.solution.has(nextHexagon)) {
 				this.solution.set(nextHexagon, {prevHexagon : hexagon, depth : depth + 1, 
 											direction : oppositeDirection});
-				if (nextHexagon == this.level.exitHexagon) {
+				if (nextHexagon === this.level.exitHexagon) {
 					return this.solution;
 				}
 				toExplore.push(nextHexagon);
@@ -63,15 +63,15 @@ LevelSolver.prototype.solve = function() {
 		}
 	}
 	this.solution = "undefined";
-}
+};
 
 LevelSolver.prototype.computeShortestPaths = function() {
 	var characterHexagon = this.level.characterHexagon;
 	var exitHexagon = this.level.exitHexagon;
-	if (characterHexagon == null || exitHexagon == null) {
+	if (characterHexagon === null || exitHexagon === null) {
 		return "undefined";
 	}
-	if (characterHexagon == exitHexagon) {
+	if (characterHexagon === exitHexagon) {
 		return {length: 0, nb: 1};
 	}
 
@@ -97,10 +97,10 @@ LevelSolver.prototype.computeShortestPaths = function() {
 			// We push the hexagons already seen at the same depth
 			// nb : some computations are not necessary, we could just store a weight
 			if (!this.depths.has(nextHexagon) 
-				|| this.depths.get(nextHexagon) == depth + 1) {
+				|| this.depths.get(nextHexagon) === depth + 1) {
 				this.depths.set(nextHexagon, depth + 1);
-				if (nextHexagon == exitHexagon) {
-					if (shortestPathNumber == 0) {
+				if (nextHexagon === exitHexagon) {
+					if (shortestPathNumber === 0) {
 						minDepth = depth + 1;
 					}
 					shortestPathNumber++;
@@ -115,21 +115,21 @@ LevelSolver.prototype.computeShortestPaths = function() {
 	} else {
 		return {length: "undefined", nb: "undefined"};
 	}
-}
+};
 
 LevelSolver.prototype.computeNextHexagon = function(hexagon, direction) {
 	var currHexagon = hexagon;
 	var nextHexagon = currHexagon[direction];
-	while (nextHexagon != null && nextHexagon.type == "space" && currHexagon != this.level.exitHexagon) {
+	while (nextHexagon !== null && nextHexagon.type === "space" && currHexagon !== this.level.exitHexagon) {
 		currHexagon = nextHexagon;
 		nextHexagon = nextHexagon[direction];
 	}
 
 	return currHexagon;
-}
+};
 
 LevelSolver.prototype.cleanMap = function() {
 	for (var hexagon of this.level.hexagons) {
 		hexagon.isPreselected = false;
 	}
-}
+};

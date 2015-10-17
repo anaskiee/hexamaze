@@ -5,7 +5,7 @@ function Pattern() {
 }
 
 Pattern.prototype.draw = function(ctx, style, x, y) {
-	if (style == "selected") {
+	if (style === "selected") {
 		ctx.save();
 		ctx.translate(x - this.width/2 - 5, y - this.height/2 - 5);
 		ctx.strokeStyle = "#AAAAAA";
@@ -17,7 +17,7 @@ Pattern.prototype.draw = function(ctx, style, x, y) {
 		ctx.drawImage(this.drawings.get(style), x, y);
 		ctx.restore();
 	}
-}
+};
 
 // Method to draw path without anti-aliasing
 Pattern.prototype.fillPath = function(ctx, pointsList, color) {
@@ -47,7 +47,7 @@ Pattern.prototype.fillPath = function(ctx, pointsList, color) {
 		err = (dx > dy ? dx : -dy)/2;
 
 		while (true) {
-			if (x0 == x1 && y0 == y1)
+			if (x0 === x1 && y0 === y1)
 				break;
 			e2 = err;
 			if (e2 > -dx) { 
@@ -62,10 +62,10 @@ Pattern.prototype.fillPath = function(ctx, pointsList, color) {
 			}
 		}
 	}
-	ctx.closePath()
+	ctx.closePath();
 	ctx.fillStyle = color;
 	ctx.fill();
-}
+};
 
 // Method to draw disk without anti-aliasing
 Pattern.prototype.fillDisk = function(ctx, x0, y0, radius, color) {
@@ -102,7 +102,7 @@ Pattern.prototype.fillDisk = function(ctx, x0, y0, radius, color) {
 	ctx.closePath();
 	ctx.fillStyle = color;
 	ctx.fill();
-}
+};
 
 Pattern.prototype.addPoints = function(octants, x0, y0, x, y) {
 	octants[0].push({x: x0 + x, y: y0 + y});
@@ -113,4 +113,4 @@ Pattern.prototype.addPoints = function(octants, x0, y0, x, y) {
 	octants[5].unshift({x: x0 - y, y: y0 - x});
 	octants[6].push({x: x0 + y, y: y0 - x});
 	octants[7].unshift({x: x0 + x, y: y0 - y});
-}
+};

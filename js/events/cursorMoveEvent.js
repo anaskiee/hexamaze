@@ -15,15 +15,15 @@ CursorMoveEvent.prototype.execute = function() {
 		this.previousElement.onMouseOverEnd();
 	}
 	
-	if (this.receiver != null) {
+	if (this.receiver !== null) {
 		var result = this.receiver.handleCursorMove(this.x, this.y);
 
 		if (result) {
 			this.handleResult(result);
 		}
 	}
-}
+};
 
 CursorMoveEvent.prototype.setPreviousElement = function(elem) {
 	this.previousElement = elem;
-}
+};

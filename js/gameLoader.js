@@ -41,7 +41,7 @@ function GameLoader(canvas, context, offContext, parameters) {
 			help += commandName + "\n";
 		}
 		alert(help);
-	}
+	};
 	master.setCommandsPrototypeChain(commands);
 
 	master.start();

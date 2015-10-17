@@ -74,14 +74,14 @@ ForgeGUI.prototype.onDrawingRectSet = function() {
 	this.rmLastLine.setPatternAndStyle(this.plusMinusPatterns, "minus");
 	this.rmFirstColumn.setPatternAndStyle(this.plusMinusPatterns, "minus");
 	this.rmLastColumn.setPatternAndStyle(this.plusMinusPatterns, "minus");
-}
+};
 
 ForgeGUI.prototype.setRendererRect = function(x, y, width, height) {
 	this.rX = x;
 	this.rY = y;
 	this.rWidth = width;
 	this.rHeight = height;
-}
+};
 
 ForgeGUI.prototype.drawElement = function(date) {
 	// Clean screen
@@ -130,7 +130,7 @@ ForgeGUI.prototype.drawElement = function(date) {
 	
 	this.addLineLast.draw(this.ctx, 8/16*this.width, 15/16*this.height);
 	this.rmLastLine.draw(this.ctx, 10/16*this.width, 15/16*this.height);
-}
+};
 
 ForgeGUI.prototype.offContextDraw = function() {
 	// We do not want to catch mouse events at the moment
@@ -159,8 +159,8 @@ ForgeGUI.prototype.offContextDraw = function() {
 	
 	this.addLineLast.offContextDraw(this.offCtx, 8/16*this.width, 15/16*this.height);
 	this.rmLastLine.offContextDraw(this.offCtx, 10/16*this.width, 15/16*this.height);
-}
+};
 
 ForgeGUI.prototype.setIndicatorText = function(text) {
 	this.shortestPaths.setText(text);
-}
+};

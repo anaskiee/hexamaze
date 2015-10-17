@@ -26,7 +26,7 @@ PlusMinusPatterns.prototype.preRenderDrawing = function(style) {
 	ctx.beginPath();
 	for (var i = 0; i <= 8; i++) {
 		var theta = -Math.PI/2 + i/8 * 2*Math.PI;
-		if (i == 0) {
+		if (i === 0) {
 			ctx.moveTo(this.radius*Math.cos(theta), this.radius*Math.sin(theta));
 		} else {
 			ctx.lineTo(this.radius*Math.cos(theta), this.radius*Math.sin(theta));
@@ -77,7 +77,7 @@ PlusMinusPatterns.prototype.preRenderDrawing = function(style) {
 	}
 
 	this.drawings.set(style, canvas);
-}
+};
 
 PlusMinusPatterns.prototype.offContextDraw = function(ctx, x, y, color) {
 	var points = [];
@@ -88,4 +88,4 @@ PlusMinusPatterns.prototype.offContextDraw = function(ctx, x, y, color) {
 		points.push(p);
 	}
 	this.fillPath(ctx, points, color);
-}
+};

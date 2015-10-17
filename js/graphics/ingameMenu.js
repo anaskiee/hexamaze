@@ -46,7 +46,7 @@ IngameMenu.prototype.onDrawingRectSet = function() {
 		width : 0.7*this.width};
 
 	// Menu characteristics
-	if (this.posX == -1) {
+	if (this.posX === -1) {
 		this.posX = this.maxWidth/4;
 		this.posY = -this.height;
 		this.menuWidth = 0;
@@ -55,22 +55,22 @@ IngameMenu.prototype.onDrawingRectSet = function() {
 	// Buttons
 	this.playAgin.setFontHeight(Math.round(this.height/8));
 	this.text.setFontHeight(Math.round(this.height/10));
-}
+};
 
 IngameMenu.prototype.reduce = function(date) {
 	this.animation = "reduce";
 	this.initAnimation(date);
 	this.playAgin.disable();
-}
+};
 
 IngameMenu.prototype.expand = function(date) {
 	this.animation = "expand";
 	this.initAnimation(date);
-}
+};
 
 IngameMenu.prototype.setText = function(text) {
 	this.text.setText(text);
-}
+};
 
 IngameMenu.prototype.initAnimation = function(date) {
 	this.beginning = date;
@@ -80,7 +80,7 @@ IngameMenu.prototype.initAnimation = function(date) {
 	this.initialOffsetX = this.posX;
 	this.initialOffsetY = this.posY;
 	this.initialWidth = this.menuWidth;
-}
+};
 
 IngameMenu.prototype.computeMenuCharacteristics = function(factor) {
 	var dim = this.metrology[this.animation];
@@ -106,7 +106,7 @@ IngameMenu.prototype.computeMenuCharacteristics = function(factor) {
 			}
 			break;
 	}
-}
+};
 
 IngameMenu.prototype.drawElement = function(date) {
 	var factor;
@@ -118,10 +118,10 @@ IngameMenu.prototype.drawElement = function(date) {
 		if (factor > 2) {
 			factor = 2;
 			this.animationRunning = false;
-			if (this.animation == "reduce") {
+			if (this.animation === "reduce") {
 				this.active = false;
 			// At the end of expand animation, we draw buttons on offContext once
-			} else if (this.animation == "expand") {
+			} else if (this.animation === "expand") {
 				drawOffContext = true;
 			}
 		}
@@ -152,12 +152,12 @@ IngameMenu.prototype.drawElement = function(date) {
 	this.playAgin.draw(this.ctx, 0, this.height/6);
 
 	this.ctx.restore();
-}
+};
 
 IngameMenu.prototype.offContextDraw = function() {
 	// We do not want to catch events except buttons, but they are drawn after
 	this.offCtx.clearRect(this.offsetX, this.offsetY, this.maxWidth, this.maxHeight);
-}
+};
 
 IngameMenu.prototype.drawDistortedHexagon = function(ctx, l, h, x, color) {
 	ctx.beginPath();
@@ -170,11 +170,11 @@ IngameMenu.prototype.drawDistortedHexagon = function(ctx, l, h, x, color) {
 	ctx.closePath();
 	ctx.fillStyle = color;
 	ctx.fill();
-}
+};
 
 IngameMenu.prototype.cleanCanvas = function() {
 	this.ctx.clearRect(0, 0, this.width, this.height);
-}
+};
 
 //   +--------------+
 //   |    Events    |
@@ -189,11 +189,11 @@ IngameMenu.prototype.handleCursorMove = function(x, y) {
 		element.mouseOver = true;
 		this.previousElement = element;
 	}
-}
+};
 
 IngameMenu.prototype.handleClick = function(x, y) {
 	var element = this.pixelMapper.getElement(x, y);
 	if (element) {
 		return element.action;
 	}
-}
+};

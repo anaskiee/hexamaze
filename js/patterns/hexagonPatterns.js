@@ -24,25 +24,25 @@ HexagonPatterns.prototype.constructor = HexagonPatterns;
 
 HexagonPatterns.prototype.computeDirectionAngles = function(direction) {
 	var i;
-	if (direction == "botRight") {
+	if (direction === "botRight") {
 		i = 0;
-	} else if (direction == "bot") {
+	} else if (direction === "bot") {
 		i = 1;
-	} else if (direction == "botLeft") {
-		i = 2
-	} else if (direction == "topLeft") {
-		i = 3
-	} else if (direction == "top") {
-		i = 4
+	} else if (direction === "botLeft") {
+		i = 2;
+	} else if (direction === "topLeft") {
+		i = 3;
+	} else if (direction === "top") {
+		i = 4;
 	} else {
-		i = 5
+		i = 5;
 	}
 
 	var alpha = i * Math.PI/3;
 	var beta = (i+1) * Math.PI/3;
 
 	return {"alpha" : alpha, "beta" : beta};
-}
+};
 
 HexagonPatterns.prototype.drawHexagonPath = function(context) {
 	context.beginPath();
@@ -52,7 +52,7 @@ HexagonPatterns.prototype.drawHexagonPath = function(context) {
 						Math.floor(this.radius * Math.sin(theta)) + 0.5);
 	}
 	context.closePath();
-}
+};
 
 HexagonPatterns.prototype.drawThickHexagon = function(context, factorInt, factorExt) {
 	context.beginPath();
@@ -70,12 +70,12 @@ HexagonPatterns.prototype.drawThickHexagon = function(context, factorInt, factor
 	context.closePath();
 	context.fillStyle = "#00AAAA";
 	context.fill();
-}
+};
 
 HexagonPatterns.prototype.drawDirectionIndicator = function(context, advancedStyle) {
 	var angles = this.computeDirectionAngles(advancedStyle);
-	var alpha = angles["alpha"];
-	var beta = angles["beta"];
+	var alpha = angles.alpha;
+	var beta = angles.beta;
 
 	context.beginPath();
 	context.moveTo(0.9*this.radius * Math.cos(alpha), 0.9*this.radius * Math.sin(alpha));
@@ -85,7 +85,7 @@ HexagonPatterns.prototype.drawDirectionIndicator = function(context, advancedSty
 	context.closePath();
 	context.fillStyle = "#AAAAAA";
 	context.fill();
-}
+};
 
 HexagonPatterns.prototype.preRenderDrawing = function(style) {
 	// Off screen canvas
@@ -136,7 +136,7 @@ HexagonPatterns.prototype.preRenderDrawing = function(style) {
 	}
 
 	this.drawings.set(style, canvas);
-}
+};
 
 HexagonPatterns.prototype.offContextDraw = function(offCtx, x, y, color) {
 	var l =[];
@@ -146,4 +146,4 @@ HexagonPatterns.prototype.offContextDraw = function(offCtx, x, y, color) {
 		l.push(p);
 	}
 	this.fillPath(offCtx, l, color);
-}
+};

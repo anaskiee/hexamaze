@@ -39,7 +39,7 @@ window.addEventListener('load', function() {
 		parsedParameters[parameter.split("=")[0]] = parameter.split("=")[1];
 	}
 
-	if (parsedParameters.debug == "true") {
+	if (parsedParameters.debug === "true") {
 		new GameLoader(canvas, offContext, context, parsedParameters);
 	} else {
 		new GameLoader(canvas, context, offContext, parsedParameters);

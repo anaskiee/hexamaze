@@ -28,7 +28,7 @@ Master.prototype.setCommandsPrototypeChain = function(commands) {
 	this.game.setCommandsPrototypeChain(this.commands);
 	this.forge.setCommandsPrototypeChain(this.commands);
 	this.home.setCommandsPrototypeChain(this.commands);
-}
+};
 
 Master.prototype.draw = function() {
 	var date = Date.now();
@@ -40,18 +40,18 @@ Master.prototype.draw = function() {
 	}
 	
 	requestAnimationFrame(this.draw.bind(this));
-}
+};
 
 Master.prototype.start = function() {
 	this.module.startModule();
 	this.draw();
-}
+};
 
 // A message is destinated to a module
 Master.prototype.pushMessageEvent = function(event) {
 	this.module.setMessageEventReceivers(event);
 	this.events.push(event);
-}
+};
 
 // Other events are destinated to a graphical elements, but only
 // the module know which one
@@ -70,7 +70,7 @@ Master.prototype.pushMouseMoveEvent = function(event) {
 		this.events.push(event);
 		this.previousMouseMoveElement = elem;
 	}
-}
+};
 
 Master.prototype.pushClickEvent = function(event) {
 	var elem = this.pixelMapper.getElement(event.x, event.y);
@@ -79,12 +79,12 @@ Master.prototype.pushClickEvent = function(event) {
 		event.setResultReceiver(this.module);
 		this.events.push(event);
 	}
-}
+};
 
 Master.prototype.pushKeyboardEvent = function(event) {
 	this.module.setKeyboardEventReceivers(event);
 	this.events.push(event);
-}
+};
 
 Master.prototype.applyEvents = function() {
 	var event;
@@ -92,26 +92,26 @@ Master.prototype.applyEvents = function() {
 		event = this.events.shift();
 		event.execute();
 	}
-}
+};
 
 // Top level functions
 Master.prototype.goToHome = function() {
 	this.home.startModule();
 	this.module = this.home;
-}
+};
 
 Master.prototype.goToForge = function() {
 	this.forge.startModule();
 	this.module = this.forge;
-}
+};
 
 Master.prototype.goToGame = function() {
 	this.game.startModule();
 	this.module = this.game;
-}
+};
 
 Master.prototype.loadLevel = function(cmdSender, cmd) {
 	var levelName = cmd.split(" ")[1];
 	this.game.startModule(getLevel(levelName));
 	this.module = this.game;
-}
+};

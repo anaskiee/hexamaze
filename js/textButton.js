@@ -17,15 +17,15 @@ function TextButton(text, action, pixelMapper) {
 TextButton.prototype.setText = function(text) {
 	this.textLines = text.split("\n");
 	this.computeButtonSize();
-}
+};
 
 TextButton.prototype.setFontHeight = function(fontHeight) {
 	this.fontHeight = fontHeight;
 	this.computeButtonSize();
-}
+};
 
 TextButton.prototype.computeButtonSize = function() {
-	if (this.fontHeight == -1) {
+	if (this.fontHeight === -1) {
 		console.log("warning: button font size not set");
 	}
 	var canvas = document.createElement("canvas");
@@ -38,7 +38,7 @@ TextButton.prototype.computeButtonSize = function() {
 	this.width = Math.ceil(this.width);
 	this.lineHeight = Math.ceil(2/3*this.fontHeight) + 4;
 	this.height = this.textLines.length * this.lineHeight;
-}
+};
 
 TextButton.prototype.draw = function(ctx, x, y) {
 	ctx.font = this.fontHeight + "px molot";
@@ -54,33 +54,33 @@ TextButton.prototype.draw = function(ctx, x, y) {
 		var offsetY = y + (i - (nbLines-1)/2) * this.lineHeight;
 		ctx.fillText(this.textLines[i], x, Math.round(offsetY));
 	}
-}
+};
 
 TextButton.prototype.offContextDraw = function(ctx, x, y) {
-	if (this.offContextColor == null) {
+	if (this.offContextColor === null) {
 		this.offContextColor = this.pixelMapper.registerAndGetColor(this);
 	}
 	ctx.fillStyle = this.offContextColor;
 	ctx.fillRect(Math.round(x - this.width/2), Math.round(y - this.height/2),
 					this.width, this.height);
-}
+};
 
 TextButton.prototype.disable = function() {
-	if (this.offContextColor != null) {
+	if (this.offContextColor !== null) {
 		this.pixelMapper.unregister(this.offContextColor);
 		this.offContextColor = null;
 		this.mouseOver = false;
 	}
-}
+};
 
 TextButton.prototype.handleCursorMove = function(x, y) {
 	this.mouseOver = true;
-}
+};
 
 TextButton.prototype.handleClick = function(x, y) {
 	return this.action;
-}
+};
 
 TextButton.prototype.onMouseOverEnd = function() {
 	this.mouseOver = false;
-}
+};

@@ -13,12 +13,12 @@ function LevelCreator(level) {
 LevelCreator.prototype.createRandomLevel = function(nbLines, nbColumns) {
 	this.createBasicLevel(nbLines, nbColumns);
 	this.randomize(15);
-}
+};
 
 LevelCreator.prototype.createEditingLevel = function(nbLines, nbColumns) {
 	this.createEmptyLevel(nbLines, nbColumns);
 	this.randomize(0);
-}
+};
 
 LevelCreator.prototype.createBasicLevel = function(nbLines, nbColumns) {
 	this.createEmptyLevel(nbLines, nbColumns);
@@ -26,12 +26,12 @@ LevelCreator.prototype.createBasicLevel = function(nbLines, nbColumns) {
 	// Initialiaze block types
 	for (var i = 0; i < this.nbLines; i++) {
 		for (var j = 0; j < this.nbColumns; j++) {
-			if (i == 0 || j == 0 || i == this.nbLines-1 || j == this.nbColumns-1) {
+			if (i === 0 || j === 0 || i === this.nbLines-1 || j === this.nbColumns-1) {
 				this.hexagons[i][j].type = "block";
 			}
 		}
 	}
-}
+};
 
 LevelCreator.prototype.createEmptyLevel = function(nbLines, nbColumns) {
 	this.nbLines = nbLines;
@@ -59,7 +59,7 @@ LevelCreator.prototype.createEmptyLevel = function(nbLines, nbColumns) {
 
 	// Link all hexagons
 	this.setLinks();
-}
+};
 
 LevelCreator.prototype.setLinks = function() {
 	var hexagon;
@@ -68,7 +68,7 @@ LevelCreator.prototype.setLinks = function() {
 		for (var j = 0; j < this.nbColumns; j++) {
 			hexagon = this.hexagons[i][j];
 
-			if (hexagon == null) {
+			if (hexagon === null) {
 				continue;
 			}
 
@@ -125,7 +125,7 @@ LevelCreator.prototype.setLinks = function() {
 			}
 		}
 	}
-}
+};
 
 LevelCreator.prototype.randomize = function(blockPercent) {
 	var limit = blockPercent / 100;
@@ -138,7 +138,7 @@ LevelCreator.prototype.randomize = function(blockPercent) {
 	
 	// Exit
 	var exitHexagon = this.getRandomHexagon();
-	while (exitHexagon == characterHexagon) {
+	while (exitHexagon === characterHexagon) {
 		var exitHexagon = this.getRandomHexagon();
 	}
 	this.level.exitHexagon = exitHexagon;
@@ -147,28 +147,28 @@ LevelCreator.prototype.randomize = function(blockPercent) {
 	for (var i = 1; i < this.nbLines-1; i++) {
 		for (var j = 1; j < this.nbColumns-1; j++) {
 			hexagon = this.hexagons[i][j];
-			if (hexagon.type == "space" && hexagon != characterHexagon 
-				&& hexagon != exitHexagon) {
+			if (hexagon.type === "space" && hexagon !== characterHexagon 
+				&& hexagon !== exitHexagon) {
 				if (Math.random() < limit) {
 					hexagon.type = "block";
 				}
 			}
 		}
 	}
-}
+};
 
 LevelCreator.prototype.getRandomHexagon = function() {
 	var x = Math.floor(Math.random() * this.nbColumns);
 	var y = Math.floor(Math.random() * this.nbLines);
 	return this.hexagons[y][x];
-}
+};
 
 LevelCreator.prototype.clearData = function() {
 	this.hexagons = null;
 	this.nbLines = -1;
 	this.nbColumns = -1;
 	this.firstColumnOnTop = false;
-}
+};
 
 LevelCreator.prototype.getHexagonColumn = function(hexagon) {
 	var currHex, nextHex;
@@ -212,7 +212,7 @@ LevelCreator.prototype.getHexagonColumn = function(hexagon) {
 	}
 
 	return -min;
-}
+};
 
 LevelCreator.prototype.fillEditingStructure = function() {
 	this.firstColumnOnTop = this.level.firstColumnOnTop;
@@ -269,9 +269,9 @@ LevelCreator.prototype.fillEditingStructure = function() {
 	}
 
 	// Compute max dimensions
-	var iMin = 0
-	var iMax = 0
-	var jMin = 0
+	var iMin = 0;
+	var iMax = 0;
+	var jMin = 0;
 	var jMax = 0;
 	for (var relPos of marks.values()) {
 		iMin = Math.min(iMin, relPos[0]);
@@ -303,11 +303,11 @@ LevelCreator.prototype.fillEditingStructure = function() {
 		var pos = entry[1];
 		this.hexagons[pos[0]][pos[1]] = hex;
 	}
-}
+};
 
 LevelCreator.prototype.getBotAndTopLineIndex = function(i, j) {
 	var botSameLine, topSameLine;
-	var columnEven = j % 2 == 0;
+	var columnEven = j % 2 === 0;
 
 	// Basic case : columnEven and firstColumnOnTop
 	botSameLine = true;
@@ -325,7 +325,7 @@ LevelCreator.prototype.getBotAndTopLineIndex = function(i, j) {
 	var topLine = topSameLine ? i : i-1;
 
 	return {botLine: botLine, topLine: topLine};
-}
+};
 
 LevelCreator.prototype.getNewLine = function() {
 	var line = new Array(this.nbColumns);
@@ -333,21 +333,21 @@ LevelCreator.prototype.getNewLine = function() {
 		line[j] = this.level.addHexagon("space");
 	}
 	return line;
-}
+};
 
 LevelCreator.prototype.addLineFirst = function() {
 	var line = this.getNewLine();
 	this.hexagons.unshift(line);
 	this.nbLines++;
 	this.setLinks();
-}
+};
 
 LevelCreator.prototype.addLineLast = function() {
 	var line = this.getNewLine();
 	this.hexagons.push(line);
 	this.nbLines++;
 	this.setLinks();
-}
+};
 
 LevelCreator.prototype.addColumnFirst = function() {
 	for (var i = 0; i < this.nbLines; i++) {
@@ -358,7 +358,7 @@ LevelCreator.prototype.addColumnFirst = function() {
 	this.firstColumnOnTop = !this.firstColumnOnTop;
 	this.level.firstColumnOnTop = this.firstColumnOnTop;
 	this.setLinks();
-}
+};
 
 LevelCreator.prototype.addColumnLast = function() {
 	for (var i = 0; i < this.nbLines; i++) {
@@ -367,27 +367,27 @@ LevelCreator.prototype.addColumnLast = function() {
 	}
 	this.nbColumns++;
 	this.setLinks();
-}
+};
 
 LevelCreator.prototype.canHexagonBeRemoved = function(hex) {
-	if (hex == this.level.characterHexagon || hex == this.level.exitHexagon) {
+	if (hex === this.level.characterHexagon || hex === this.level.exitHexagon) {
 		console.log("warning: can't remove this line/column");
 		alert("operation impossible : exit or character would be removed");
 		return false;
 	}
-	if (this.positionsSaved != null) {
-		if (hex == this.positionsSaved.character 
-			|| hex == this.positionsSaved.exit) {
+	if (this.positionsSaved !== null) {
+		if (hex === this.positionsSaved.character 
+			|| hex === this.positionsSaved.exit) {
 			console.log("warning: can't remove this line/column because of save");
 			alert("operation impossible : saved exit or character would be removed");
 			return false;
 		}
 	}
 	return true;
-}
+};
 
 LevelCreator.prototype.removeFirstLine = function() {
-	if (this.nbLines == 0)
+	if (this.nbLines === 0)
 		return;
 
 	for (var j = 0; j < this.nbColumns; j++) {
@@ -403,10 +403,10 @@ LevelCreator.prototype.removeFirstLine = function() {
 	this.hexagons.splice(0, 1);
 	this.nbLines--;
 	this.setLinks();
-}
+};
 
 LevelCreator.prototype.removeLastLine = function() {
-	if (this.nbLines == 0)
+	if (this.nbLines === 0)
 		return;
 	for (var j = 0; j < this.nbColumns; j++) {
 		var hex = this.hexagons[this.nbLines-1][j];
@@ -421,10 +421,10 @@ LevelCreator.prototype.removeLastLine = function() {
 	this.hexagons.splice(-1, 1);
 	this.nbLines--;
 	this.setLinks();
-}
+};
 
 LevelCreator.prototype.removeFirstColumn = function() {
-	if (this.nbColumns == 0)
+	if (this.nbColumns === 0)
 		return;
 
 	for (var i = 0; i < this.nbLines; i++) {
@@ -442,10 +442,10 @@ LevelCreator.prototype.removeFirstColumn = function() {
 	this.firstColumnOnTop = !this.firstColumnOnTop;
 	this.level.firstColumnOnTop = this.firstColumnOnTop;
 	this.setLinks();
-}
+};
 
 LevelCreator.prototype.removeLastColumn = function() {
-	if (this.nbColumns == 0)
+	if (this.nbColumns === 0)
 		return;
 
 	for (var i = 0; i < this.nbLines; i++) {
@@ -461,29 +461,29 @@ LevelCreator.prototype.removeLastColumn = function() {
 	}
 	this.nbColumns--;
 	this.setLinks();
-}
+};
 
 LevelCreator.prototype.setHexagonStyle = function(hexagon, style) {
 	hexagon.type = style;
-}
+};
 
 LevelCreator.prototype.setCharacterHexagon = function(hexagon) {
 	this.level.characterHexagon = hexagon;
-}
+};
 
 LevelCreator.prototype.setExitHexagon = function(hexagon) {
 	this.level.exitHexagon = hexagon;
-}
+};
 
 LevelCreator.prototype.save = function() {
 	this.positionsSaved = {
 		character: this.level.characterHexagon,
 		exit: this.level.exitHexagon
 	};
-}
+};
 
 LevelCreator.prototype.restore = function() {
 	this.level.characterHexagon = this.positionsSaved.character;
 	this.level.exitHexagon = this.positionsSaved.exit;
 	this.positionsSaved = null;
-}
+};

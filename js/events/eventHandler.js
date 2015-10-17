@@ -19,28 +19,28 @@ function EventHandler(canvas, master, worker) {
 EventHandler.prototype.handleMouse = function(event) {
 	var evt = new CursorMoveEvent(event.pageX, event.pageY);
 	this.master.pushMouseMoveEvent(evt);
-}
+};
 
 EventHandler.prototype.handleTouch = function(event, isMouse) {
 	var evt = new CursorMoveEvent(event.touches[0].pageX, event.touches[0].pageY);
 	this.master.pushMouseMoveEvent(evt);
-}
+};
 
 EventHandler.prototype.handleClick = function(event) {
 	var evt = new ClickEvent(event.pageX, event.pageY);
 	this.master.pushClickEvent(evt);
-}
+};
 
 EventHandler.prototype.handleKey = function(event) {
 	// prevent backspace key from navigating back
-	if (event.keyCode == 8) {
+	if (event.keyCode === 8) {
 		event.preventDefault();
 	}
 	var evt = new KeyEvent(event.keyCode + event.charCode);
 	this.master.pushKeyboardEvent(evt);
-}
+};
 
 EventHandler.prototype.handleMessage = function(event) {
 	var evt = new WorkerMessageEvent(event.data);
 	this.master.pushMessageEvent(evt);
-}
+};

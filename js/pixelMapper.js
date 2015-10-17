@@ -23,7 +23,7 @@ PixelMapper.prototype.registerAndGetColor = function(object) {
 	var color = "rgb(" + r + "," + g + "," + b + ")";
 	this.colorMap.set(color, object);
 	return color;
-}
+};
 
 PixelMapper.prototype.getElement = function(x, y) {
 	var pixel = this.offCtx.getImageData(x, y, 1, 1);
@@ -31,12 +31,11 @@ PixelMapper.prototype.getElement = function(x, y) {
 	var r = pixel.data[0];
 	var g = pixel.data[1];
 	var b = pixel.data[2];
-	var color = "rgb(" + r + "," + g + "," + b + ")";
+	color = "rgb(" + r + "," + g + "," + b + ")";
 	var element = this.colorMap.get(color);
 	return element;
-}
+};
 
 PixelMapper.prototype.unregister = function(color) {
-	var color = this.colorMap.get(color);
 	this.colorMap.delete(color);
-}
+};

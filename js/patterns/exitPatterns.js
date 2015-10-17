@@ -27,8 +27,8 @@ ExitPatterns.prototype.preRenderDrawing = function(style) {
 	ctx.stroke();
 
 	this.drawings.set(style, canvas);
-}
+};
 
 ExitPatterns.prototype.offContextDraw = function(ctx, x, y, color) {
 	this.fillDisk(ctx, Math.round(x), Math.round(y), Math.round(this.size), color);
-}
+};

@@ -44,7 +44,7 @@ Forge.prototype.startModule = function() {
 	this.addElementToRender("GraphicsEngine");
 
 	this.ComputeAndDisplaySolution();
-}
+};
 
 Forge.prototype.setGraphicsEngineDrawingRect = function() {
 	var x = Math.round(2/8*this.forgeGuiWidth);
@@ -53,10 +53,10 @@ Forge.prototype.setGraphicsEngineDrawingRect = function() {
 	var height = Math.round(6/8*this.forgeGuiHeight);
 	this.graphicsEngine.setDrawingRect(x, y, width, height);
 	this.forgeGUI.setRendererRect(x, y, width, height);
-}
+};
 
 Forge.prototype.stopModule = function() {
-}
+};
 
 Forge.prototype.setCommandsPrototypeChain = function(commands) {
 	this.commands = Object.create(commands);
@@ -77,30 +77,30 @@ Forge.prototype.setCommandsPrototypeChain = function(commands) {
 	this.commands.select_character = this.onCharacterSelect.bind(this);
 	this.commands.select_exit = this.onExitSelect.bind(this);
 	this.commands.click_on_hexagon = this.onHexagonClick.bind(this);
-}
+};
 
 // +----------------------+
 // |   Events managment   |
 // +----------------------+
 
 Forge.prototype.setMessageEventReceivers = function(event) {
-}
+};
 
 Forge.prototype.setKeyboardEventReceivers = function(event) {
-	var consoleVisible = this.elementsToRender[0] != null;
+	var consoleVisible = this.elementsToRender[0] !== null;
 	if (consoleVisible) {
 		event.setReceiver(this.developerConsole);
 		event.setResultReceiver(this);
 	} else {
 		event.setReceiver(this);
 	}
-}
+};
 
 Forge.prototype.handleKey = function(keyCode) {
-	if (keyCode == 13) {
+	if (keyCode === 13) {
 		this.showConsole();
 	}
-}
+};
 
 // +-------------------------+
 // |   Top level functions   |
@@ -108,7 +108,7 @@ Forge.prototype.handleKey = function(keyCode) {
 
 Forge.prototype.hideConsole = function() {
 	this.developerConsole.hide();
-}
+};
 
 Forge.prototype.showConsole = function() {
 	this.forgeGuiHeight -= this.developerConsole.maxHeight;
@@ -116,7 +116,7 @@ Forge.prototype.showConsole = function() {
 	this.setGraphicsEngineDrawingRect();
 	this.addElementToRender("DeveloperConsole");
 	this.developerConsole.show();
-}
+};
 
 Forge.prototype.hideConsole = function() {
 	this.forgeGuiHeight += this.developerConsole.maxHeight;
@@ -124,7 +124,7 @@ Forge.prototype.hideConsole = function() {
 	this.setGraphicsEngineDrawingRect();
 	this.removeElementToRender("DeveloperConsole");
 	this.developerConsole.hide();
-}
+};
 
 Forge.prototype.editLevel = function(operation) {
 	this.removeElementToRender("GraphicsEngine");
@@ -133,42 +133,42 @@ Forge.prototype.editLevel = function(operation) {
 	this.addElementToRender("GraphicsEngine");
 
 	this.ComputeAndDisplaySolution();
-}
+};
 
 Forge.prototype.addLineFirst = function() {
 	this.editLevel(this.levelCreator.addLineFirst.bind(this.levelCreator));
-}
+};
 
 Forge.prototype.addLineLast = function() {
 	this.editLevel(this.levelCreator.addLineLast.bind(this.levelCreator));
-}
+};
 
 Forge.prototype.addColumnFirst = function() {
 	this.editLevel(this.levelCreator.addColumnFirst.bind(this.levelCreator));
-}
+};
 
 Forge.prototype.addColumnLast = function() {
 	this.editLevel(this.levelCreator.addColumnLast.bind(this.levelCreator));
-}
+};
 
 Forge.prototype.removeFirstLine = function() {
 	this.editLevel(this.levelCreator.removeFirstLine.bind(this.levelCreator));
-}
+};
 
 Forge.prototype.removeLastLine = function() {
 	this.editLevel(this.levelCreator.removeLastLine.bind(this.levelCreator));
-}
+};
 
 Forge.prototype.removeFirstColumn = function() {
 	this.editLevel(this.levelCreator.removeFirstColumn.bind(this.levelCreator));
-}
+};
 
 Forge.prototype.removeLastColumn = function() {
 	this.editLevel(this.levelCreator.removeLastColumn.bind(this.levelCreator));
-}
+};
 
 Forge.prototype.onTestItClick = function(cmdSender) {
-	if (this.mode == "edit") {
+	if (this.mode === "edit") {
 		this.mode = "test";
 		this.graphicsEngine.setEventMode("game");
 		cmdSender.setText("Edit");
@@ -181,7 +181,7 @@ Forge.prototype.onTestItClick = function(cmdSender) {
 	}
 	this.forgeGUI.offContextDraw();
 	this.graphicsEngine.offContextDraw();
-}
+};
 
 Forge.prototype.import = function() {
 	var levelB64 =  window.prompt("enter the map previously exported");
@@ -199,12 +199,12 @@ Forge.prototype.import = function() {
 		this.addElementToRender("GraphicsEngine");
 		this.ComputeAndDisplaySolution();
 	}
-}
+};
 
 Forge.prototype.export = function() {
 	if (!this.level.isLevelFinished()) {
 		alert("export impossible, level is not complete");
-	} else if (this.mode == "test") {
+	} else if (this.mode === "test") {
 		alert("export not allowed while testing");
 	} else {
 		var levelString = this.level.toString();
@@ -215,75 +215,75 @@ Forge.prototype.export = function() {
 			var text = "your level is too big to be exported in this pop-up,";
 			text += "but you can find it in the console instead ;)";
 			text += " (if you don't see it, click export again)\n";
-			text += "/!\\ Check that the string does not finish with [...]"
+			text += "/!\\ Check that the string does not finish with [...]";
 			alert(text);
 			console.log(levelB64);
 		} else {
 			alert(levelB64 + "\r\n");
 		}
 	}
-}
+};
 
 Forge.prototype.onEmptyHexagonSelected = function(cmdSender) {
-	if (this.buttonSelected != null) {
+	if (this.buttonSelected !== null) {
 		this.buttonSelected.onFocusOver();
 	}
 	console.log("style selected : space");
 	this.selection = "space";
 	this.buttonSelected = cmdSender;
-}
+};
 
 Forge.prototype.onFullHexagonSelected = function(cmdSender) {
-	if (this.buttonSelected != null) {
+	if (this.buttonSelected !== null) {
 		this.buttonSelected.onFocusOver();
 	}
 	console.log("style selected : block");
 	this.selection = "block";
 	this.buttonSelected = cmdSender;
-}
+};
 
 Forge.prototype.onVoidHexagonSelect = function(cmdSender) {
-	if (this.buttonSelected != null) {
+	if (this.buttonSelected !== null) {
 		this.buttonSelected.onFocusOver();
 	}
 	console.log("style selected : void");
 	this.selection = "void";
 	this.buttonSelected = cmdSender;
-}
+};
 
 Forge.prototype.onCharacterSelect = function(cmdSender) {
-	if (this.buttonSelected != null) {
+	if (this.buttonSelected !== null) {
 		this.buttonSelected.onFocusOver();
 	}
 	console.log("character selected");
 	this.selection = "character";
 	this.buttonSelected = cmdSender;
-}
+};
 
 Forge.prototype.onExitSelect = function(cmdSender) {
-	if (this.buttonSelected != null) {
+	if (this.buttonSelected !== null) {
 		this.buttonSelected.onFocusOver();
 	}
 	console.log("exit selected");
 	this.selection = "exit";
 	this.buttonSelected = cmdSender;
-}
+};
 
 // The sender of the command is an hexagon
 Forge.prototype.onHexagonClick = function(cmdSender) {
-	if (this.selection == "exit") {
+	if (this.selection === "exit") {
 		this.levelCreator.setExitHexagon(cmdSender);
-	} else if (this.selection == "character") {
+	} else if (this.selection === "character") {
 		this.levelCreator.setCharacterHexagon(cmdSender);
-	} else if (this.selection != null) {
+	} else if (this.selection !== null) {
 		this.levelCreator.setHexagonStyle(cmdSender, this.selection);
 	}
 	this.ComputeAndDisplaySolution();
-}
+};
 
 Forge.prototype.ComputeAndDisplaySolution = function() {
 	var shortestPaths = this.levelSolver.computeShortestPaths();
 	var text = "Shortest path length: " + shortestPaths.length + "\n";
 	text += "Number of way: " + shortestPaths.nb;
 	this.forgeGUI.setIndicatorText(text);
-}
+};

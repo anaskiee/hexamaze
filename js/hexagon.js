@@ -24,10 +24,10 @@ function Hexagon(type)
 
 Hexagon.prototype.handleClick = function(x, y) {
 	return "click_on_hexagon";
-}
+};
 
 Hexagon.prototype.handleCursorMove = function(x, y) {
-}
+};
 
 Hexagon.prototype.onMouseOverEnd = function() {
-}
+};

@@ -12,10 +12,10 @@ Help.prototype.constructor = Help;
 Help.prototype.execute = function(commandLine) {
 	var help = "list of available commands : \n";
 	for (var commandName of this.commands.keys()) {
-		help += commandName + "\n"
+		help += commandName + "\n";
 	}
 	alert(help);
-}
+};
 
 /*--------------------------------------------------*/
 
@@ -30,7 +30,7 @@ NewMap.prototype.constructor = NewMap;
 
 NewMap.prototype.execute = function(commandLine) {
 	this.game.computeNewMap(commandLine);
-}
+};
 
 /*--------------------------------------------------*/
 
@@ -45,4 +45,4 @@ Win.prototype.constructor = Win;
 
 Win.prototype.execute = function(commandLine) {
 	this.game.onWinEvent();
-}
+};
