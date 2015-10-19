@@ -95,23 +95,31 @@ Master.prototype.applyEvents = function() {
 };
 
 // Top level functions
+Master.prototype.loadModule = function(module, parameters) {
+	if (this.module !== null) {
+		this.module.stopModule();
+	}
+	this[module].startModule(parameters);
+	this.module = this[module];
+}
+
 Master.prototype.goToHome = function() {
-	this.home.startModule();
-	this.module = this.home;
+	this.loadModule("home");
 };
 
 Master.prototype.goToForge = function() {
-	this.forge.startModule();
-	this.module = this.forge;
+	this.loadModule("forge");
 };
 
 Master.prototype.goToGame = function() {
-	this.game.startModule();
-	this.module = this.game;
+	this.loadModule("game");
 };
 
 Master.prototype.loadLevel = function(cmdSender, cmd) {
-	var levelName = cmd.split(" ")[1];
-	this.game.startModule(getLevel(levelName));
-	this.module = this.game;
+	if (cmd.split(" ").length === 2) {
+		var levelName = cmd.split(" ")[1];
+		this.loadModule("game", getLevel(levelName));
+	} else {
+		console.log("invalid command: " + cmd);
+	}
 };

@@ -11,6 +11,8 @@ function Game(width, height, physicsEngine, graphicsEngine, ingameMenu,
 	this.developerConsole = developerConsole;
 	this.worker = worker;
 	this.level = level;
+
+	this.workerCommand = null;
 }
 
 Game.prototype = Object.create(GameMode.prototype);
@@ -36,11 +38,13 @@ Game.prototype.startModule = function(level) {
 
 	// Call the worker to generate one
 	} else {
-		this.worker.postMessage("compute");
+		this.workerCommand = "compute 9 17 12";
+		this.worker.postMessage(this.workerCommand);
 	}
 };
 
 Game.prototype.stopModule = function() {
+	this.workerCommand = null;
 };
 
 Game.prototype.setCommandsPrototypeChain = function(commands) {
@@ -84,11 +88,18 @@ Game.prototype.handleKey = function(keyCode) {
 };
 
 Game.prototype.handleWorkerMessage = function(msg) {
-	if (msg.length > 4 && msg.substr(0, 4) === "done") {
-		this.loadMap(msg.substr(4));
-		this.mapComputed();
+	var jsonMsg = JSON.parse(msg);
+	// Check that a command is running and that we got a response
+	// from the one expected
+	if (this.workerCommand === jsonMsg.cmd) {
+		if (jsonMsg.type === "computed") {
+			this.loadMap(jsonMsg.data);
+			this.mapComputed();
+		} else {
+			this.updateComputingMenu(jsonMsg.data);
+		}
 	} else {
-		this.updateComputingMenu(msg);
+		console.log("this command response is outdated: " + jsonMsg.cmd);
 	}
 };
 
@@ -101,7 +112,10 @@ Game.prototype.computeNewMap = function(cmdSender, commandLine) {
 	this.addElementToRender("IngameMenu");
 	this.ingameMenu.expand(Date.now());
 	this.updateComputingMenu(0);
-	this.worker.postMessage(commandLine);
+	if (commandLine.split(" ").length === 4) {
+		this.workerCommand = commandLine;
+		this.worker.postMessage(this.workerCommand);
+	}
 };
 
 Game.prototype.onWinEvent = function() {
