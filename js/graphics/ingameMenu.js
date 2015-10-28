@@ -8,7 +8,7 @@ function IngameMenu(context, offContext, pixelMapper ,uiElementCreator) {
 	this.uiElementCreator = uiElementCreator;
 
 	// Text
-	this.text = uiElementCreator.createUIElement("ingame_menu_text", "multiline_text");
+	this.text = uiElementCreator.createUIElement("ingame_menu_text", "text");
 	uiElementCreator.setTextStyle(this.text, "basic_text");
 	this.text.setText("");
 

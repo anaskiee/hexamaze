@@ -14,7 +14,7 @@ function ForgeGUI(context, offContext, pixelMapper, uiElementCreator) {
 	this.buttons.add(this.export);
 	this.buttons.add(this.testIt);
 
-	this.shortestPaths = uiElementCreator.createUIElement("paths", "multiline_text");
+	this.shortestPaths = uiElementCreator.createUIElement("paths", "text");
 	uiElementCreator.setTextStyle(this.shortestPaths, "basic_text");
 
 	// Buttons on the left

@@ -8,7 +8,6 @@ function UIElement(name, type, pixelMapper) {
 	this.x = -1;
 	this.y = -1;
 
-	this.offContextColor = null;
 	this.rendering = null;
 }
 

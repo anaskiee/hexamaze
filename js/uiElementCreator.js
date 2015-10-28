@@ -16,9 +16,6 @@ UIElementCreator.prototype.createUIElement = function(name, type) {
 		case "text":
 			uiElement = new Text(name, type, this.pixelMapper);
 			break;
-		case "multiline_text":
-			uiElement = new MultilineText(name, type, this.pixelMapper);
-			break;
 		default:
 			console.log("warning: unknown type '" + type + "'");
 			break;
