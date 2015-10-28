@@ -1,14 +1,16 @@
 "use strict";
 
-function IngameMenu(context, offContext, pixelMapper) {
-	GraphicalElement.call(this, "IngameMenu", pixelMapper);
+function IngameMenu(context, offContext, pixelMapper ,uiElementCreator) {
+	GraphicalElement.call(this, "IngameMenu");
 
 	this.ctx = context;
 	this.offCtx = offContext;
+	this.uiElementCreator = uiElementCreator;
 
 	// Text
-	//this.text = "Ingame menu text !";
-	this.text = new Text("");
+	this.text = uiElementCreator.createUIElement("ingame_menu_text", "multiline_text");
+	uiElementCreator.setTextStyle(this.text, "basic_text");
+	this.text.setText("");
 
 	// For animations
 	this.initialOffsetX = -1;

@@ -15,14 +15,15 @@ function GameLoader(canvas, context, offContext, parameters) {
 	var levelSolver = new LevelSolver(level);
 	
 	var pixelMapper = new PixelMapper(offContext);
+	var uiElementCreator = new UIElementCreator(pixelMapper);
 
 	// Graphical modules
 	var graphicsEngine = new GraphicsEngine(context, offContext, pixelMapper, level, 
 											physicsEngine);
-	var ingameMenu = new IngameMenu(context, offContext, pixelMapper);
-	var developerConsole = new DeveloperConsole(context, offContext, pixelMapper);
-	var forgeGUI = new ForgeGUI(context, offContext, pixelMapper);
-	var mainMenu = new MainMenu(context, offContext, pixelMapper);
+	var ingameMenu = new IngameMenu(context, offContext, pixelMapper, uiElementCreator);
+	var developerConsole = new DeveloperConsole(context, offContext, uiElementCreator);
+	var forgeGUI = new ForgeGUI(context, offContext, pixelMapper, uiElementCreator);
+	var mainMenu = new MainMenu(context, offContext, pixelMapper, uiElementCreator);
 	
 	// Game modules
 	var game = new Game(width, height, physicsEngine, graphicsEngine, ingameMenu, 

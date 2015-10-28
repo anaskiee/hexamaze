@@ -1,7 +1,7 @@
 "use strict";
 
-function ForgeGUI(context, offContext, pixelMapper) {
-	GraphicalElement.call(this, "ForgeGUI", pixelMapper);
+function ForgeGUI(context, offContext, pixelMapper, uiElementCreator) {
+	GraphicalElement.call(this, "ForgeGUI", pixelMapper, uiElementCreator);
 
 	this.ctx = context;
 	this.offCtx = offContext;
@@ -14,7 +14,8 @@ function ForgeGUI(context, offContext, pixelMapper) {
 	this.buttons.add(this.export);
 	this.buttons.add(this.testIt);
 
-	this.shortestPaths = new Text("");
+	this.shortestPaths = uiElementCreator.createUIElement("paths", "multiline_text");
+	uiElementCreator.setTextStyle(this.shortestPaths, "basic_text");
 
 	// Buttons on the left
 	this.emptyHexagon = new PatternButton("select_empty_hexagon", pixelMapper);

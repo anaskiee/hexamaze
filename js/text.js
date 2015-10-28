@@ -1,11 +1,19 @@
 "use strict";
 
-function Text(text) {
-	this.textLines = text.split("\n");
+function Text(name, type, pixelMapper) {
+	UIElement.call(name, type, pixelMapper);
+	this.text = "";
+	this.lineHeight = -1;
+	this.fontHeight = -1;
+
+	this.textStyle = null;
 }
 
+Text.prototype = Object.create(UIElement.prototype);
+Text.prototype.constructor = Text;
+
 Text.prototype.setText = function(text) {
-	this.textLines = text.split("\n");
+	this.text = text;
 };
 
 Text.prototype.setFontHeight = function(fontHeight) {
@@ -14,13 +22,9 @@ Text.prototype.setFontHeight = function(fontHeight) {
 };
 
 Text.prototype.draw = function(ctx, x, y) {
-	ctx.font = this.fontHeight + "px chunkfive";
-	ctx.textAlign = "center";
-	ctx.textBaseline = "middle";
-	ctx.fillStyle = "#000000";
-	var nbLines = this.textLines.length;
-	for (var i = 0; i < nbLines; i++) {
-		var offsetY = y + (i - (nbLines-1)/2) * this.lineHeight;
-		ctx.fillText(this.textLines[i], x, Math.round(offsetY));
-	}
+	this.textStyle.configureContext(ctx, this.fontHeight);
+	ctx.fillText(this.text, x, y);
+};
+
+Text.prototype.offContextDraw = function(ctx, x, y) {
 };

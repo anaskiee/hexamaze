@@ -1,17 +1,21 @@
 "use strict";
 
-function DeveloperConsole(context, offContext, pixelMapper) {
-	GraphicalElement.call(this, "DeveloperConsole", pixelMapper);
+function DeveloperConsole(context, offContext, uiElementCreator) {
+	GraphicalElement.call(this, "DeveloperConsole");
 
 	this.ctx = context;
 	this.offCtx = offContext;
+	this.uiElementCreator = uiElementCreator;
 
 	this.active = false;
 	this.blockEventsSpread = false;
 
 	this.focus = false;
 
-	this.text = "";
+	this.pipePresent = false;
+	this.command = "";
+	this.text = uiElementCreator.createUIElement("console text", "text");
+	uiElementCreator.setTextStyle(this.text, "console_text");
 	this.animationRunning = true;
 }
 
@@ -21,6 +25,7 @@ DeveloperConsole.prototype.constructor = DeveloperConsole;
 DeveloperConsole.prototype.onDrawingRectSet = function() {
 	this.width = this.maxWidth;
 	this.height = this.maxHeight;
+	this.text.setFontHeight(4/5*this.height);
 };
 
 DeveloperConsole.prototype.drawElement = function(date) {
@@ -30,14 +35,14 @@ DeveloperConsole.prototype.drawElement = function(date) {
 	this.ctx.strokeStyle = "#000000";
 	this.ctx.strokeRect(0.5, 0.5, this.width-1, this.height-1);
 
-	this.ctx.font = 4/5*this.height + "px ubuntu-condensed";
-	this.ctx.textBaseline = "middle";
-	this.ctx.fillStyle = "#EEEEEE";
-	if (date % 1000 > 500) {
-		this.ctx.fillText(this.text + "|", 3, this.height/2);
-	} else {
-		this.ctx.fillText(this.text, 3, this.height/2);
+	if (date % 1000 > 500 && this.pipePresent === false) {
+		this.text.setText(this.command + "|");
+		this.pipePresent = true;
+	} else if (date % 1000 < 500 && this.pipePresent === true) {
+		this.text.setText(this.command);
+		this.pipePresent = false;
 	}
+	this.text.draw(this.ctx, 3, this.height/2);
 };
 
 DeveloperConsole.prototype.offContextDraw = function() {
@@ -57,12 +62,15 @@ DeveloperConsole.prototype.hide = function() {
 
 DeveloperConsole.prototype.handleKey = function(code) {
 	if (32 <= code && code <= 124) {
-		this.text += String.fromCharCode(code);
+		this.command += String.fromCharCode(code);
+		this.text.setText(this.command);
 	} else if (code === 8) {
-		this.text = this.text.slice(0, -1);
+		this.command = this.command.slice(0, -1);
+		this.text.setText(this.command);
 	} else if (code === 13) {
-		var copy = this.text;
-		this.text = "";
+		var copy = this.command;
+		this.command = "";
+		this.text.setText("");
 		return copy;
 	}
 };

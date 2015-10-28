@@ -1,24 +1,31 @@
 "use strict";
 
-function MainMenu(context, offContext, pixelMapper) {
-	GraphicalElement.call(this, "MainMenu", pixelMapper);
+function MainMenu(context, offContext, pixelMapper, uiElementCreator) {
+	GraphicalElement.call(this, "MainMenu", pixelMapper, uiElementCreator);
 
 	this.ctx = context;
 	this.offCtx = offContext;
 	this.pixelMapper = pixelMapper;
-
-	this.text = "Hexamaze";
+	this.uiElementCreator = uiElementCreator;
 
 	this.forge = new TextButton("Forge", "goto_forge", pixelMapper);
 	this.game = new TextButton("Play on\nrandom level", "goto_game", pixelMapper);
-	this.levels = new Text("levels");
 	this.warmup = new TextButton("Warm-up", "level warmup", pixelMapper);
 	this.spaceship = new TextButton("Spaceship", "level spaceship", pixelMapper);
 	this.highway = new TextButton("Highway", "level highway", pixelMapper);
 	this.hopeless = new TextButton("Hopeless", "level hopeless", pixelMapper);
+	
+	this.levels = uiElementCreator.createUIElement("levels", "text");
+	uiElementCreator.setTextStyle(this.levels, "basic_text");
+	this.levels.setText("levels");
+	
+	this.title = uiElementCreator.createUIElement("title", "text");
+	uiElementCreator.setTextStyle(this.title, "title_text");
+	this.title.setText("Hexamaze");
 
 	this.texts = new Map();
 	this.texts.set(this.levels, {x: 7/8, y: 17/30});
+	this.texts.set(this.title, {x: 1/2, y: 1/3});
 	
 	this.buttons = new Map();
 	this.buttons.set(this.forge, {x: 1/6,  y: 2/3});
@@ -41,6 +48,7 @@ MainMenu.prototype.onDrawingRectSet = function() {
 	this.forge.setFontHeight(Math.round(this.height/10));
 	this.game.setFontHeight(Math.round(this.height/10));
 	this.levels.setFontHeight(Math.round(this.height/15));
+	this.title.setFontHeight(Math.round(this.height/5));
 	this.warmup.setFontHeight(Math.round(this.height/15));
 	this.spaceship.setFontHeight(Math.round(this.height/15));
 	this.highway.setFontHeight(Math.round(this.height/15));
@@ -50,13 +58,6 @@ MainMenu.prototype.onDrawingRectSet = function() {
 MainMenu.prototype.drawElement = function(date) {
 	this.ctx.fillStyle = "#777777";
 	this.ctx.fillRect(0, 0, this.width, this.height);
-
-	// Draw title
-	this.ctx.fillStyle = "#000000";
-	this.ctx.font = this.height/5 + "px distant-galaxy";
-	this.ctx.textAlign = "center";
-	this.ctx.textBaseline = "middle";
-	this.ctx.fillText(this.text, 1/2*this.width, 1/3*this.height);
 
 	for (var button of this.buttons.entries()) {
 		var obj = button[0];

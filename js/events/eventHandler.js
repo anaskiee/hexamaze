@@ -22,7 +22,8 @@ EventHandler.prototype.handleMouse = function(event) {
 };
 
 EventHandler.prototype.handleTouch = function(event, isMouse) {
-	var evt = new CursorMoveEvent(event.touches[0].pageX, event.touches[0].pageY);
+	var evt = new CursorMoveEvent(event.touches[0].pageX, 
+									event.touches[0].pageY);
 	this.master.pushMouseMoveEvent(evt);
 };
 
