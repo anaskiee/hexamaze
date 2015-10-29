@@ -15,7 +15,7 @@ function ForgeGUI(context, offContext, pixelMapper, uiElementCreator) {
 	this.buttons.add(this.testIt);
 
 	this.shortestPaths = uiElementCreator.createUIElement("paths", "text");
-	uiElementCreator.setTextStyle(this.shortestPaths, "basic_text");
+	this.shortestPaths.setStyle("basic_text");
 
 	// Buttons on the left
 	this.emptyHexagon = new PatternButton("select_empty_hexagon", pixelMapper);

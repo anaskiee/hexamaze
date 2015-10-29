@@ -72,3 +72,39 @@ Text.prototype.offContextDraw = function(ctx, x, y) {
 	ctx.fillRect(Math.round(x - this.width/2), Math.round(y - this.height/2),
 				this.width, this.height);
 };
+
+Text.prototype.setStyle = function(style) {
+	switch (style) {
+		case "basic_text":
+			this.fontName = "chunkfive";
+			this.textAlign = "center";
+			this.textBaseline = "middle";
+			this.defaultColor = "#000000";
+			this.overColor = "#222222";
+			break;
+		case "title_text":
+			this.fontName = "distant-galaxy";
+			this.textAlign = "center";
+			this.textBaseline = "middle";
+			this.defaultColor = "#000000";
+			this.overColor = "#222222";
+			break;
+		case "button_text":
+			this.fontName = "molot";
+			this.textAlign = "center";
+			this.textBaseline = "middle";
+			this.defaultColor = "#000000";
+			this.overColor = "#222222";
+			break;
+		case "console_text":
+			this.fontName = "ubuntu-condensed";
+			this.textAlign = "left";
+			this.textBaseline = "middle";
+			this.defaultColor = "#EEEEEE";
+			this.overColor = "#222222";
+			break;
+		default:
+			console.log("warning: unknow style '" + style + "'");
+			break;
+	}
+};

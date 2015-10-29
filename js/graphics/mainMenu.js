@@ -16,11 +16,11 @@ function MainMenu(context, offContext, pixelMapper, uiElementCreator) {
 	this.hopeless = new TextButton("Hopeless", "level hopeless", pixelMapper);
 	
 	this.levels = uiElementCreator.createUIElement("levels", "text");
-	uiElementCreator.setTextStyle(this.levels, "basic_text");
+	this.levels.setStyle("basic_text");
 	this.levels.setText("levels");
 	
 	this.title = uiElementCreator.createUIElement("title", "text");
-	uiElementCreator.setTextStyle(this.title, "title_text");
+	this.title.setStyle("title_text");
 	this.title.setText("Hexamaze");
 
 	this.texts = new Map();

@@ -9,7 +9,7 @@ function IngameMenu(context, offContext, pixelMapper ,uiElementCreator) {
 
 	// Text
 	this.text = uiElementCreator.createUIElement("ingame_menu_text", "text");
-	uiElementCreator.setTextStyle(this.text, "basic_text");
+	this.text.setStyle("basic_text");
 	this.text.setText("");
 
 	// For animations

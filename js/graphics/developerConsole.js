@@ -15,7 +15,7 @@ function DeveloperConsole(context, offContext, uiElementCreator) {
 	this.pipePresent = false;
 	this.command = "";
 	this.text = uiElementCreator.createUIElement("console text", "text");
-	uiElementCreator.setTextStyle(this.text, "console_text");
+	this.text.setStyle("console_text");
 	this.animationRunning = true;
 }
 
