@@ -1,13 +1,13 @@
 "use strict";
 
 function CursorMoveEvent(x, y) {
-	Event.call(this);
+	GameEvent.call(this);
 	this.x = x;
 	this.y = y;
 	this.previousElement = null;
 }
 
-CursorMoveEvent.prototype = Object.create(Event.prototype);
+CursorMoveEvent.prototype = Object.create(GameEvent.prototype);
 CursorMoveEvent.prototype.constructor = CursorMoveEvent;
 
 CursorMoveEvent.prototype.execute = function() {

@@ -2,12 +2,6 @@
 
 function UIElementCreator(pixelMapper) {
 	this.pixelMapper = pixelMapper;
-
-	this.textRenderingStrategies = new Map();
-	this.textRenderingStrategies.set("basic_text", new BasicText());
-	this.textRenderingStrategies.set("button_text", new ButtonText());
-	this.textRenderingStrategies.set("title_text", new TitleText());
-	this.textRenderingStrategies.set("console_text", new ConsoleText());
 }
 
 UIElementCreator.prototype.createUIElement = function(name, type) {
@@ -25,11 +19,38 @@ UIElementCreator.prototype.createUIElement = function(name, type) {
 };
 
 UIElementCreator.prototype.setTextStyle = function(uiElement, style) {
-	var strategy = this.textRenderingStrategies.get(style);
-	if (strategy === undefined) {
-		console.log("warning: unknow style '" + style + "'");
-	} else {
-		uiElement.textStyle = strategy;
+	switch (style) {
+		case "basic_text":
+			uiElement.fontName = "chunkfive";
+			uiElement.textAlign = "center";
+			uiElement.textBaseline = "middle";
+			uiElement.defaultColor = "#000000";
+			uiElement.overColor = "#222222";
+			break;
+		case "title_text":
+			uiElement.fontName = "distant-galaxy";
+			uiElement.textAlign = "center";
+			uiElement.textBaseline = "middle";
+			uiElement.defaultColor = "#000000";
+			uiElement.overColor = "#222222";
+			break;
+		case "button_text":
+			uiElement.fontName = "molot";
+			uiElement.textAlign = "center";
+			uiElement.textBaseline = "middle";
+			uiElement.defaultColor = "#000000";
+			uiElement.overColor = "#222222";
+			break;
+		case "console_text":
+			uiElement.fontName = "ubuntu-condensed";
+			uiElement.textAlign = "left";
+			uiElement.textBaseline = "middle";
+			uiElement.defaultColor = "#EEEEEE";
+			uiElement.overColor = "#222222";
+			break;
+		default:
+			console.log("warning: unknow style '" + style + "'");
+			break;
 	}
 };
 

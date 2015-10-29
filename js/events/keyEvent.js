@@ -1,11 +1,11 @@
 "use strict";
 
 function KeyEvent(keyCode) {
-	Event.call(this);
+	GameEvent.call(this);
 	this.keyCode = keyCode;
 }
 
-KeyEvent.prototype = Object.create(Event.prototype);
+KeyEvent.prototype = Object.create(GameEvent.prototype);
 KeyEvent.prototype.constructor = KeyEvent;
 
 KeyEvent.prototype.execute = function() {

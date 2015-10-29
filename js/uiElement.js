@@ -7,8 +7,11 @@ function UIElement(name, type, pixelMapper) {
 	
 	this.x = -1;
 	this.y = -1;
+	this.width = -1;
+	this.height = -1;
 
-	this.rendering = null;
+	this.mouseOver = false;
+	this.clickable = false;
 }
 
 UIElement.prototype.setPosition = function(x, y) {

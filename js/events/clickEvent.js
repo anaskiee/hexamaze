@@ -1,12 +1,12 @@
 "use strict";
 
 function ClickEvent(x, y) {
-	Event.call(this);
+	GameEvent.call(this);
 	this.x = x;
 	this.y = y;
 }
 
-ClickEvent.prototype = Object.create(Event.prototype);
+ClickEvent.prototype = Object.create(GameEvent.prototype);
 ClickEvent.prototype.constructor = ClickEvent;
 
 ClickEvent.prototype.execute = function() {
