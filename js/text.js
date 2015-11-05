@@ -1,8 +1,8 @@
 "use strict";
 
-function Text(name, type, pixelMapper) {
-	UIElement.call(this, name, type, pixelMapper);
-	this.textLines = [""];
+function Text(name, text, pixelMapper) {
+	UIElement.call(this, name, pixelMapper);
+	this.textLines = text.split("\n");
 	this.lineHeight = -1;
 
 	this.fontHeight = -1;
@@ -65,12 +65,14 @@ Text.prototype.draw = function(ctx, x, y) {
 };
 
 Text.prototype.offContextDraw = function(ctx, x, y) {
-	if (this.offContextColor === null) {
-		this.offContextColor = this.pixelMapper.registerAndGetColor(this);
+	if (this.clickable) {
+		if (this.offContextColor === null) {
+			this.offContextColor = this.pixelMapper.registerAndGetColor(this);
+		}
+		ctx.fillStyle = this.offContextColor;
+		ctx.fillRect(Math.round(x - this.width/2), Math.round(y - this.height/2),
+					this.width, this.height);
 	}
-	ctx.fillStyle = this.offContextColor;
-	ctx.fillRect(Math.round(x - this.width/2), Math.round(y - this.height/2),
-				this.width, this.height);
 };
 
 Text.prototype.setStyle = function(style) {
@@ -106,5 +108,13 @@ Text.prototype.setStyle = function(style) {
 		default:
 			console.log("warning: unknow style '" + style + "'");
 			break;
+	}
+};
+
+Text.prototype.disable = function() {
+	if (this.offContextColor !== null) {
+		this.pixelMapper.unregister(this.offContextColor);
+		this.offContextColor = null;
+		this.mouseOver = false;
 	}
 };

@@ -1,11 +1,11 @@
 "use strict";
 
-function DeveloperConsole(context, offContext, uiElementCreator) {
+function DeveloperConsole(context, offContext, uiCreator) {
 	GraphicalElement.call(this, "DeveloperConsole");
 
 	this.ctx = context;
 	this.offCtx = offContext;
-	this.uiElementCreator = uiElementCreator;
+	this.uiCreator = uiCreator;
 
 	this.active = false;
 	this.blockEventsSpread = false;
@@ -14,8 +14,7 @@ function DeveloperConsole(context, offContext, uiElementCreator) {
 
 	this.pipePresent = false;
 	this.command = "";
-	this.text = uiElementCreator.createUIElement("console text", "text");
-	this.text.setStyle("console_text");
+	this.text = uiCreator.createText("console text", "console_text", "");
 	this.animationRunning = true;
 }
 

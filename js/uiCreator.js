@@ -1,22 +1,22 @@
 "use strict";
 
-function UIElementCreator(pixelMapper) {
+function UICreator(pixelMapper) {
 	this.pixelMapper = pixelMapper;
 }
 
-UIElementCreator.prototype.createUIElement = function(name, type) {
-	var uiElement;
-	switch (type) {
-		case "text":
-			uiElement = new Text(name, type, this.pixelMapper);
-			break;
-		default:
-			console.log("warning: unknown type '" + type + "'");
-			break;
-	}
+UICreator.prototype.setCustomRendering = function(uiElement, pattern) {
+};
 
+UICreator.prototype.createText = function(name, style, text) {
+	var uiElement = new Text(name, text, this.pixelMapper);
+	uiElement.setStyle(style);
 	return uiElement;
 };
 
-UIElementCreator.prototype.setCustomRendering = function(uiElement, pattern) {
+UICreator.prototype.createTextButton = function(name, text, action) {
+	var uiElement = new Text(name, text, this.pixelMapper);
+	uiElement.setStyle("button_text");
+	uiElement.action = action;
+	uiElement.clickable = true;
+	return uiElement;
 };

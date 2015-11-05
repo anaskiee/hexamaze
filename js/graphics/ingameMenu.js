@@ -1,16 +1,14 @@
 "use strict";
 
-function IngameMenu(context, offContext, pixelMapper ,uiElementCreator) {
+function IngameMenu(context, offContext ,uiCreator) {
 	GraphicalElement.call(this, "IngameMenu");
 
 	this.ctx = context;
 	this.offCtx = offContext;
-	this.uiElementCreator = uiElementCreator;
+	this.uiCreator = uiCreator;
 
 	// Text
-	this.text = uiElementCreator.createUIElement("ingame_menu_text", "text");
-	this.text.setStyle("basic_text");
-	this.text.setText("");
+	this.text = uiCreator.createText("ingame_menu_text", "basic_text", "");
 
 	// For animations
 	this.initialOffsetX = -1;
@@ -26,7 +24,8 @@ function IngameMenu(context, offContext, pixelMapper ,uiElementCreator) {
 	this.active = false;
 	this.blockEventsSpread = true;
 
-	this.playAgin = new TextButton("Back to home", "goto_home", pixelMapper);
+	this.playAgin = uiCreator.createTextButton("ig menu button", "Back to home", 
+												"goto_home");
 	this.previousElement = null;
 }
 

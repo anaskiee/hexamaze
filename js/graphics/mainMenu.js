@@ -1,27 +1,25 @@
 "use strict";
 
-function MainMenu(context, offContext, pixelMapper, uiElementCreator) {
-	GraphicalElement.call(this, "MainMenu", pixelMapper, uiElementCreator);
+function MainMenu(context, offContext, uiCreator) {
+	GraphicalElement.call(this, "MainMenu", uiCreator);
 
 	this.ctx = context;
 	this.offCtx = offContext;
-	this.pixelMapper = pixelMapper;
-	this.uiElementCreator = uiElementCreator;
+	this.uiCreator = uiCreator;
 
-	this.forge = new TextButton("Forge", "goto_forge", pixelMapper);
-	this.game = new TextButton("Play on\nrandom level", "goto_game", pixelMapper);
-	this.warmup = new TextButton("Warm-up", "level warmup", pixelMapper);
-	this.spaceship = new TextButton("Spaceship", "level spaceship", pixelMapper);
-	this.highway = new TextButton("Highway", "level highway", pixelMapper);
-	this.hopeless = new TextButton("Hopeless", "level hopeless", pixelMapper);
+	this.forge = uiCreator.createTextButton("forge button", "Forge", "goto_forge");
+	this.game = uiCreator.createTextButton("game button", "Play on\nrandom level", 
+													"goto_game");
+	this.warmup = uiCreator.createTextButton("warmup level", "Warm-up", "level warmup");
+	this.spaceship = uiCreator.createTextButton("spaceship level", "Spaceship", 
+													"level spaceship");
+	this.highway = uiCreator.createTextButton("highway level", "Highway", 
+													"level highway");
+	this.hopeless = uiCreator.createTextButton("hopeless level", "Hopeless", 
+												"level hopeless");
 	
-	this.levels = uiElementCreator.createUIElement("levels", "text");
-	this.levels.setStyle("basic_text");
-	this.levels.setText("levels");
-	
-	this.title = uiElementCreator.createUIElement("title", "text");
-	this.title.setStyle("title_text");
-	this.title.setText("Hexamaze");
+	this.levels = uiCreator.createText("levels title", "basic_text", "levels");
+	this.title = uiCreator.createText("main title", "title_text", "hexamaze");
 
 	this.texts = new Map();
 	this.texts.set(this.levels, {x: 7/8, y: 17/30});

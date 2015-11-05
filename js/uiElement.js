@@ -1,8 +1,7 @@
 "use strict";
 
-function UIElement(name, type, pixelMapper) {
+function UIElement(name, pixelMapper) {
 	this.name = name;
-	this.type = type;
 	this.pixelMapper = pixelMapper;
 	
 	this.x = -1;
@@ -12,9 +11,22 @@ function UIElement(name, type, pixelMapper) {
 
 	this.mouseOver = false;
 	this.clickable = false;
+	this.action = undefined;
 }
 
 UIElement.prototype.setPosition = function(x, y) {
 	this.x = x;
 	this.y = y;
+};
+
+UIElement.prototype.handleCursorMove = function(x, y) {
+	this.mouseOver = true;
+};
+
+UIElement.prototype.handleClick = function(x, y) {
+	return this.action;
+};
+
+UIElement.prototype.onMouseOverEnd = function() {
+	this.mouseOver = false;
 };
