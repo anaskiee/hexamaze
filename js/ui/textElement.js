@@ -1,6 +1,6 @@
 "use strict";
 
-function Text(name, text, pixelMapper) {
+function TextElement(name, text, pixelMapper) {
 	UIElement.call(this, name, pixelMapper);
 	this.textLines = text.split("\n");
 	this.lineHeight = -1;
@@ -13,24 +13,23 @@ function Text(name, text, pixelMapper) {
 
 	this.defaultColor = "";
 	this.overColor = "";
-	this.offContextColor = null;
 }
 
-Text.prototype = Object.create(UIElement.prototype);
-Text.prototype.constructor = Text;
+TextElement.prototype = Object.create(UIElement.prototype);
+TextElement.prototype.constructor = TextElement;
 
-Text.prototype.setText = function(text) {
+TextElement.prototype.setText = function(text) {
 	this.textLines = text.split("\n");
 	this.computeButtonSize();
 };
 
-Text.prototype.setFontHeight = function(fontHeight) {
+TextElement.prototype.setFontHeight = function(fontHeight) {
 	this.fontHeight = fontHeight;
 	this.font = fontHeight + "px " + this.fontName;
 	this.computeButtonSize();
 };
 
-Text.prototype.computeButtonSize = function() {
+TextElement.prototype.computeButtonSize = function() {
 	if (this.fontHeight === -1) {
 		console.log("warning: button font size not set");
 		return;
@@ -48,7 +47,7 @@ Text.prototype.computeButtonSize = function() {
 	this.height = this.textLines.length * this.lineHeight;
 };
 
-Text.prototype.draw = function(ctx, x, y) {
+TextElement.prototype.draw = function(ctx, x, y) {
 	ctx.font = this.font;
 	ctx.textAlign = this.textAlign;
 	ctx.textBaseline = this.textBaseline;
@@ -64,7 +63,7 @@ Text.prototype.draw = function(ctx, x, y) {
 	}
 };
 
-Text.prototype.offContextDraw = function(ctx, x, y) {
+TextElement.prototype.offContextDraw = function(ctx, x, y) {
 	if (this.clickable) {
 		if (this.offContextColor === null) {
 			this.offContextColor = this.pixelMapper.registerAndGetColor(this);
@@ -75,7 +74,7 @@ Text.prototype.offContextDraw = function(ctx, x, y) {
 	}
 };
 
-Text.prototype.setStyle = function(style) {
+TextElement.prototype.setStyle = function(style) {
 	switch (style) {
 		case "basic_text":
 			this.fontName = "chunkfive";
@@ -108,13 +107,5 @@ Text.prototype.setStyle = function(style) {
 		default:
 			console.log("warning: unknow style '" + style + "'");
 			break;
-	}
-};
-
-Text.prototype.disable = function() {
-	if (this.offContextColor !== null) {
-		this.pixelMapper.unregister(this.offContextColor);
-		this.offContextColor = null;
-		this.mouseOver = false;
 	}
 };

@@ -33,7 +33,6 @@ function MainMenu(context, offContext, uiCreator) {
 	this.buttons.set(this.spaceship, {x: 7/8, y: 21/30});
 	this.buttons.set(this.highway, {x: 7/8, y: 23/30});
 	this.buttons.set(this.hopeless, {x: 7/8, y: 25/30});
-
 }
 
 MainMenu.prototype = Object.create(GraphicalElement.prototype);
