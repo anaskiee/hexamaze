@@ -10,7 +10,8 @@ function UIElement(name, pixelMapper) {
 	this.height = -1;
 
 	this.mouseOver = false;
-	this.selected = false;
+	// null if not selectable (may be clickable)
+	this.selected = null;
 	this.clickable = false;
 	this.action = undefined;
 	this.offContextColor = null;

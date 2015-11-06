@@ -17,29 +17,31 @@ function ForgeGUI(context, offContext, pixelMapper, uiCreator) {
 	this.shortestPaths = uiCreator.createText("paths", "basic_text", "");
 
 	// Buttons on the left
-	//this.emptyHexagon = new PatternButton("select_empty_hexagon", pixelMapper);
-	this.emptyHexagon = uiCreator.createPatternButton("empty hex", 
+	this.emptyHexagon = uiCreator.createPatternButton("emptyHex", 
 														"select_empty_hexagon");
-	this.fullHexagon = uiCreator.createPatternButton("full hex", 
-														"select_full_hexagon");
-	this.voidHexagon = uiCreator.createPatternButton("void hex", 
-														"select_void_hexagon");
-	this.character = uiCreator.createPatternButton("char button", "select_character");
-	this.exit = uiCreator.createPatternButton("exit button", "select_exit");
+	this.fullHexagon = uiCreator.createPatternButton("fullHex", "select_full_hexagon");
+	this.voidHexagon = uiCreator.createPatternButton("voidHex", "select_void_hexagon");
+	this.character = uiCreator.createPatternButton("charButton", "select_character");
+	this.exit = uiCreator.createPatternButton("exitButton", "select_exit");
+	this.emptyHexagon.enableFocusRendering();
+	this.fullHexagon.enableFocusRendering();
+	this.voidHexagon.enableFocusRendering();
+	this.character.enableFocusRendering();
+	this.exit.enableFocusRendering();
 
 	// Buttons to edit level size
-	this.addLineFirst = uiCreator.createPatternButton("add line first", 
+	this.addLineFirst = uiCreator.createPatternButton("addLineFirst", 
 														"add_line_first");
-	this.addLineLast = uiCreator.createPatternButton("add line last", "add_line_last");
-	this.addColumnFirst = uiCreator.createPatternButton("add col first", 
+	this.addLineLast = uiCreator.createPatternButton("addLineLast", "add_line_last");
+	this.addColumnFirst = uiCreator.createPatternButton("addColFirst", 
 														"add_column_first");
-	this.addColumnLast = uiCreator.createPatternButton("add col last", 
+	this.addColumnLast = uiCreator.createPatternButton("addColLast", 
 														"add_column_last");
-	this.rmFirstLine = uiCreator.createPatternButton("rm first line", "rm_first_line");
-	this.rmLastLine = uiCreator.createPatternButton("rm last line", "rm_last_line");
-	this.rmFirstColumn = uiCreator.createPatternButton("rm first col", 
+	this.rmFirstLine = uiCreator.createPatternButton("rmFirstLine", "rm_first_line");
+	this.rmLastLine = uiCreator.createPatternButton("rmLastLine", "rm_last_line");
+	this.rmFirstColumn = uiCreator.createPatternButton("rmFirstCol", 
 														"rm_first_column");
-	this.rmLastColumn = uiCreator.createPatternButton("rm last col", "rm_last_column");
+	this.rmLastColumn = uiCreator.createPatternButton("rmLastCol", "rm_last_column");
 }
 
 ForgeGUI.prototype = Object.create(GraphicalElement.prototype);
