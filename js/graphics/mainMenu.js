@@ -52,7 +52,7 @@ MainMenu.prototype.onDrawingRectSet = function() {
 	this.hopeless.setFontHeight(Math.round(this.height/15));
 };
 
-MainMenu.prototype.drawElement = function(date) {
+MainMenu.prototype.selfRender = function() {
 	this.ctx.fillStyle = "#777777";
 	this.ctx.fillRect(0, 0, this.width, this.height);
 
@@ -77,4 +77,7 @@ MainMenu.prototype.offContextDraw = function() {
 		var coor = text[1];
 		obj.offContextDraw(this.offCtx, coor.x*this.width, coor.y*this.height);
 	}
+};
+
+MainMenu.prototype.update = function(dt) {
 };

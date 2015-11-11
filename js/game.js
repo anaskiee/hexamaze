@@ -110,7 +110,7 @@ Game.prototype.handleWorkerMessage = function(msg) {
 Game.prototype.computeNewMap = function(cmdSender, commandLine) {
 	this.removeElementToRender("GraphicsEngine");
 	this.addElementToRender("IngameMenu");
-	this.ingameMenu.expand(Date.now());
+	this.ingameMenu.expand();
 	this.updateComputingMenu(0);
 	if (commandLine.split(" ").length === 4) {
 		this.workerCommand = commandLine;
@@ -121,7 +121,7 @@ Game.prototype.computeNewMap = function(cmdSender, commandLine) {
 Game.prototype.onWinEvent = function() {
 	this.addElementToRender("IngameMenu");
 	this.ingameMenu.setText("You win !");
-	this.ingameMenu.expand(Date.now());
+	this.ingameMenu.expand();
 };
 
 Game.prototype.mapComputed = function() {
@@ -137,11 +137,11 @@ Game.prototype.loadMap = function(map) {
 
 Game.prototype.expandMenu = function() {
 	this.addElementToRender("IngameMenu");
-	this.ingameMenu.expand(Date.now());
+	this.ingameMenu.expand();
 };	
 
 Game.prototype.reduceMenu = function() {
-	this.ingameMenu.reduce(Date.now());
+	this.ingameMenu.reduce();
 };
 
 Game.prototype.displayMenu = function() {

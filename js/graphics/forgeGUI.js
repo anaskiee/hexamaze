@@ -88,7 +88,7 @@ ForgeGUI.prototype.setRendererRect = function(x, y, width, height) {
 	this.rHeight = height;
 };
 
-ForgeGUI.prototype.drawElement = function(date) {
+ForgeGUI.prototype.selfRender = function() {
 	// Clean screen
 	this.ctx.fillStyle = "#003333";
 	// left
@@ -164,6 +164,9 @@ ForgeGUI.prototype.offContextDraw = function() {
 	
 	this.addLineLast.offContextDraw(this.offCtx, 8/16*this.width, 15/16*this.height);
 	this.rmLastLine.offContextDraw(this.offCtx, 10/16*this.width, 15/16*this.height);
+};
+
+ForgeGUI.prototype.update = function(dt) {
 };
 
 ForgeGUI.prototype.setIndicatorText = function(text) {

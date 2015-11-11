@@ -3,13 +3,9 @@
 function TextElement(name, text, pixelMapper) {
 	UIElement.call(this, name, pixelMapper);
 	this.textLines = text.split("\n");
-	this.lineHeight = -1;
 
 	this.fontHeight = -1;
-	this.fontName = "";
-	this.textAlign = "";
-	this.textBaseline = "";
-	this.font = "";
+	this.rendering = null;
 
 	this.defaultColor = "";
 	this.overColor = "";
@@ -43,24 +39,18 @@ TextElement.prototype.computeButtonSize = function() {
 		this.width = Math.max(this.width, ctx.measureText(line).width);
 	}
 	this.width = Math.ceil(this.width);
-	this.lineHeight = Math.ceil(2/3*this.fontHeight) + 4;
-	this.height = this.textLines.length * this.lineHeight;
+	var lineHeight = 2/3*this.fontHeight + 4;
+	this.height = this.textLines.length * lineHeight;
 };
 
 TextElement.prototype.draw = function(ctx, x, y) {
-	ctx.font = this.font;
-	ctx.textAlign = this.textAlign;
-	ctx.textBaseline = this.textBaseline;
+	var color;
 	if (this.mouseOver) {
-		ctx.fillStyle = this.overColor;
+		color = this.overColor;
 	} else {
-		ctx.fillStyle = this.defaultColor;
+		color = this.defaultColor;
 	}
-	var nbLines = this.textLines.length;
-	for (var i = 0; i < nbLines; i++) {
-		var offsetY = y + (i - (nbLines-1)/2) * this.lineHeight;
-		ctx.fillText(this.textLines[i], x, Math.round(offsetY));
-	}
+	this.rendering(ctx, x, y, this.textLines, this.fontHeight, color);
 };
 
 TextElement.prototype.offContextDraw = function(ctx, x, y) {
@@ -77,30 +67,22 @@ TextElement.prototype.offContextDraw = function(ctx, x, y) {
 TextElement.prototype.setStyle = function(style) {
 	switch (style) {
 		case "basic_text":
-			this.fontName = "chunkfive";
-			this.textAlign = "center";
-			this.textBaseline = "middle";
+			this.rendering = TextRendering.fillBasicText;
 			this.defaultColor = "#000000";
 			this.overColor = "#222222";
 			break;
 		case "title_text":
-			this.fontName = "distant-galaxy";
-			this.textAlign = "center";
-			this.textBaseline = "middle";
+			this.rendering = TextRendering.fillTitleText;
 			this.defaultColor = "#000000";
 			this.overColor = "#222222";
 			break;
 		case "button_text":
-			this.fontName = "molot";
-			this.textAlign = "center";
-			this.textBaseline = "middle";
+			this.rendering = TextRendering.fillButtonText;
 			this.defaultColor = "#000000";
 			this.overColor = "#222222";
 			break;
 		case "console_text":
-			this.fontName = "ubuntu-condensed";
-			this.textAlign = "left";
-			this.textBaseline = "middle";
+			this.rendering = TextRendering.fillConsoleText;
 			this.defaultColor = "#EEEEEE";
 			this.overColor = "#222222";
 			break;

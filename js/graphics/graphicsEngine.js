@@ -153,7 +153,7 @@ GraphicsEngine.prototype.computeMapSize = function(width, height) {
 	return radius;
 };
 
-GraphicsEngine.prototype.drawElement = function(date) {
+GraphicsEngine.prototype.selfRender = function() {
 	// Clean screen
 	this.ctx.fillStyle = "#003333";
 	this.ctx.fillRect(0, 0, this.width, this.height);
@@ -221,6 +221,9 @@ GraphicsEngine.prototype.offContextDraw = function() {
 			this.offCtx.restore();
 		}
 	}
+};
+
+GraphicsEngine.prototype.update = function(dt) {
 };
 
 GraphicsEngine.prototype.updateCharacterCoordinates = function() {

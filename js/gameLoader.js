@@ -21,7 +21,7 @@ function GameLoader(canvas, context, offContext, parameters) {
 	var graphicsEngine = new GraphicsEngine(context, offContext, pixelMapper, level, 
 											physicsEngine);
 	var ingameMenu = new IngameMenu(context, offContext, uiCreator);
-	var developerConsole = new DeveloperConsole(context, offContext, uiCreator);
+	var developerConsole = new DeveloperConsole(context, offContext);
 	var forgeGUI = new ForgeGUI(context, offContext, pixelMapper, uiCreator);
 	var mainMenu = new MainMenu(context, offContext, uiCreator);
 	

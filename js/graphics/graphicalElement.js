@@ -45,17 +45,14 @@ GraphicalElement.prototype.checkProperties = function() {
 GraphicalElement.prototype.onDrawingRectSet = function() {
 };
 
-GraphicalElement.prototype.draw = function(date) {
+GraphicalElement.prototype.render = function() {
 	this.ctx.save();
 	this.ctx.translate(this.offsetX, this.offsetY);
-	this.drawElement(date);
+	this.selfRender();
 	this.ctx.restore();
 };
 
 GraphicalElement.prototype.offContextDraw = function() {
-};
-
-GraphicalElement.prototype.drawElement = function(date) {
 };
 
 GraphicalElement.prototype.handleCursorMove = function(x, y) {

@@ -52,11 +52,18 @@ GameMode.prototype.addElementToRender = function(name) {
 // |     Drawing     |
 // +-----------------+
 
-GameMode.prototype.computeNewFrameAndDraw = function(date) {
-	// Render
+GameMode.prototype.update = function(dt) {
 	for (var element of this.elementsToRender) {
 		if (element) {
-			element.draw(date);
+			element.update(dt);
+		}
+	}
+};
+
+GameMode.prototype.render = function() {
+	for (var element of this.elementsToRender) {
+		if (element) {
+			element.render();
 		}
 	}
 

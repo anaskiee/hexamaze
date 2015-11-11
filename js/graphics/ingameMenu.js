@@ -22,11 +22,11 @@ function IngameMenu(context, offContext ,uiCreator) {
 	this.animationDuration = 300;
 	this.animation = "";
 	this.active = false;
-	this.blockEventsSpread = true;
 
 	this.playAgin = uiCreator.createTextButton("ig menu button", "Back to home", 
 												"goto_home");
 	this.previousElement = null;
+	this.dt = -1;
 }
 
 IngameMenu.prototype = Object.create(GraphicalElement.prototype);
@@ -58,23 +58,23 @@ IngameMenu.prototype.onDrawingRectSet = function() {
 	this.text.setFontHeight(Math.round(this.height/10));
 };
 
-IngameMenu.prototype.reduce = function(date) {
+IngameMenu.prototype.reduce = function() {
 	this.animation = "reduce";
-	this.initAnimation(date);
+	this.initAnimation();
 	this.playAgin.disable();
 };
 
-IngameMenu.prototype.expand = function(date) {
+IngameMenu.prototype.expand = function() {
 	this.animation = "expand";
-	this.initAnimation(date);
+	this.initAnimation();
 };
 
 IngameMenu.prototype.setText = function(text) {
 	this.text.setText(text);
 };
 
-IngameMenu.prototype.initAnimation = function(date) {
-	this.beginning = date;
+IngameMenu.prototype.initAnimation = function() {
+	this.dt = 0;
 	this.animationRunning = true;
 	this.active = true;
 
@@ -109,26 +109,7 @@ IngameMenu.prototype.computeMenuCharacteristics = function(factor) {
 	}
 };
 
-IngameMenu.prototype.drawElement = function(date) {
-	var factor;
-	var drawOffContext = false;
-	if (!this.animationRunning) {
-		factor = 2;
-	} else {
-		factor = 2 * (date - this.beginning) / this.animationDuration;
-		if (factor > 2) {
-			factor = 2;
-			this.animationRunning = false;
-			if (this.animation === "reduce") {
-				this.active = false;
-			// At the end of expand animation, we draw buttons on offContext once
-			} else if (this.animation === "expand") {
-				drawOffContext = true;
-			}
-		}
-		this.computeMenuCharacteristics(factor);
-	}
-	
+IngameMenu.prototype.selfRender = function(dt) {
 	var h = 0.9*this.height;
 	var x = h / 2 / Math.sqrt(3);
 
@@ -144,7 +125,7 @@ IngameMenu.prototype.drawElement = function(date) {
 	this.text.draw(this.ctx, 0, -this.height/6);
 	
 	// Draw button
-	if (drawOffContext) {
+	if (this.drawOffContext) {
 		this.offCtx.save();
 		this.offCtx.translate(this.posX + this.width/2, this.posY + this.height/2);
 		this.playAgin.offContextDraw(this.offCtx, 0, this.height/6);
@@ -171,6 +152,28 @@ IngameMenu.prototype.drawDistortedHexagon = function(ctx, l, h, x, color) {
 	ctx.closePath();
 	ctx.fillStyle = color;
 	ctx.fill();
+};
+
+IngameMenu.prototype.update = function(dt) {
+	var factor;
+	this.dt += dt;
+	this.drawOffContext = false;
+	if (!this.animationRunning) {
+		factor = 2;
+	} else {
+		factor = 2 * this.dt / this.animationDuration;
+		if (factor > 2) {
+			factor = 2;
+			this.animationRunning = false;
+			if (this.animation === "reduce") {
+				this.active = false;
+			// At the end of expand animation, we draw buttons on offContext once
+			} else if (this.animation === "expand") {
+				this.drawOffContext = true;
+			}
+		}
+		this.computeMenuCharacteristics(factor);
+	}
 };
 
 IngameMenu.prototype.cleanCanvas = function() {

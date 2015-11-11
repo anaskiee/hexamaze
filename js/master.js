@@ -8,6 +8,7 @@ function Master(game, forge, home, pixelMapper, parameters) {
 
 	this.commands = null;
 	this.events = [];
+	this.prevDate = Date.now();
 
 	if (parameters.mode) {
 		this.module = this[parameters.mode];
@@ -32,12 +33,15 @@ Master.prototype.setCommandsPrototypeChain = function(commands) {
 
 Master.prototype.draw = function() {
 	var date = Date.now();
+	var dt = date - this.prevDate;
 
 	var eventNb = this.events.length;
 	this.applyEvents();
 	if (eventNb > 0 || this.module.isAnimationRunning()) {
-		this.module.computeNewFrameAndDraw(date);
+		this.module.update(dt);
+		this.module.render();
 	}
+	this.prevDate = date;
 	
 	requestAnimationFrame(this.draw.bind(this));
 };
