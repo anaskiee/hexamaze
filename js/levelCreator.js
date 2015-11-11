@@ -134,7 +134,7 @@ LevelCreator.prototype.randomize = function(blockPercent) {
 
 	// Character
 	var characterHexagon = this.getRandomHexagon();
-	this.level.characterHexagon = characterHexagon;
+	this.level.character.hexagon = characterHexagon;
 	
 	// Exit
 	var exitHexagon = this.getRandomHexagon();
@@ -370,7 +370,7 @@ LevelCreator.prototype.addColumnLast = function() {
 };
 
 LevelCreator.prototype.canHexagonBeRemoved = function(hex) {
-	if (hex === this.level.characterHexagon || hex === this.level.exitHexagon) {
+	if (hex === this.level.character.hexagon || hex === this.level.exitHexagon) {
 		console.log("warning: can't remove this line/column");
 		alert("operation impossible : exit or character would be removed");
 		return false;
@@ -468,7 +468,7 @@ LevelCreator.prototype.setHexagonStyle = function(hexagon, style) {
 };
 
 LevelCreator.prototype.setCharacterHexagon = function(hexagon) {
-	this.level.characterHexagon = hexagon;
+	this.level.character.hexagon = hexagon;
 };
 
 LevelCreator.prototype.setExitHexagon = function(hexagon) {
@@ -477,13 +477,13 @@ LevelCreator.prototype.setExitHexagon = function(hexagon) {
 
 LevelCreator.prototype.save = function() {
 	this.positionsSaved = {
-		character: this.level.characterHexagon,
+		character: this.level.character.hexagon,
 		exit: this.level.exitHexagon
 	};
 };
 
 LevelCreator.prototype.restore = function() {
-	this.level.characterHexagon = this.positionsSaved.character;
+	this.level.character.hexagon = this.positionsSaved.character;
 	this.level.exitHexagon = this.positionsSaved.exit;
 	this.positionsSaved = null;
 };

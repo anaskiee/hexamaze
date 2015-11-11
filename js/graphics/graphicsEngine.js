@@ -5,14 +5,11 @@ function GraphicsEngine(context, offContext, pixelMapper, level, physicsEngine) 
 
 	this.ctx = context;
 	this.offCtx = offContext;
-
 	this.level = level;
+	this.physicsEngine = physicsEngine;
 
 	this.active = true;
 	this.blockEventsSpread = false;
-
-	// To apply events
-	this.physicsEngine = physicsEngine;
 
 	// Direction given by eventHandler
 	this.direction = "";
@@ -30,24 +27,27 @@ GraphicsEngine.prototype.constructor = GraphicsEngine;
 GraphicsEngine.prototype.onDrawingRectSet = function() {
 	this.width = this.maxWidth;
 	this.height = this.maxHeight;
-
-	if (this.level.hexagons.size > 0) {
-		this.computeGraphicsData();
-	}
+	this.computeGraphicsData();
 };
 
 GraphicsEngine.prototype.computeGraphicsData = function() {
-	// Pre computation of each hexagons position for the drawing
-	this.radius = this.computeMapSize(this.width, this.height);
-
-	// Patterns
-	this.hexagonPatterns = new HexagonPatterns(this.radius);
-	var characterHeight = 2/5*this.radius;
-	this.characterPatterns = new CharacterPatterns(characterHeight);
-	var exitHeight = 3/5*this.radius;
-	this.exitPatterns = new ExitPatterns(exitHeight);
+	// Only compute if there is level is initialized
+	if (this.level.hexagons.size > 0) {
+		// Pre computation of each hexagons position for the drawing
+		this.radius = this.computeMapSize(this.width, this.height);
 	
-	this.updateCharacterCoordinates();
+		// Patterns
+		this.hexagonPatterns = new HexagonPatterns(this.radius);
+		var characterHeight = 2/5*this.radius;
+		var character = this.level.character;
+		character.pattern = new CharacterPatterns(characterHeight);
+		character.x = character.hexagon.x;
+		character.y = character.hexagon.y;
+		var exitHeight = 3/5*this.radius;
+		this.exitPatterns = new ExitPatterns(exitHeight);
+		
+		this.updateCharacterCoordinates();
+	}
 };
 
 /*GraphicsEngine.prototype.computeHexagonSize = function(screenWidth, screenHeight) {
@@ -179,10 +179,10 @@ GraphicsEngine.prototype.selfRender = function() {
 	}
 
 	// Draw character and direction preselected
-	if (this.level.characterHexagon !== null) {
-		posX = this.level.characterHexagon.x;
-		posY = this.level.characterHexagon.y;
-		this.characterPatterns.draw(this.ctx, "basic", posX, posY);
+	if (this.level.character.hexagon !== null) {
+		posX = this.level.character.hexagon.x;
+		posY = this.level.character.hexagon.y;
+		this.level.character.render(this.ctx);
 		if (this.direction) {
 			this.hexagonPatterns.draw(this.ctx, this.direction, posX, posY);
 		}
@@ -224,10 +224,15 @@ GraphicsEngine.prototype.offContextDraw = function() {
 };
 
 GraphicsEngine.prototype.update = function(dt) {
+	this.level.character.update(dt);
+	if (this.animationRunning === true && 
+		this.level.character.animationRunning === false) {
+		this.animationRunning = false;
+	}
 };
 
 GraphicsEngine.prototype.updateCharacterCoordinates = function() {
-	var hexagon = this.level.characterHexagon;
+	var hexagon = this.level.character.hexagon;
 	if (hexagon !== null) {
 		this.charX = this.offsetX + hexagon.x;
 		this.charY = this.offsetY + hexagon.y; 
@@ -278,6 +283,9 @@ GraphicsEngine.prototype.setEventMode = function(mode) {
 };
 
 GraphicsEngine.prototype.handleCursorMove = function(x, y) {
+	if (this.level.character.animationRunning === true)
+		return;
+
 	var direction = this.computeDirection(x, y);
 	if (direction !== this.direction) {
 		this.direction = direction;
@@ -287,7 +295,19 @@ GraphicsEngine.prototype.handleCursorMove = function(x, y) {
 };
 
 GraphicsEngine.prototype.handleClick = function() {
+	if (this.level.character.animationRunning === true)
+		return;
+	
+	var character = this.level.character;
+	var px = this.offsetX + character.hexagon.x;
+	var py = this.offsetY + character.hexagon.y;
 	var action = this.physicsEngine.applyMove(this.direction);
-	this.updateCharacterCoordinates();
-	return action;
+	var x = this.offsetX + character.hexagon.x;
+	var y = this.offsetY + character.hexagon.y;
+	if (px !== x || py !== y) {
+		this.animationRunning = true;
+		character.initAnimation(px, py, x, y);
+		this.updateCharacterCoordinates();
+		return action;
+	}
 };

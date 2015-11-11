@@ -2,7 +2,7 @@
 
 function Level() {
 	this.hexagons = new Set();
-	this.characterHexagon = null;
+	this.character = new Character();
 	this.exitHexagon = null;
 	this.firstColumnOnTop = false;
 }
@@ -10,7 +10,7 @@ function Level() {
 Level.prototype.clearData = function() {
 	if (this.hexagons.size > 0) {
 		this.hexagons.clear();
-		this.characterHexagon = null;
+		this.character.hexagon = null;
 		this.exitHexagon = null;
 		this.firstColumnOnTop = false;
 	}
@@ -24,8 +24,8 @@ Level.prototype.addHexagon = function(type) {
 
 Level.prototype.removeHexagon = function(hex) {
 	var done = this.hexagons.delete(hex);
-	if (hex === this.characterHexagon) {
-		this.characterHexagon = null;
+	if (hex === this.character.hexagon) {
+		this.character.hexagon = null;
 	}
 	if (hex === this.exitHexagon) {
 		this.exitHexagon = null;
@@ -33,7 +33,7 @@ Level.prototype.removeHexagon = function(hex) {
 };
 
 Level.prototype.isLevelFinished = function() {
-	if (this.characterHexagon === null || this.characterHexagon.type === "void")
+	if (this.character.hexagon === null || this.character.hexagon.type === "void")
 		return false;
 	if (this.exitHexagon === null || this.exitHexagon.type === "void")
 		return false;
@@ -85,7 +85,7 @@ Level.prototype.toString = function() {
 	}
 	
 	// Save character and exit hexagon
-	idxCharacter = indexes.get(this.characterHexagon);
+	idxCharacter = indexes.get(this.character.hexagon);
 	idxExit = indexes.get(this.exitHexagon);
 
 	return this.firstColumnOnTop + ";" + idxCharacter + ";" + idxExit + ";" + hexagons;
@@ -132,6 +132,6 @@ Level.prototype.fill = function(data) {
 	}
 
 	// Character and exit
-	this.characterHexagon = indexes.get(idxCharacter);
+	this.character.hexagon = indexes.get(idxCharacter);
 	this.exitHexagon = indexes.get(idxExit);
 };

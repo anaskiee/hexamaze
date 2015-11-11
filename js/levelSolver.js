@@ -24,7 +24,7 @@ LevelSolver.prototype.highlightSolution = function() {
 
 	var currHexagon = exitHexagon;
 	var nextHexagon, direction;
-	while (currHexagon !== this.level.characterHexagon) {
+	while (currHexagon !== this.level.character.hexagon) {
 		nextHexagon = this.solution.get(currHexagon);
 		nextHexagon = nextHexagon.prevHexagon;
 		direction = this.solution.get(currHexagon).direction;
@@ -36,7 +36,7 @@ LevelSolver.prototype.highlightSolution = function() {
 };
 
 LevelSolver.prototype.solve = function() {
-	var characterHexagon = this.level.characterHexagon;
+	var characterHexagon = this.level.character.hexagon;
 	var exitHexagon = this.level.exitHexagon;
 	if (characterHexagon === null || exitHexagon === null) {
 		return "undefined";
@@ -66,7 +66,7 @@ LevelSolver.prototype.solve = function() {
 };
 
 LevelSolver.prototype.computeShortestPaths = function() {
-	var characterHexagon = this.level.characterHexagon;
+	var characterHexagon = this.level.character.hexagon;
 	var exitHexagon = this.level.exitHexagon;
 	if (characterHexagon === null || exitHexagon === null) {
 		return "undefined";

@@ -1,6 +1,7 @@
 "use strict";
 
-importScripts("./levelCreator.js", "./levelSolver.js", "./level.js", "./hexagon.js");
+importScripts("./levelCreator.js", "./levelSolver.js", "./level.js", "./hexagon.js", 
+				"./character.js");
 
 onmessage = function(msg) {
 	var command = msg.data;
