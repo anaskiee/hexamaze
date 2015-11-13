@@ -13,6 +13,7 @@ function Game(width, height, physicsEngine, graphicsEngine, ingameMenu,
 	this.level = level;
 
 	this.workerCommand = null;
+	this.levelSaved = "";
 }
 
 Game.prototype = Object.create(GameMode.prototype);
@@ -33,6 +34,7 @@ Game.prototype.startModule = function(level) {
 	
 	// Load this one
 	if (level) {
+		this.levelSaved = this.decompressLevel(level);
 		this.loadMap(this.decompressLevel(level));
 		this.mapComputed();
 
@@ -51,6 +53,7 @@ Game.prototype.setCommandsPrototypeChain = function(commands) {
 	this.commands = Object.create(commands);
 	this.commands.new_level = this.computeNewMap.bind(this);
 	this.commands.win = this.onWinEvent.bind(this);
+	this.commands.restart = this.restart.bind(this);
 };
 
 // +----------------------+
@@ -93,6 +96,7 @@ Game.prototype.handleWorkerMessage = function(msg) {
 	// from the one expected
 	if (this.workerCommand === jsonMsg.cmd) {
 		if (jsonMsg.type === "computed") {
+			this.levelSaved = jsonMsg.data;
 			this.loadMap(jsonMsg.data);
 			this.mapComputed();
 		} else {
@@ -173,4 +177,9 @@ Game.prototype.hideConsole = function() {
 	this.ingameMenu.adjustDrawingRect(0, 0, 0, this.developerConsole.maxHeight);
 	this.removeElementToRender("DeveloperConsole");
 	this.developerConsole.hide();
+};
+
+Game.prototype.restart = function() {
+		this.loadMap(this.levelSaved);
+		this.mapComputed();
 };
