@@ -1,7 +1,7 @@
 "use strict";
 
-function Forge(width, height, pixelMapper, graphicsEngine, developerConsole, level, 
-				levelCreator, forgeGUI, levelSolver) {
+function Forge(width, height, pixelMapper, graphicsEngine, developerConsole, 
+				level, levelCreator, forgeGUI, levelSolver) {
 	var elemList = [developerConsole, forgeGUI, graphicsEngine];
 	GameMode.call(this, "Forge", width, height, elemList);
 
@@ -105,10 +105,6 @@ Forge.prototype.handleKey = function(key) {
 // +-------------------------+
 // |   Top level functions   |
 // +-------------------------+
-
-Forge.prototype.hideConsole = function() {
-	this.developerConsole.hide();
-};
 
 Forge.prototype.showConsole = function() {
 	this.forgeGuiHeight -= this.developerConsole.maxHeight;

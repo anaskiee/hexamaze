@@ -1,7 +1,7 @@
 "use strict";
 
-function PixelMapper(offContext) {
-	this.offCtx = offContext;
+function PixelMapper(ctxLocator) {
+	this.ctxLocator = ctxLocator;
 
 	// 0 for null element
 	// others to register elements
@@ -26,7 +26,7 @@ PixelMapper.prototype.registerAndGetColor = function(object) {
 };
 
 PixelMapper.prototype.getElement = function(x, y) {
-	var pixel = this.offCtx.getImageData(x, y, 1, 1);
+	var pixel = this.ctxLocator.offCtx.getImageData(x, y, 1, 1);
 	var color = pixel.data;
 	var r = pixel.data[0];
 	var g = pixel.data[1];

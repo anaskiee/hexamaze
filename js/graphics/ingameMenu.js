@@ -1,10 +1,8 @@
 "use strict";
 
-function IngameMenu(context, offContext ,uiCreator) {
-	GraphicalElement.call(this, "IngameMenu");
+function IngameMenu(ctxLocator ,uiCreator) {
+	GraphicalElement.call(this, "IngameMenu", ctxLocator);
 
-	this.ctx = context;
-	this.offCtx = offContext;
 	this.uiCreator = uiCreator;
 
 	// Text
@@ -110,35 +108,38 @@ IngameMenu.prototype.computeMenuCharacteristics = function(factor) {
 };
 
 IngameMenu.prototype.selfRender = function(dt) {
+	var ctx = this.ctxLocator.ctx;
 	var h = 0.9*this.height;
 	var x = h / 2 / Math.sqrt(3);
 
-	this.ctx.save();
-	this.ctx.translate(this.posX + this.width/2, this.posY + this.height/2);
+	ctx.save();
+	ctx.translate(this.posX + this.width/2, this.posY + this.height/2);
 
 	// Draw hexagon style menu
-	this.drawDistortedHexagon(this.ctx, this.menuWidth, h, x, "#000000");
-	this.drawDistortedHexagon(this.ctx, 0.992*this.menuWidth, 0.98*h, 0.98*x, "#555555");
-	this.ctx.clip();
+	this.drawDistortedHexagon(ctx, this.menuWidth, h, x, "#000000");
+	this.drawDistortedHexagon(ctx, 0.992*this.menuWidth, 0.98*h, 0.98*x, "#555555");
+	ctx.clip();
 
 	// Draw text
-	this.text.draw(this.ctx, 0, -this.height/6);
+	this.text.draw(ctx, 0, -this.height/6);
 	
 	// Draw button
 	if (this.drawOffContext) {
-		this.offCtx.save();
-		this.offCtx.translate(this.posX + this.width/2, this.posY + this.height/2);
-		this.playAgin.offContextDraw(this.offCtx, 0, this.height/6);
-		this.offCtx.restore();
+		var offCtx = this.ctxLocator.offCtx;
+		offCtx.save();
+		offCtx.translate(this.posX + this.width/2, this.posY + this.height/2);
+		this.playAgin.offContextDraw(offCtx, 0, this.height/6);
+		offCtx.restore();
 	}
-	this.playAgin.draw(this.ctx, 0, this.height/6);
+	this.playAgin.draw(ctx, 0, this.height/6);
 
-	this.ctx.restore();
+	ctx.restore();
 };
 
 IngameMenu.prototype.offContextDraw = function() {
 	// We do not want to catch events except buttons, but they are drawn after
-	this.offCtx.clearRect(this.offsetX, this.offsetY, this.maxWidth, this.maxHeight);
+	this.ctxLocator.offCtx.clearRect(this.offsetX, this.offsetY, 
+									this.maxWidth, this.maxHeight);
 };
 
 IngameMenu.prototype.drawDistortedHexagon = function(ctx, l, h, x, color) {

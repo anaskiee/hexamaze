@@ -1,10 +1,8 @@
 "use strict";
 
-function MainMenu(context, offContext, uiCreator) {
-	GraphicalElement.call(this, "MainMenu", uiCreator);
+function MainMenu(ctxLocator, uiCreator) {
+	GraphicalElement.call(this, "MainMenu", ctxLocator, uiCreator);
 
-	this.ctx = context;
-	this.offCtx = offContext;
 	this.uiCreator = uiCreator;
 
 	this.forge = uiCreator.createTextButton("forge button", "Forge", "goto_forge");
@@ -53,29 +51,31 @@ MainMenu.prototype.onDrawingRectSet = function() {
 };
 
 MainMenu.prototype.selfRender = function() {
-	this.ctx.fillStyle = "#777777";
-	this.ctx.fillRect(0, 0, this.width, this.height);
+	var ctx = this.ctxLocator.ctx;
+	ctx.fillStyle = "#777777";
+	ctx.fillRect(0, 0, this.width, this.height);
 
 	for (var button of this.buttons.entries()) {
 		var obj = button[0];
 		var coor = button[1];
-		obj.draw(this.ctx, coor.x*this.width, coor.y*this.height);
+		obj.draw(ctx, coor.x*this.width, coor.y*this.height);
 	}
 
 	for (var text of this.texts.entries()) {
 		var obj = text[0];
 		var coor = text[1];
-		obj.draw(this.ctx, coor.x*this.width, coor.y*this.height);
+		obj.draw(ctx, coor.x*this.width, coor.y*this.height);
 	}
 };
 
 MainMenu.prototype.offContextDraw = function() {
-	this.offCtx.clearRect(this.offsetX, this.offsetY, this.maxWidth, this.maxHeight);
+	var offCtx = this.ctxLocator.offCtx;
+	offCtx.clearRect(this.offsetX, this.offsetY, this.maxWidth, this.maxHeight);
 
 	for (var text of this.buttons.entries()) {
 		var obj = text[0];
 		var coor = text[1];
-		obj.offContextDraw(this.offCtx, coor.x*this.width, coor.y*this.height);
+		obj.offContextDraw(offCtx, coor.x*this.width, coor.y*this.height);
 	}
 };
 

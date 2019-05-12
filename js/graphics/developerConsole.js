@@ -1,10 +1,7 @@
 "use strict";
 
-function DeveloperConsole(context, offContext) {
-	GraphicalElement.call(this, "DeveloperConsole");
-
-	this.ctx = context;
-	this.offCtx = offContext;
+function DeveloperConsole(ctxLocator) {
+	GraphicalElement.call(this, "DeveloperConsole", ctxLocator);
 
 	this.active = false;
 	this.blockEventsSpread = false;
@@ -29,20 +26,21 @@ DeveloperConsole.prototype.onDrawingRectSet = function() {
 };
 
 DeveloperConsole.prototype.selfRender = function() {
-	this.ctx.fillStyle = "#222222";
-	this.ctx.fillRect(0, 0, this.width, this.height);
+	var ctx = this.ctxLocator.ctx;
+	ctx.fillStyle = "#222222";
+	ctx.fillRect(0, 0, this.width, this.height);
 
-	this.ctx.strokeStyle = "#000000";
-	this.ctx.strokeRect(0.5, 0.5, this.width-1, this.height-1);
+	ctx.strokeStyle = "#000000";
+	ctx.strokeRect(0.5, 0.5, this.width-1, this.height-1);
 
 	var text = this.command + this.concatString;
-	TextRendering.fillConsoleText(this.ctx, 3, this.height/2, [text], this.cmdHeight, 
+	TextRendering.fillConsoleText(ctx, 3, this.height/2, [text], this.cmdHeight, 
 									"#EEEEEE");
 };
 
 DeveloperConsole.prototype.offContextDraw = function() {
 	// We do not want to catch mouse events at the moment
-	this.offCtx.clearRect(this.offsetX, this.offsetY, this.maxWidth, this.maxHeight);
+	this.ctxLocator.offCtx.clearRect(this.offsetX, this.offsetY, this.maxWidth, this.maxHeight);
 };
 
 DeveloperConsole.prototype.update = function(dt) {

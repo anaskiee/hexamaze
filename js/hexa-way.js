@@ -16,9 +16,9 @@ window.addEventListener('load', function() {
 		alert("Impossible to get context of canvas");
 		return;
 	}
-
 	var offCanvas = document.createElement("canvas");
 	var offContext = offCanvas.getContext("2d");
+	var ctxLocator = new ContextLocator(context, offContext);
 
 	var screenWidth = window.innerWidth;
 	var screenHeight = window.innerHeight;
@@ -39,9 +39,5 @@ window.addEventListener('load', function() {
 		parsedParameters[parameter.split("=")[0]] = parameter.split("=")[1];
 	}
 
-	if (parsedParameters.debug === "true") {
-		new GameLoader(canvas, offContext, context, parsedParameters);
-	} else {
-		new GameLoader(canvas, context, offContext, parsedParameters);
-	}
+	new GameLoader(canvas, ctxLocator, parsedParameters);
 });

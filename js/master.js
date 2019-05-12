@@ -1,6 +1,7 @@
 "use strict";
 
-function Master(game, forge, home, pixelMapper, parameters) {
+function Master(ctxLocator, game, forge, home, pixelMapper, parameters) {
+	this.ctxLocator = ctxLocator;
 	this.game = game;
 	this.forge = forge;
 	this.home = home;
@@ -25,6 +26,7 @@ Master.prototype.setCommandsPrototypeChain = function(commands) {
 	this.commands.goto_forge = this.goToForge.bind(this);
 	this.commands.goto_home = this.goToHome.bind(this);
 	this.commands.level = this.loadLevel.bind(this);
+	this.commands.invert_ctx = this.invertContexts.bind(this);
 
 	this.game.setCommandsPrototypeChain(this.commands);
 	this.forge.setCommandsPrototypeChain(this.commands);
@@ -126,3 +128,10 @@ Master.prototype.loadLevel = function(cmdSender, cmd) {
 		console.log("invalid command: " + cmd);
 	}
 };
+
+Master.prototype.invertContexts = function() {
+	var saved = this.ctxLocator.ctx;
+	this.ctxLocator.ctx = this.ctxLocator.offCtx;
+	this.ctxLocator.offCtx = saved;
+	this.module.forceRenderRefresh();
+}

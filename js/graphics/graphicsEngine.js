@@ -1,10 +1,8 @@
 "use strict";
 
-function GraphicsEngine(context, offContext, pixelMapper, level, physicsEngine) {
-	GraphicalElement.call(this, "GraphicsEngine", pixelMapper);
+function GraphicsEngine(ctxLocator, pixelMapper, level, physicsEngine) {
+	GraphicalElement.call(this, "GraphicsEngine", ctxLocator, pixelMapper);
 
-	this.ctx = context;
-	this.offCtx = offContext;
 	this.level = level;
 	this.physicsEngine = physicsEngine;
 
@@ -154,9 +152,10 @@ GraphicsEngine.prototype.computeMapSize = function(width, height) {
 };
 
 GraphicsEngine.prototype.selfRender = function() {
+	var ctx = this.ctxLocator.ctx;
 	// Clean screen
-	this.ctx.fillStyle = "#003333";
-	this.ctx.fillRect(0, 0, this.width, this.height);
+	ctx.fillStyle = "#003333";
+	ctx.fillRect(0, 0, this.width, this.height);
 
 	var posX, posY, style;
 
@@ -167,13 +166,13 @@ GraphicsEngine.prototype.selfRender = function() {
 		style = hexagon.type;
 		
 		if (hexagon.isPreselected) {
-			this.hexagonPatterns.draw(this.ctx, "highlight", posX, posY);
+			this.hexagonPatterns.draw(ctx, "highlight", posX, posY);
 		} else if (hexagon.isReachable) {
-			this.hexagonPatterns.draw(this.ctx, "reachable", posX, posY);
+			this.hexagonPatterns.draw(ctx, "reachable", posX, posY);
 		} else {
 			// voids are not drawn in game mode
 			if (!(style === "void" && this.mode === "game")) {
-				this.hexagonPatterns.draw(this.ctx, style, posX, posY);
+				this.hexagonPatterns.draw(ctx, style, posX, posY);
 			}
 		}
 	}
@@ -182,9 +181,9 @@ GraphicsEngine.prototype.selfRender = function() {
 	if (this.level.character.hexagon !== null) {
 		posX = this.level.character.hexagon.x;
 		posY = this.level.character.hexagon.y;
-		this.level.character.render(this.ctx);
+		this.level.character.render(ctx);
 		if (this.direction) {
-			this.hexagonPatterns.draw(this.ctx, this.direction, posX, posY);
+			this.hexagonPatterns.draw(ctx, this.direction, posX, posY);
 		}
 	}
 
@@ -192,20 +191,21 @@ GraphicsEngine.prototype.selfRender = function() {
 	if (this.level.exitHexagon !== null) {
 		posX = this.level.exitHexagon.x;
 		posY = this.level.exitHexagon.y;
-		this.exitPatterns.draw(this.ctx, "basic", posX, posY);
+		this.exitPatterns.draw(ctx, "basic", posX, posY);
 	}
 };
 
 GraphicsEngine.prototype.offContextDraw = function() {
+	var offCtx = this.ctxLocator.offCtx;
 	if (this.mode === "game") {
 		if (this.offContextColor === null) {
 			this.offContextColor = this.pixelMapper.registerAndGetColor(this);
 		}
-		this.offCtx.fillStyle = this.offContextColor;
-		this.offCtx.fillRect(this.offsetX, this.offsetY, 
+		offCtx.fillStyle = this.offContextColor;
+		offCtx.fillRect(this.offsetX, this.offsetY, 
 								this.maxWidth, this.maxHeight);
 	} else if (this.mode === "forge") {
-		this.offCtx.clearRect(this.offsetX, this.offsetY, 
+		offCtx.clearRect(this.offsetX, this.offsetY, 
 								this.maxWidth, this.maxHeight);
 		var x, y;
 		for (var hexagon of this.level.hexagons) {
@@ -214,11 +214,11 @@ GraphicsEngine.prototype.offContextDraw = function() {
 			if (hexagon.offContextColor === null) {
 				hexagon.offContextColor = this.pixelMapper.registerAndGetColor(hexagon);
 			}
-			this.offCtx.save();
-			this.offCtx.translate(Math.round(this.offsetX), Math.round(this.offsetY));
-			this.hexagonPatterns.offContextDraw(this.offCtx, x, y, 
+			offCtx.save();
+			offCtx.translate(Math.round(this.offsetX), Math.round(this.offsetY));
+			this.hexagonPatterns.offContextDraw(offCtx, x, y, 
 												hexagon.offContextColor);
-			this.offCtx.restore();
+			offCtx.restore();
 		}
 	}
 };

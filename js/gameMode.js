@@ -60,6 +60,11 @@ GameMode.prototype.update = function(dt) {
 	}
 };
 
+GameMode.prototype.forceRenderRefresh = function() {
+	this.render();
+	this.eventsContextDraw();
+}
+
 GameMode.prototype.render = function() {
 	for (var element of this.elementsToRender) {
 		if (element) {

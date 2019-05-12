@@ -1,7 +1,8 @@
 "use strict";
 
-function GraphicalElement(name, pixelMapper) {
+function GraphicalElement(name, ctxLocator, pixelMapper) {
 	this.name = name;
+	this.ctxLocator = ctxLocator;
 	this.pixelMapper = pixelMapper;
 	this.offsetX = 0;
 	this.offsetY = 0;
@@ -46,10 +47,11 @@ GraphicalElement.prototype.onDrawingRectSet = function() {
 };
 
 GraphicalElement.prototype.render = function() {
-	this.ctx.save();
-	this.ctx.translate(this.offsetX, this.offsetY);
+	var ctx = this.ctxLocator.ctx;
+	ctx.save();
+	ctx.translate(this.offsetX, this.offsetY);
 	this.selfRender();
-	this.ctx.restore();
+	ctx.restore();
 };
 
 GraphicalElement.prototype.offContextDraw = function() {};

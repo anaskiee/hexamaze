@@ -1,10 +1,7 @@
 "use strict";
 
-function ForgeGUI(context, offContext, pixelMapper, uiCreator) {
-	GraphicalElement.call(this, "ForgeGUI", pixelMapper, uiCreator);
-
-	this.ctx = context;
-	this.offCtx = offContext;
+function ForgeGUI(ctxLocator, pixelMapper, uiCreator) {
+	GraphicalElement.call(this, "ForgeGUI", ctxLocator, pixelMapper);
 
 	this.testIt = uiCreator.createTextButton("test it button", "Test it", "test_it");
 	this.import = uiCreator.createTextButton("Import button", "import", "import");
@@ -89,81 +86,83 @@ ForgeGUI.prototype.setRendererRect = function(x, y, width, height) {
 };
 
 ForgeGUI.prototype.selfRender = function() {
+	var ctx = this.ctxLocator.ctx;
 	// Clean screen
-	this.ctx.fillStyle = "#003333";
+	ctx.fillStyle = "#003333";
 	// left
-	this.ctx.fillRect(0, 0, this.rX - this.offsetX, this.height);
+	ctx.fillRect(0, 0, this.rX - this.offsetX, this.height);
 	// right
-	this.ctx.fillRect(this.rX + this.rWidth, 0, 
+	ctx.fillRect(this.rX + this.rWidth, 0, 
 						this.width - this.rX - this.rWidth, this.height);
 	// top
-	this.ctx.fillRect(this.rX, 0, this.rWidth, this.rY - this.offsetX);
+	ctx.fillRect(this.rX, 0, this.rWidth, this.rY - this.offsetX);
 	// bot
-	this.ctx.fillRect(this.rX, this.rY + this.rHeight, 
+	ctx.fillRect(this.rX, this.rY + this.rHeight, 
 						this.rWidth, this.height - this.rY - this.rHeight);
 
 	// Around graphicsEngine
-	this.ctx.strokeStyle = "#000000";
-	this.ctx.strokeRect(this.rX-0.5, this.rY-0.5, this.rWidth+1, this.rHeight+1);
+	ctx.strokeStyle = "#000000";
+	ctx.strokeRect(this.rX-0.5, this.rY-0.5, this.rWidth+1, this.rHeight+1);
 
 	// Left interface
-	this.ctx.strokeRect(Math.round(this.width/8)+0.5, 0.5, 0, this.height);
+	ctx.strokeRect(Math.round(this.width/8)+0.5, 0.5, 0, this.height);
 
 	// Buttons on the left
-	this.testIt.draw(this.ctx, 1/16*this.width, 17/20*this.height);
-	this.import.draw(this.ctx, 1/16*this.width, 18/20*this.height);
-	this.export.draw(this.ctx, 1/16*this.width, 19/20*this.height);
+	this.testIt.draw(ctx, 1/16*this.width, 17/20*this.height);
+	this.import.draw(ctx, 1/16*this.width, 18/20*this.height);
+	this.export.draw(ctx, 1/16*this.width, 19/20*this.height);
 
 	// Level indicator
-	this.shortestPaths.draw(this.ctx, 4/16*this.width, 19/20*this.height);
+	this.shortestPaths.draw(ctx, 4/16*this.width, 19/20*this.height);
 
-	this.emptyHexagon.draw(this.ctx, 1/16*this.width, 3/32*this.height);
-	this.fullHexagon.draw(this.ctx, 1/16*this.width, 8/32*this.height);
-	this.voidHexagon.draw(this.ctx, 1/16*this.width, 13/32*this.height);
-	this.character.draw(this.ctx, 1/16*this.width, 18/32*this.height);
-	this.exit.draw(this.ctx, 1/16*this.width, 23/32*this.height);
+	this.emptyHexagon.draw(ctx, 1/16*this.width, 3/32*this.height);
+	this.fullHexagon.draw(ctx, 1/16*this.width, 8/32*this.height);
+	this.voidHexagon.draw(ctx, 1/16*this.width, 13/32*this.height);
+	this.character.draw(ctx, 1/16*this.width, 18/32*this.height);
+	this.exit.draw(ctx, 1/16*this.width, 23/32*this.height);
 
 	// Buttons to edit map size
-	this.addColumnFirst.draw(this.ctx, 3/16*this.width, 3/8*this.height);
-	this.rmFirstColumn.draw(this.ctx, 3/16*this.width, 5/8*this.height);
+	this.addColumnFirst.draw(ctx, 3/16*this.width, 3/8*this.height);
+	this.rmFirstColumn.draw(ctx, 3/16*this.width, 5/8*this.height);
 	
-	this.addColumnLast.draw(this.ctx, 15/16*this.width, 3/8*this.height);
-	this.rmLastColumn.draw(this.ctx, 15/16*this.width, 5/8*this.height);
+	this.addColumnLast.draw(ctx, 15/16*this.width, 3/8*this.height);
+	this.rmLastColumn.draw(ctx, 15/16*this.width, 5/8*this.height);
 	
-	this.addLineFirst.draw(this.ctx, 8/16*this.width, 1/16*this.height);
-	this.rmFirstLine.draw(this.ctx, 10/16*this.width, 1/16*this.height);
+	this.addLineFirst.draw(ctx, 8/16*this.width, 1/16*this.height);
+	this.rmFirstLine.draw(ctx, 10/16*this.width, 1/16*this.height);
 	
-	this.addLineLast.draw(this.ctx, 8/16*this.width, 15/16*this.height);
-	this.rmLastLine.draw(this.ctx, 10/16*this.width, 15/16*this.height);
+	this.addLineLast.draw(ctx, 8/16*this.width, 15/16*this.height);
+	this.rmLastLine.draw(ctx, 10/16*this.width, 15/16*this.height);
 };
 
 ForgeGUI.prototype.offContextDraw = function() {
+	var offCtx = this.ctxLocator.offCtx;
 	// We do not want to catch mouse events at the moment
-	this.offCtx.clearRect(this.offsetX, this.offsetY, this.maxWidth, this.maxHeight);
+	offCtx.clearRect(this.offsetX, this.offsetY, this.maxWidth, this.maxHeight);
 	
 	// Buttons on the left
-	this.testIt.offContextDraw(this.offCtx, 1/16*this.width, 17/20*this.height);
-	this.import.offContextDraw(this.offCtx, 1/16*this.width, 18/20*this.height);
-	this.export.offContextDraw(this.offCtx, 1/16*this.width, 19/20*this.height);
+	this.testIt.offContextDraw(offCtx, 1/16*this.width, 17/20*this.height);
+	this.import.offContextDraw(offCtx, 1/16*this.width, 18/20*this.height);
+	this.export.offContextDraw(offCtx, 1/16*this.width, 19/20*this.height);
 	
-	this.emptyHexagon.offContextDraw(this.offCtx, 1/16*this.width, 3/32*this.height);
-	this.fullHexagon.offContextDraw(this.offCtx, 1/16*this.width, 8/32*this.height);
-	this.voidHexagon.offContextDraw(this.offCtx, 1/16*this.width, 13/32*this.height);
-	this.character.offContextDraw(this.offCtx, 1/16*this.width, 18/32*this.height);
-	this.exit.offContextDraw(this.offCtx, 1/16*this.width, 23/32*this.height);
+	this.emptyHexagon.offContextDraw(offCtx, 1/16*this.width, 3/32*this.height);
+	this.fullHexagon.offContextDraw(offCtx, 1/16*this.width, 8/32*this.height);
+	this.voidHexagon.offContextDraw(offCtx, 1/16*this.width, 13/32*this.height);
+	this.character.offContextDraw(offCtx, 1/16*this.width, 18/32*this.height);
+	this.exit.offContextDraw(offCtx, 1/16*this.width, 23/32*this.height);
 
 	// Buttons to edit map
-	this.addColumnFirst.offContextDraw(this.offCtx, 3/16*this.width, 3/8*this.height);
-	this.rmFirstColumn.offContextDraw(this.offCtx, 3/16*this.width, 5/8*this.height);
+	this.addColumnFirst.offContextDraw(offCtx, 3/16*this.width, 3/8*this.height);
+	this.rmFirstColumn.offContextDraw(offCtx, 3/16*this.width, 5/8*this.height);
 	
-	this.addColumnLast.offContextDraw(this.offCtx, 15/16*this.width, 3/8*this.height);
-	this.rmLastColumn.offContextDraw(this.offCtx, 15/16*this.width, 5/8*this.height);
+	this.addColumnLast.offContextDraw(offCtx, 15/16*this.width, 3/8*this.height);
+	this.rmLastColumn.offContextDraw(offCtx, 15/16*this.width, 5/8*this.height);
 	
-	this.addLineFirst.offContextDraw(this.offCtx, 8/16*this.width, 1/16*this.height);
-	this.rmFirstLine.offContextDraw(this.offCtx, 10/16*this.width, 1/16*this.height);
+	this.addLineFirst.offContextDraw(offCtx, 8/16*this.width, 1/16*this.height);
+	this.rmFirstLine.offContextDraw(offCtx, 10/16*this.width, 1/16*this.height);
 	
-	this.addLineLast.offContextDraw(this.offCtx, 8/16*this.width, 15/16*this.height);
-	this.rmLastLine.offContextDraw(this.offCtx, 10/16*this.width, 15/16*this.height);
+	this.addLineLast.offContextDraw(offCtx, 8/16*this.width, 15/16*this.height);
+	this.rmLastLine.offContextDraw(offCtx, 10/16*this.width, 15/16*this.height);
 };
 
 ForgeGUI.prototype.update = function(dt) {
