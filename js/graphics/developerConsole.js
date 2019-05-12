@@ -68,12 +68,12 @@ DeveloperConsole.prototype.hide = function() {
 	this.focus = false;
 };
 
-DeveloperConsole.prototype.handleKey = function(code) {
-	if (32 <= code && code <= 124) {
-		this.command += String.fromCharCode(code);
-	} else if (code === 8) {
+DeveloperConsole.prototype.handleKey = function(key) {
+	if (key.length === 1) {
+		this.command += key;
+	} else if (key === 'Backspace') {
 		this.command = this.command.slice(0, -1);
-	} else if (code === 13) {
+	} else if (key === 'Enter') {
 		var copy = this.command;
 		this.command = "";
 		return copy;

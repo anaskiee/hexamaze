@@ -82,10 +82,10 @@ Game.prototype.setKeyboardEventReceivers = function(event) {
 	}
 };
 
-Game.prototype.handleKey = function(keyCode) {
-	if (keyCode === 27) {
+Game.prototype.handleKey = function(key) {
+	if (key === 'Escape') {
 		this.expandMenu();
-	} else if (keyCode === 13) {
+	} else if (key === 'Enter') {
 		this.showConsole();
 	}
 };

@@ -52,20 +52,14 @@ GraphicalElement.prototype.render = function() {
 	this.ctx.restore();
 };
 
-GraphicalElement.prototype.offContextDraw = function() {
-};
+GraphicalElement.prototype.offContextDraw = function() {};
 
-GraphicalElement.prototype.handleCursorMove = function(x, y) {
-};
+GraphicalElement.prototype.handleCursorMove = function(x, y) {};
 
-GraphicalElement.prototype.handleClick = function(x, y) {
-};
+GraphicalElement.prototype.handleClick = function(x, y) {};
 
-GraphicalElement.prototype.handleKey = function(keyCode) {
-};
+GraphicalElement.prototype.handleKey = function(key) {};
 
-GraphicalElement.prototype.handleWorkerMessage = function(keyCode) {
-};
+GraphicalElement.prototype.handleWorkerMessage = function(keyCode) {};
 
-GraphicalElement.prototype.onMouseOverEnd = function() {
-};
+GraphicalElement.prototype.onMouseOverEnd = function() {};

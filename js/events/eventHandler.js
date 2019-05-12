@@ -6,13 +6,13 @@ function EventHandler(canvas, master, worker) {
 	this.canvas = canvas;
 	canvas.addEventListener("touchmove", this.handleTouch.bind(this), false);
 	canvas.addEventListener("mousemove", this.handleMouse.bind(this), false);
-	canvas.addEventListener("keypress", this.handleKey.bind(this), false);
+	canvas.addEventListener("keydown", this.handleKey.bind(this), false);
 	canvas.addEventListener("click", this.handleClick.bind(this), false);
 	
 	worker.addEventListener("message", this.handleMessage.bind(this), false);
 
 	// Send fake event to trigger first draw
-	this.handleKey({charCode: 0, keyCode: 0});
+	this.handleKey({});
 }
 
 // Functions to catch events in order to apply them asynchronously
@@ -34,10 +34,10 @@ EventHandler.prototype.handleClick = function(event) {
 
 EventHandler.prototype.handleKey = function(event) {
 	// prevent backspace key from navigating back
-	if (event.keyCode === 8) {
+	if (event.key === 'Backspace') {
 		event.preventDefault();
 	}
-	var evt = new KeyEvent(event.keyCode + event.charCode);
+	var evt = new KeyEvent(event.key);
 	this.master.pushKeyboardEvent(evt);
 };
 

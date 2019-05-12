@@ -1,8 +1,8 @@
 "use strict";
 
-function KeyEvent(keyCode) {
+function KeyEvent(key) {
 	GameEvent.call(this);
-	this.keyCode = keyCode;
+	this.key = key;
 }
 
 KeyEvent.prototype = Object.create(GameEvent.prototype);
@@ -10,7 +10,7 @@ KeyEvent.prototype.constructor = KeyEvent;
 
 KeyEvent.prototype.execute = function() {
 	if (this.receiver !== null) {
-		var result = this.receiver.handleKey(this.keyCode);
+		var result = this.receiver.handleKey(this.key);
 
 		// Nothing returned
 		if (result !== undefined) {

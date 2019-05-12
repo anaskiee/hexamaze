@@ -44,8 +44,8 @@ Home.prototype.setKeyboardEventReceivers = function(event) {
 	}
 };
 
-Home.prototype.handleKey = function(keyCode) {
-	if (keyCode === 13) {
+Home.prototype.handleKey = function(key) {
+	if (key === 'Enter') {
 		this.showConsole();
 	}
 };

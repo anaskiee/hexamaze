@@ -96,8 +96,8 @@ Forge.prototype.setKeyboardEventReceivers = function(event) {
 	}
 };
 
-Forge.prototype.handleKey = function(keyCode) {
-	if (keyCode === 13) {
+Forge.prototype.handleKey = function(key) {
+	if (key === 'Enter') {
 		this.showConsole();
 	}
 };
