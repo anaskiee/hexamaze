@@ -23,8 +23,8 @@ function IngameMenu(context, offContext ,uiCreator) {
 	this.animation = "";
 	this.active = false;
 
-	this.playAgin = uiCreator.createTextButton("ig menu button", "Back to home", 
-												"goto_home");
+	this.playAgin = uiCreator.createTextButton(
+		"ig menu button", "Back to home", "goto_home");
 	this.previousElement = null;
 	this.dt = -1;
 }

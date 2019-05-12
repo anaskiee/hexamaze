@@ -66,25 +66,24 @@ Game.prototype.setMessageEventReceivers = function(event) {
 };
 
 Game.prototype.setKeyboardEventReceivers = function(event) {
-	// Catch esc
-	if (event.keyCode === 27) {
-		event.setReceiver(this);
-		event.setResultReceiver(null);
-		return;
-	}
-
 	var consoleVisible = this.elementsToRender[0] !== null;
 	if (consoleVisible) {
 		event.setReceiver(this.developerConsole);
 		event.setResultReceiver(this);
 	} else {
 		event.setReceiver(this);
+		event.setResultReceiver(null);
 	}
 };
 
 Game.prototype.handleKey = function(key) {
 	if (key === 'Escape') {
-		this.expandMenu();
+		var menuVisible = this.elementsToRender[2] !== null;
+		if (menuVisible) {
+			this.reduceMenu();
+		} else {
+			this.expandMenu();
+		}
 	} else if (key === 'Enter') {
 		this.showConsole();
 	}

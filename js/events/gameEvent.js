@@ -13,8 +13,7 @@ GameEvent.prototype.setResultReceiver = function(resReceiver) {
 	this.resultReceiver = resReceiver;
 };
 
-GameEvent.prototype.execute = function() {
-};
+GameEvent.prototype.execute = function() {};
 
 GameEvent.prototype.handleResult = function(result) {
 	if (this.resultReceiver !== null) {
