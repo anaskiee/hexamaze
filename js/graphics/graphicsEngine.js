@@ -299,11 +299,11 @@ GraphicsEngine.prototype.handleClick = function() {
 		return;
 	
 	var character = this.level.character;
-	var px = this.offsetX + character.hexagon.x;
-	var py = this.offsetY + character.hexagon.y;
+	var px = character.hexagon.x;
+	var py = character.hexagon.y;
 	var action = this.physicsEngine.applyMove(this.direction);
-	var x = this.offsetX + character.hexagon.x;
-	var y = this.offsetY + character.hexagon.y;
+	var x = character.hexagon.x;
+	var y = character.hexagon.y;
 	if (px !== x || py !== y) {
 		this.animationRunning = true;
 		character.initAnimation(px, py, x, y);
