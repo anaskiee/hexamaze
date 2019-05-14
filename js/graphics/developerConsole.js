@@ -10,6 +10,7 @@ function DeveloperConsole(ctxLocator) {
 
 	this.concatString = "";
 	this.command = "";
+	this.lastCommand = "";
 	this.cmdHeight = -1;
 	this.animationRunning = true;
 
@@ -71,9 +72,11 @@ DeveloperConsole.prototype.handleKey = function(key) {
 		this.command += key;
 	} else if (key === 'Backspace') {
 		this.command = this.command.slice(0, -1);
+	} else if (key === 'ArrowUp') {
+		this.command = this.lastCommand;
 	} else if (key === 'Enter') {
-		var copy = this.command;
+		this.lastCommand = this.command;
 		this.command = "";
-		return copy;
+		return this.lastCommand;
 	}
 };
